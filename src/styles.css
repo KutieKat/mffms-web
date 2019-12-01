@@ -21,9 +21,17 @@ main {
 }
 
 .main-header {
-  height: 70px;
+  height: 60px;
   background-color: #ffc607;
   display: flex;
+}
+
+.main-header__logo {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  margin-right: 8px;
+  margin-bottom: 3px;
 }
 
 .main-header__left {
