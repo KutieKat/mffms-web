@@ -1,21 +1,21 @@
-import { USER_LOG_IN, USER_LOG_OUT } from "../actions/types";
+import { USER_LOG_IN, USER_LOG_OUT } from '../actions/types'
 
-let initialState = {};
+let initialState = {}
 
 export default function(state = initialState, action) {
-  switch (action.type) {
-    case USER_LOG_IN: {
-      const newState = action.user;
-      return newState;
-    }
+   switch (action.type) {
+      case USER_LOG_IN: {
+         const newState = action.user
+         return newState
+      }
 
-    case USER_LOG_OUT: {
-      const newState = {};
-      return newState;
-    }
+      case USER_LOG_OUT: {
+         const newState = {}
+         return newState
+      }
 
-    default: {
-      return state;
-    }
-  }
+      default: {
+         return state
+      }
+   }
 }
