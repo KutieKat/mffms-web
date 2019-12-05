@@ -9,11 +9,11 @@ export const isEmpty = obj => {
   return true;
 };
 
-export const formatDateString = (dateString, timeIncluded = true) => {
+export const formatDateString = (dateString, timeIncluded = false) => {
   if (timeIncluded) {
-    return moment(dateString).format("hh:mm, DD-MM-YYYY");
+    return moment(dateString).format("hh:mm, DD/MM/YYYY");
   }
-  return moment(dateString).format("DD-MM-YYYY");
+  return moment(dateString).format("DD/MM/YYYY");
 };
 
 export const getValue = (value, defaultValue = "(Chưa có dữ liệu)") => {

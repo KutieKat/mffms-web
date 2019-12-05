@@ -101,6 +101,7 @@ class App extends Component {
 
         <main className="main">
           <div className="main-left">
+            {this.renderMenuSection("Nghiệp vụ", menuRoutes.business)}
             {this.renderMenuSection("Hệ thống", menuRoutes.system)}
           </div>
 
