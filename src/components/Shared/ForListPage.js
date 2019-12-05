@@ -31,7 +31,7 @@ class ForListPage extends Component {
     this.fetchData = debounce(this.fetchData, 50);
   }
 
-  /// METHODS FOR REACT LIFECYCLES ///
+  ///// METHODS FOR REACT LIFECYCLES /////
 
   componentDidMount() {
     const { fetchData } = this;
@@ -39,7 +39,7 @@ class ForListPage extends Component {
     fetchData();
   }
 
-  /// METHODS FOR INTERACTING WITH API ///
+  ///// METHODS FOR INTERACTING WITH API /////
 
   formRequestParams = () => {
     const params = {};
@@ -93,7 +93,7 @@ class ForListPage extends Component {
     }
   };
 
-  /// METHODS FOR HANDLING UI EVENTS ///
+  ///// METHODS FOR HANDLING UI EVENTS /////
 
   changeKeyword = e => {
     const { fetchData } = this;
@@ -178,7 +178,7 @@ class ForListPage extends Component {
   exportData = () => {};
   exportReport = () => {};
 
-  /// METHODS FOR CHECKING VALUES ///
+  ///// METHODS FOR CHECKING VALUES /////
 
   isBeingSorted = columnName => {
     const { sortField } = this.state;
@@ -186,7 +186,7 @@ class ForListPage extends Component {
     return sortField === columnName;
   };
 
-  /// METHODS FOR COMPUTING VALUES ///
+  ///// METHODS FOR COMPUTING VALUES /////
 
   getPageNumbers = () => {
     const { totalPages } = this.state;
@@ -225,7 +225,7 @@ class ForListPage extends Component {
     }
   };
 
-  /// METHODS FOR RENDERING UI ///
+  ///// METHODS FOR RENDERING UI /////
 
   renderHeader = () => {
     const { entityName, entitySlug } = this.props;
@@ -366,13 +366,13 @@ class ForListPage extends Component {
 
   renderTableHeader = () => {
     const { isBeingSorted, sortByColumn } = this;
-    const { columns } = this.props;
+    const { columnsForList } = this.props;
 
     return (
       <thead>
         <tr>
           <th></th>
-          {columns.map(column => (
+          {columnsForList.map(column => (
             <th onClick={() => sortByColumn(column.id)} key={column.id}>
               {isBeingSorted(column.id) && (
                 <i className="fas fa-sort sort-button"></i>
@@ -403,9 +403,9 @@ class ForListPage extends Component {
   renderTableData = () => {
     const { getCurrentStatusColors, getCurrentStatusText } = this;
     const { data } = this.state;
-    const { entityName, columns } = this.props;
-    const idColumn = columns[0].idForValue;
-    const statusColumn = columns[columns.length - 1].idForValue;
+    const { entityName, columnsForList } = this.props;
+    const idColumn = columnsForList[0].idForValue;
+    const statusColumn = columnsForList[columnsForList.length - 1].idForValue;
 
     return data.map((record, index) => (
       <tr key={index}>
@@ -443,7 +443,7 @@ class ForListPage extends Component {
           </ul>
         </td>
 
-        {columns.map(column => (
+        {columnsForList.map(column => (
           <td
             className={column.isBold ? "table-text-bold" : ""}
             key={column.id}
@@ -541,6 +541,8 @@ class ForListPage extends Component {
 
   renderComponent = () => {
     const { renderHeader, renderBody } = this;
+    const { data } = this.state;
+    const { entityName, columnsForPrint } = this.props;
 
     return (
       <Fragment>
@@ -551,6 +553,7 @@ class ForListPage extends Component {
   };
 
   render() {
+    console.log(this.props);
     const { renderComponent } = this;
 
     return renderComponent();
