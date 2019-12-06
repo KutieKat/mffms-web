@@ -13,7 +13,6 @@ class KhachHangForCreate extends Component {
          api: apiRoutes.khachHang,
          fields: [
             {
-               id: 'HoVaTen',
                label: 'Họ và tên',
                propForValue: 'tenKhachHang',
                placeholder: 'Nhập họ và tên đầy đủ của khách hàng',
@@ -33,7 +32,6 @@ class KhachHangForCreate extends Component {
                ]
             },
             {
-               id: 'GioiTinh',
                label: 'Giới tính',
                propForValue: 'gioiTinh',
                type: 'select',
@@ -41,16 +39,8 @@ class KhachHangForCreate extends Component {
                propForItemKey: 'id',
                propForItemValue: 'text',
                propForItemText: 'text'
-               // validators: [
-               //    {
-               //       rule: 'inRange',
-               //       range: [0, 1],
-               //       message: 'Giới tính của khách hàng không hợp lệ!'
-               //    }
-               // ]
             },
             {
-               id: 'NgaySinh',
                label: 'Ngày sinh',
                propForValue: 'ngaySinh',
                placeholder: 'Nhập ngày sinh của khách hàng',
@@ -70,7 +60,6 @@ class KhachHangForCreate extends Component {
                ]
             },
             {
-               id: 'SoDienThoai',
                label: 'Số điện thoại',
                propForValue: 'soDienThoai',
                placeholder: 'Nhập số điện thoại của khách hàng',

@@ -277,18 +277,18 @@ class ForCreatePage extends Component {
       return (
          <Fragment>
             <form autoComplete="off">
-               {fields.map(field => renderFormGroup(field))}
+               {fields.map((field, index) => renderFormGroup(field, index))}
             </form>
          </Fragment>
       )
    }
 
-   renderFormGroup = field => {
+   renderFormGroup = (field, index) => {
       const { renderField } = this
-      const { id, label } = field
+      const { label } = field
 
       return (
-         <div className="form-group" key={id}>
+         <div className="form-group" key={index}>
             <label className="form-label">{label}</label>
             {renderField(field)}
          </div>
