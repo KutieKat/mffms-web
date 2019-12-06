@@ -101,6 +101,11 @@ class ForCreatePage extends Component {
                editingData[propForValue] = values[0][propForItemValue]
                break
             }
+
+            case 'textarea': {
+               editingData[propForValue] = ''
+               break
+            }
          }
       })
 
@@ -362,7 +367,20 @@ class ForCreatePage extends Component {
          }
 
          case 'textarea': {
-            return <textarea></textarea>
+            return (
+               <textarea
+                  className={
+                     isValidField(propForValue)
+                        ? 'form-input-alert'
+                        : 'form-input-outline'
+                  }
+                  placeholder={placeholder}
+                  value={editingData[propForValue]}
+                  onChange={e => changeEditingData(e, propForValue)}
+                  onFocus={hideAlert}
+                  disabled={disabled}
+               ></textarea>
+            )
          }
       }
    }

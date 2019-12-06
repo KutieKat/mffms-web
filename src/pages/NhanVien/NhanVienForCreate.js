@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ForCreatePage from '../../components/ForCreatePage'
-import { GENDERS } from '../../constants/'
+import { GENDERS, POSITIONS } from '../../constants/'
 import apiRoutes from '../../routes/apis'
 
 class NhanVienForCreate extends Component {
@@ -58,6 +58,14 @@ class NhanVienForCreate extends Component {
                ]
             },
             {
+               label: 'Chức vụ',
+               propForValue: 'chucVu',
+               type: 'select',
+               values: POSITIONS,
+               propForItemValue: 'text',
+               propForItemText: 'text'
+            },
+            {
                label: 'Số điện thoại',
                propForValue: 'soDienThoai',
                placeholder: 'Nhập số điện thoại của nhân viên',
@@ -103,6 +111,19 @@ class NhanVienForCreate extends Component {
                ]
             },
             {
+               label: 'Địa chỉ',
+               propForValue: 'diaChi',
+               placeholder: 'Nhập địa chỉ của nhân viên',
+               type: 'textarea',
+               validators: [
+                  {
+                     rule: 'notEmpty',
+                     message:
+                        'Địa chỉ của nhân viên là thông tin bắt buộc và không được để trống!'
+                  }
+               ]
+            },
+            {
                label: 'Tiền lương',
                propForValue: 'luong',
                placeholder: 'Nhập tiền lương của nhân viên',
@@ -119,6 +140,12 @@ class NhanVienForCreate extends Component {
                         'Tiền lương của nhân viên là thông tin bắt buộc và không được để trống!'
                   }
                ]
+            },
+            {
+               label: 'Ghi chú',
+               propForValue: 'ghiChu',
+               placeholder: 'Nhập ghi chú về nhân viên (nếu có)',
+               type: 'textarea'
             }
          ]
       }

@@ -79,6 +79,25 @@ class KhachHangForCreate extends Component {
                      message: 'Số điện thoại của khách hàng không hợp lệ!'
                   }
                ]
+            },
+            {
+               label: 'Địa chỉ',
+               propForValue: 'diaChi',
+               placeholder: 'Nhập địa chỉ của khách hàng',
+               type: 'textarea',
+               validators: [
+                  {
+                     rule: 'notEmpty',
+                     message:
+                        'Địa chỉ của khách hàng là thông tin bắt buộc và không được để trống!'
+                  }
+               ]
+            },
+            {
+               label: 'Ghi chú',
+               propForValue: 'ghiChu',
+               placeholder: 'Nhập ghi chú về khách hàng (nếu có)',
+               type: 'textarea'
             }
          ]
       }
