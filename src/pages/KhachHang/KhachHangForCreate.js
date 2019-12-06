@@ -36,7 +36,6 @@ class KhachHangForCreate extends Component {
                propForValue: 'gioiTinh',
                type: 'select',
                values: GENDERS,
-               propForItemKey: 'id',
                propForItemValue: 'text',
                propForItemText: 'text'
             },

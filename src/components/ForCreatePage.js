@@ -338,12 +338,7 @@ class ForCreatePage extends Component {
          }
 
          case 'select': {
-            const {
-               values,
-               propForItemKey,
-               propForItemText,
-               propForItemValue
-            } = field
+            const { values, propForItemText, propForItemValue } = field
 
             return (
                <select
@@ -358,10 +353,7 @@ class ForCreatePage extends Component {
                >
                   {values.length > 0 &&
                      values.map((record, index) => (
-                        <option
-                           key={record[propForItemKey]}
-                           value={record[propForItemValue]}
-                        >
+                        <option key={index} value={record[propForItemValue]}>
                            {record[propForItemText]}
                         </option>
                      ))}
