@@ -407,7 +407,6 @@ class ForListPage extends Component {
       const { data } = this.state
       const { entityName, columnsForList } = this.props
       const idColumn = columnsForList[0].idForValue
-      const statusColumn = columnsForList[columnsForList.length - 1].idForValue
 
       return data.map((record, index) => (
          <tr key={index}>
@@ -435,7 +434,7 @@ class ForListPage extends Component {
                      <Link to="#">Xóa tạm thời</Link>
                   </li>
 
-                  {record[statusColumn] === -1 && (
+                  {record.trangThai === -1 && (
                      <li className="table-dropdown-menu-item">
                         <Link to="#">Khôi phục lại</Link>
                      </li>
