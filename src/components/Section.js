@@ -15,7 +15,8 @@ class Section extends Component {
    }
 
    renderHeaderLeft = () => {
-      const { title, subtitle } = this.props
+      const { section } = this.props
+      const { title, subtitle } = section
 
       return (
          <div className="section__header-left">
@@ -26,7 +27,8 @@ class Section extends Component {
    }
 
    renderHeaderRight = () => {
-      const { headerRight } = this.props
+      const { section } = this.props
+      const { headerRight } = section
 
       return (
          headerRight !== undefined && (
@@ -41,13 +43,47 @@ class Section extends Component {
       return <div className="section__body">{children}</div>
    }
 
+   renderFooter = () => {
+      const { renderFooterLeft, renderFooterRight } = this
+
+      return (
+         <footer className="section__footer">
+            {renderFooterLeft()}
+            {renderFooterRight()}
+         </footer>
+      )
+   }
+
+   renderFooterLeft = () => {
+      const { section } = this.props
+      const { footerLeft } = section
+
+      return (
+         footerLeft !== undefined && (
+            <div className="section__footer-left">{footerLeft}</div>
+         )
+      )
+   }
+
+   renderFooterRight = () => {
+      const { section } = this.props
+      const { footerRight } = section
+
+      return (
+         footerRight !== undefined && (
+            <div className="section__footer-right">{footerRight}</div>
+         )
+      )
+   }
+
    renderComponent = () => {
-      const { renderHeader, renderBody } = this
+      const { renderHeader, renderBody, renderFooter } = this
 
       return (
          <section className="section">
             {renderHeader()}
             {renderBody()}
+            {renderFooter()}
          </section>
       )
    }

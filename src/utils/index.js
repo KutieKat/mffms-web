@@ -1,6 +1,8 @@
 import moment from 'moment'
+import axios from 'axios'
+axios.defaults.headers.common['Authorization'] = 'AUTH_TOKEN'
 
-export const isEmpty = obj => {
+export const isEmptyObj = obj => {
    for (let key in obj) {
       if (obj.hasOwnProperty(key)) {
          return false
@@ -46,7 +48,7 @@ export const isValidEmail = email => {
    return pattern.test(email)
 }
 
-export const isValidPhoneNumber = phone => {
+export const isPhoneNumber = phone => {
    let flag = false
    phone = phone.replace('(+84)', '0')
    phone = phone.replace('+84', '0')
@@ -67,3 +69,7 @@ export const isValidPhoneNumber = phone => {
    }
    return flag
 }
+
+export const apiGet = (url, data) => axios.get(url, data)
+
+export const apiPost = (url, data) => axios.post(url, data)

@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import Section from './Section'
-import { PAGE_SIZES } from '../../constants'
-import { formatDateString } from '../../utils'
+import { PAGE_SIZES } from '../constants'
+import { formatDateString } from '../utils'
 import axios from 'axios'
 import { debounce } from 'debounce'
 
@@ -64,7 +64,8 @@ class ForListPage extends Component {
 
    fetchData = async () => {
       const { formRequestParams } = this
-      const { api } = this.props
+      const { settings } = this.props
+      const { api } = settings
       const url = api.getAll
       const params = formRequestParams()
 
@@ -228,7 +229,8 @@ class ForListPage extends Component {
    ///// METHODS FOR RENDERING UI /////
 
    renderHeader = () => {
-      const { entityName, entitySlug } = this.props
+      const { settings } = this.props
+      const { entityName, entitySlug } = settings
 
       return (
          <section className="breadcrumbs">
@@ -250,7 +252,8 @@ class ForListPage extends Component {
    renderSectionHeaderRight = () => {
       const { refresh, importData, exportData, exportReport } = this
       const { data } = this.state
-      const { entitySlug } = this.props
+      const { settings } = this.props
+      const { entitySlug } = settings
 
       return (
          <Fragment>
@@ -290,14 +293,16 @@ class ForListPage extends Component {
          renderTable,
          renderPagination
       } = this
-      const { entityName } = this.props
+      const { settings } = this.props
+      const { entityName } = settings
+      const section = {
+         title: `Danh sách ${entityName}`,
+         subtitle: `Danh sách tất cả các ${entityName} hiện đang được quản lý`,
+         headerRight: renderSectionHeaderRight()
+      }
 
       return (
-         <Section
-            title={`Danh sách ${entityName}`}
-            subtitle={`Danh sách tất cả các ${entityName} hiện đang được quản lý`}
-            headerRight={renderSectionHeaderRight()}
-         >
+         <Section section={section}>
             {renderToolbar()}
             {renderTable()}
             {renderPagination()}
@@ -366,15 +371,19 @@ class ForListPage extends Component {
 
    renderTableHeader = () => {
       const { isBeingSorted, sortByColumn } = this
-      const { columnsForList } = this.props
+      const { settings } = this.props
+      const { columns } = settings
 
       return (
          <thead>
             <tr>
                <th></th>
-               {columnsForList.map(column => (
-                  <th onClick={() => sortByColumn(column.id)} key={column.id}>
-                     {isBeingSorted(column.id) && (
+               {columns.map((column, index) => (
+                  <th
+                     onClick={() => sortByColumn(column.propForSorting)}
+                     key={index}
+                  >
+                     {isBeingSorted(column.propForSorting) && (
                         <i className="fas fa-sort sort-button"></i>
                      )}{' '}
                      {column.text}
@@ -405,8 +414,9 @@ class ForListPage extends Component {
    renderTableData = () => {
       const { getCurrentStatusColors, getCurrentStatusText } = this
       const { data } = this.state
-      const { entityName, columnsForList } = this.props
-      const idColumn = columnsForList[0].idForValue
+      const { settings } = this.props
+      const { entitySlug, columns } = settings
+      const idColumn = columns[0].propForValue
 
       return data.map((record, index) => (
          <tr key={index}>
@@ -418,7 +428,7 @@ class ForListPage extends Component {
                <ul className="table-dropdown-menu">
                   <li className="table-dropdown-menu-item">
                      <Link
-                        to={`/${entityName}/xem-thong-tin/${record[idColumn]}`}
+                        to={`/${entitySlug}/xem-thong-tin/${record[idColumn]}`}
                      >
                         Xem thông tin
                      </Link>
@@ -446,14 +456,14 @@ class ForListPage extends Component {
                </ul>
             </td>
 
-            {columnsForList.map(column => (
+            {columns.map((column, index) => (
                <td
                   className={column.isBold ? 'table-text-bold' : ''}
-                  key={column.id}
+                  key={index}
                >
                   {column.isDateTimeValue
-                     ? formatDateString(record[column.idForValue])
-                     : record[column.idForValue]}
+                     ? formatDateString(record[column.propForValue])
+                     : record[column.propForValue]}
                </td>
             ))}
 
@@ -553,8 +563,6 @@ class ForListPage extends Component {
 
    renderComponent = () => {
       const { renderHeader, renderBody } = this
-      const { data } = this.state
-      const { entityName, columnsForPrint } = this.props
 
       return (
          <Fragment>

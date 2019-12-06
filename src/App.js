@@ -11,7 +11,7 @@ import * as actions from './redux/actions'
 import menuRoutes from './routes/menus'
 import pageRoutes from './routes/pages'
 import { isEmpty } from './utils'
-import NotFound from './components/NotFound'
+import NotFound from './pages/NotFound'
 import './styles.css'
 
 class App extends Component {

@@ -100,7 +100,8 @@ class ForPrintPage extends Component {
    }
 
    renderMainHeader = () => {
-      const { entityName } = this.props
+      const { settings } = this.props
+      const { entityName } = settings
 
       return (
          <div className="printing-page__main">
@@ -132,7 +133,8 @@ class ForPrintPage extends Component {
    }
 
    renderTableHeader = () => {
-      const { columns } = this.props
+      const { settings } = this.props
+      const { columns } = settings
 
       return (
          <thead>
@@ -146,7 +148,8 @@ class ForPrintPage extends Component {
    }
 
    renderTableBody = () => {
-      const { data, columns } = this.props
+      const { settings } = this.props
+      const { data, columns } = settings
 
       return (
          <tbody>
@@ -157,8 +160,8 @@ class ForPrintPage extends Component {
                      {columns.map(column => (
                         <td>
                            {column.isDateTimeValue
-                              ? formatDateString(record[column.idForValue])
-                              : record[column.idForValue]}
+                              ? formatDateString(record[column.propForValue])
+                              : record[column.propForValue]}
                         </td>
                      ))}
                   </tr>
@@ -190,7 +193,8 @@ class ForPrintPage extends Component {
    }
 
    renderTopFooterLeft = () => {
-      const { data } = this.props
+      const { settings } = this.props
+      const { data } = settings
 
       return (
          <div className="printing-page__footer-top-left">

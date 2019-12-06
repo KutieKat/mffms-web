@@ -6,80 +6,53 @@ class KhachHangForList extends Component {
    constructor(props) {
       super(props)
 
-      this.columnsForList = [
-         {
-            id: 'MaKhachHang',
-            text: 'Mã khách hàng',
-            idForValue: 'maKhachHang',
-            isBold: true
-         },
-         {
-            id: 'HoVaTen',
-            text: 'Họ và tên',
-            idForValue: 'tenKhachHang'
-         },
-         {
-            id: 'GioiTinh',
-            text: 'Giới tính',
-            idForValue: 'gioiTinh'
-         },
-         {
-            id: 'NgaySinh',
-            text: 'Ngày sinh',
-            idForValue: 'ngaySinh',
-            isDateTimeValue: true
-         },
-         {
-            id: 'SoDienThoai',
-            text: 'Số điện thoại',
-            idForValue: 'soDienThoai'
-         }
-      ]
-
-      this.columnsForPrint = [
-         {
-            id: 'MaKhachHang',
-            text: 'Mã khách hàng',
-            idForValue: 'maKhachHang'
-         },
-         {
-            id: 'HoVaTen',
-            text: 'Họ và tên',
-            idForValue: 'tenKhachHang'
-         },
-         {
-            id: 'GioiTinh',
-            text: 'Giới tính',
-            idForValue: 'gioiTinh'
-         },
-         {
-            id: 'NgaySinh',
-            text: 'Ngày sinh',
-            idForValue: 'ngaySinh',
-            isDateTimeValue: true
-         },
-         {
-            id: 'SoDienThoai',
-            text: 'Số điện thoại',
-            idForValue: 'soDienThoai'
-         }
-      ]
+      this.settings = {
+         entityName: 'khách hàng',
+         entitySlug: 'khach-hang',
+         api: apiRoutes.khachHang,
+         columns: [
+            {
+               text: 'Mã khách hàng',
+               propForValue: 'maKhachHang',
+               propForSorting: 'MaKhachHang',
+               isBold: true,
+               type: 'listAndPrint'
+            },
+            {
+               text: 'Họ và tên',
+               propForValue: 'tenKhachHang',
+               propForSorting: 'HoVaTen',
+               type: 'listAndPrint'
+            },
+            {
+               text: 'Giới tính',
+               propForValue: 'gioiTinh',
+               propForSorting: 'GioiTinh',
+               type: 'listAndPrint'
+            },
+            {
+               text: 'Ngày sinh',
+               propForValue: 'ngaySinh',
+               propForSorting: 'NgaySinh',
+               isDateTimeValue: true,
+               type: 'listAndPrint'
+            },
+            {
+               text: 'Số điện thoại',
+               propForValue: 'soDienThoai',
+               propForSorting: 'SoDienThoai',
+               type: 'listAndPrint'
+            }
+         ]
+      }
    }
 
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
-      const { columnsForList, columnsForPrint } = this
+      const { settings } = this
 
-      return (
-         <ForListPage
-            entityName="khách hàng"
-            entitySlug="khach-hang"
-            api={apiRoutes.khachHang}
-            columnsForList={columnsForList}
-            columnsForPrint={columnsForPrint}
-         />
-      )
+      return <ForListPage settings={settings} />
    }
 
    render() {

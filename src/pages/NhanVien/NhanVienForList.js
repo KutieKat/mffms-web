@@ -6,55 +6,59 @@ class NhanVienForList extends Component {
    constructor(props) {
       super(props)
 
-      this.columns = [
-         {
-            id: 'MaNhanVien',
-            text: 'Mã nhân viên',
-            idForValue: 'maNhanVien',
-            isBold: true
-         },
-         {
-            id: 'HoVaTen',
-            text: 'Họ và tên',
-            idForValue: 'tenNhanVien'
-         },
-         {
-            id: 'GioiTinh',
-            text: 'Giới tính',
-            idForValue: 'gioiTinh'
-         },
-         {
-            id: 'NgaySinh',
-            text: 'Ngày sinh',
-            idForValue: 'ngaySinh',
-            isDateTimeValue: true
-         },
-         {
-            id: 'SoDienThoai',
-            text: 'Số điện thoại',
-            idForValue: 'soDienThoai'
-         },
-         {
-            id: 'TienLuong',
-            text: 'Tiền lương',
-            idForValue: 'luong'
-         }
-      ]
+      this.settings = {
+         entityName: 'nhân viên',
+         entitySlug: 'nhan-vien',
+         api: apiRoutes.nhanVien,
+         columns: [
+            {
+               id: 'MaNhanVien',
+               text: 'Mã nhân viên',
+               propForValue: 'maNhanVien',
+               isBold: true,
+               type: 'listAndPrint'
+            },
+            {
+               id: 'HoVaTen',
+               text: 'Họ và tên',
+               propForValue: 'tenNhanVien',
+               type: 'listAndPrint'
+            },
+            {
+               id: 'GioiTinh',
+               text: 'Giới tính',
+               propForValue: 'gioiTinh',
+               type: 'listAndPrint'
+            },
+            {
+               id: 'NgaySinh',
+               text: 'Ngày sinh',
+               propForValue: 'ngaySinh',
+               isDateTimeValue: true,
+               type: 'listAndPrint'
+            },
+            {
+               id: 'SoDienThoai',
+               text: 'Số điện thoại',
+               propForValue: 'soDienThoai',
+               type: 'listAndPrint'
+            },
+            {
+               id: 'TienLuong',
+               text: 'Tiền lương',
+               propForValue: 'luong',
+               type: 'listAndPrint'
+            }
+         ]
+      }
    }
 
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
-      const { columns } = this
+      const { settings } = this
 
-      return (
-         <ForListPage
-            entityName="nhân viên"
-            entitySlug="nhan-vien"
-            api={apiRoutes.nhanVien}
-            columns={columns}
-         />
-      )
+      return <ForListPage settings={settings} />
    }
 
    render() {
