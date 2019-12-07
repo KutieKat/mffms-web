@@ -15,7 +15,6 @@ class NhanVienForView extends Component {
             {
                label: 'Họ và tên',
                propForValue: 'tenNhanVien',
-               placeholder: 'Nhập họ và tên đầy đủ của nhân viên',
                type: 'input'
             },
             {
@@ -29,7 +28,6 @@ class NhanVienForView extends Component {
             {
                label: 'Ngày sinh',
                propForValue: 'ngaySinh',
-               placeholder: 'Nhập ngày sinh của nhân viên',
                type: 'date'
             },
             {
@@ -43,31 +41,26 @@ class NhanVienForView extends Component {
             {
                label: 'Số điện thoại',
                propForValue: 'soDienThoai',
-               placeholder: 'Nhập số điện thoại của nhân viên',
                type: 'input'
             },
             {
                label: 'Số CMND',
                propForValue: 'soCMND',
-               placeholder: 'Nhập số CMND của nhân viên',
                type: 'input'
             },
             {
                label: 'Địa chỉ',
                propForValue: 'diaChi',
-               placeholder: 'Nhập địa chỉ của nhân viên',
                type: 'textarea'
             },
             {
                label: 'Tiền lương',
                propForValue: 'luong',
-               placeholder: 'Nhập tiền lương của nhân viên',
                type: 'input'
             },
             {
                label: 'Ghi chú',
                propForValue: 'ghiChu',
-               placeholder: 'Nhập ghi chú về nhân viên (nếu có)',
                type: 'textarea'
             }
          ]
