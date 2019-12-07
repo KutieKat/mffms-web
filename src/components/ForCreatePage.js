@@ -64,7 +64,7 @@ class ForCreatePage extends Component {
       this.setState({ showAlert: false, errors: null })
    }
 
-   onSubmit = () => {
+   submit = () => {
       const { validateFields, createRecord } = this
       const errors = validateFields()
 
@@ -389,7 +389,7 @@ class ForCreatePage extends Component {
    }
 
    renderFormFooter = () => {
-      const { onSubmit } = this
+      const { submit } = this
       const { settings } = this.props
       const { entity } = settings
       const { slug } = entity
@@ -402,7 +402,7 @@ class ForCreatePage extends Component {
                </Link>
             </span>
 
-            <span className="button" onClick={onSubmit}>
+            <span className="button" onClick={submit}>
                <i className="fas fa-save"></i>&nbsp;&nbsp;Lưu lại
             </span>
          </Fragment>
