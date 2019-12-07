@@ -231,7 +231,7 @@ class ForListPage extends Component {
    renderHeader = () => {
       const { settings } = this.props
       const { entity } = settings
-      const { entityName, entitySlug } = entity
+      const { name, slug } = entity
 
       return (
          <section className="breadcrumbs">
@@ -244,7 +244,7 @@ class ForListPage extends Component {
             </span>
 
             <span className="breadcrumb-active">
-               <Link to={`/${entitySlug}`}>Quản lý {entityName}</Link>
+               <Link to={`/${slug}`}>Quản lý {name}</Link>
             </span>
          </section>
       )
@@ -255,7 +255,7 @@ class ForListPage extends Component {
       const { data } = this.state
       const { settings } = this.props
       const { entity } = settings
-      const { entitySlug } = entity
+      const { slug } = entity
 
       return (
          <Fragment>
@@ -264,7 +264,7 @@ class ForListPage extends Component {
             </span>
 
             <span className="button">
-               <Link to={`/${entitySlug}/them-moi`}>
+               <Link to={`/quan-ly/${slug}/them-moi`}>
                   <i className="fas fa-plus-circle"></i>&nbsp;&nbsp;Thêm mới
                </Link>
             </span>
@@ -297,10 +297,10 @@ class ForListPage extends Component {
       } = this
       const { settings } = this.props
       const { entity } = settings
-      const { entityName } = entity
+      const { name } = entity
       const section = {
-         title: `Danh sách ${entityName}`,
-         subtitle: `Danh sách tất cả các ${entityName} hiện đang được quản lý`,
+         title: `Danh sách ${name}`,
+         subtitle: `Danh sách tất cả các ${name} hiện đang được quản lý`,
          headerRight: renderSectionHeaderRight()
       }
 
@@ -420,7 +420,7 @@ class ForListPage extends Component {
       const { data } = this.state
       const { settings } = this.props
       const { entity, columns } = settings
-      const { entitySlug } = entity
+      const { slug } = entity
       const idColumn = columns[0].propForValue
 
       return data.map((record, index) => (
@@ -433,9 +433,9 @@ class ForListPage extends Component {
                <ul className="table-dropdown-menu">
                   <li className="table-dropdown-menu-item">
                      <Link
-                        to={`/${entitySlug}/xem-thong-tin/${record[idColumn]}`}
+                        to={`/quan-ly/${slug}/xem-thong-tin/${record[idColumn]}`}
                      >
-                        Xem thông tin
+                        Xem chi tiết
                      </Link>
                   </li>
 

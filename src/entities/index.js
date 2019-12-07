@@ -8,9 +8,19 @@ const nhanVien = {
    slug: 'nhan-vien'
 }
 
+const nhaCungCap = {
+   name: 'nhà cung cấp',
+   slug: 'nha-cung-cap'
+}
+
+const sanBong = {
+   name: 'sân bóng',
+   slug: 'san-bong'
+}
+
 const caiDat = {
    name: 'cài đặt',
    slug: 'cai-dat'
 }
 
-export { khachHang, nhanVien, caiDat }
+export { khachHang, nhanVien, nhaCungCap, sanBong, caiDat }

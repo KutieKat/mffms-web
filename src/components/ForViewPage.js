@@ -67,7 +67,7 @@ class ForViewPage extends Component {
    renderHeader = () => {
       const { settings } = this.props
       const { entity } = settings
-      const { entityName, entitySlug } = entity
+      const { name, slug } = entity
 
       return (
          <span className="breadcrumbs">
@@ -78,13 +78,13 @@ class ForViewPage extends Component {
                <i className="fas fa-chevron-right"></i>
             </span>
             <span className="breadcrumb">
-               <Link to={`/${entitySlug}`}>Quản lý {entityName}</Link>
+               <Link to={`/${slug}`}>Quản lý {name}</Link>
             </span>
             <span className="breadcrumb-separator">
                <i className="fas fa-chevron-right"></i>
             </span>
             <span className="breadcrumb-active">
-               <Link to="#">Xem thông tin {entityName}</Link>
+               <Link to="#">Xem thông tin {name}</Link>
             </span>
          </span>
       )
@@ -94,10 +94,10 @@ class ForViewPage extends Component {
       const { renderForm, renderFormFooter } = this
       const { settings } = this.props
       const { entity } = settings
-      const { entityName } = entity
+      const { name } = entity
       const section = {
-         title: `Xem thông tin ${entityName}`,
-         subtitle: `Xem thông tin chi tiết của ${entityName}`,
+         title: `Xem thông tin ${name}`,
+         subtitle: `Xem thông tin chi tiết của ${name}`,
          footerRight: renderFormFooter()
       }
 
@@ -192,12 +192,12 @@ class ForViewPage extends Component {
    renderFormFooter = () => {
       const { settings } = this.props
       const { entity } = settings
-      const { entitySlug } = entity
+      const { slug } = entity
 
       return (
          <Fragment>
             <span className="button">
-               <Link to={`/${entitySlug}`}>
+               <Link to={`/quan-ly/${slug}`}>
                   <i className="fas fa-arrow-left"></i>&nbsp;&nbsp;Trở về
                </Link>
             </span>

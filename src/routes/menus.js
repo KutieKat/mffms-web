@@ -1,23 +1,41 @@
 export default {
-   statistics: [],
-   lookup: [],
    business: [
       {
          title: 'Quản lý khách hàng',
-         path: '/khach-hang',
+         path: '/quan-ly/khach-hang',
          icon: 'fas fa-users'
       },
       {
          title: 'Quản lý nhân viên',
-         path: '/nhan-vien',
+         path: '/quan-ly/nhan-vien',
          icon: 'fas fa-users'
+      },
+      {
+         title: 'Quản lý sân bóng',
+         path: '/quan-ly/san-bong',
+         icon: 'far fa-futbol'
+      },
+      {
+         title: 'Quản lý nhà cung cấp',
+         path: '/quan-ly/nha-cung-cap',
+         icon: 'fas fa-industry'
       }
    ],
    system: [
       {
-         title: 'Quản lý tài khoản',
-         path: '/tai-khoan',
+         title: 'Quản lý người dùng',
+         path: '/he-thong/nguoi-dung',
          icon: 'fas fa-users'
+      },
+      {
+         title: 'Quản lý cài đặt',
+         path: '/he-thong/cai-dat',
+         icon: 'fas fa-sliders-h'
+      },
+      {
+         title: 'Đăng xuất',
+         path: '#',
+         icon: 'fas fa-sign-out-alt'
       }
    ]
 }

@@ -47,8 +47,7 @@ class Section extends Component {
       const { renderFooterLeft, renderFooterRight } = this
 
       return (
-         renderFooterLeft() !== false &&
-         renderFooterRight() !== false && (
+         (renderFooterLeft() !== false || renderFooterRight() !== false) && (
             <footer className="section__footer">
                {renderFooterLeft()}
                {renderFooterRight()}

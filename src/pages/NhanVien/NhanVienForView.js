@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import ForViewPage from '../../components/ForViewPage'
 import { GENDERS, POSITIONS } from '../../constants/'
 import apiRoutes from '../../routes/apis'
+import { nhanVien } from '../../entities'
 
 class NhanVienForView extends Component {
    constructor(props) {
       super(props)
 
       this.settings = {
-         entityName: 'nhân viên',
-         entitySlug: 'nhan-vien',
+         entity: nhanVien,
          api: apiRoutes.nhanVien,
          fields: [
             {

@@ -1,6 +1,8 @@
 const baseApi = 'http://localhost:5000/api'
 const baseKhachHangApi = baseApi + '/KhachHang'
 const baseNhanVienApi = baseApi + '/NhanVien'
+const baseNhaCungCapApi = baseApi + '/NhaCungCap'
+const baseSanBongApi = baseApi + '/SanBong'
 const baseCaiDatApi = baseApi + '/CaiDat'
 
 export default {
@@ -10,9 +12,7 @@ export default {
       create: baseKhachHangApi + '/Create',
       createMultiple: baseKhachHangApi + '/CreateMultiple',
       updateById: baseKhachHangApi + '/UpdateById',
-      temporarilyDeleteById: baseKhachHangApi + '/TemporarilyDeleteById',
-      permanentlyDeleteById: baseKhachHangApi + '/PermanentlyDeleteById',
-      restoreById: baseKhachHangApi + '/RestoreById'
+      permanentlyDeleteById: baseKhachHangApi + '/PermanentlyDeleteById'
    },
    nhanVien: {
       getAll: baseNhanVienApi + '/GetAll',
@@ -20,9 +20,23 @@ export default {
       create: baseNhanVienApi + '/Create',
       createMultiple: baseNhanVienApi + '/CreateMultiple',
       updateById: baseNhanVienApi + '/UpdateById',
-      temporarilyDeleteById: baseNhanVienApi + '/TemporarilyDeleteById',
-      permanentlyDeleteById: baseNhanVienApi + '/PermanentlyDeleteById',
-      restoreById: baseNhanVienApi + '/RestoreById'
+      permanentlyDeleteById: baseNhanVienApi + '/PermanentlyDeleteById'
+   },
+   nhaCungCap: {
+      getAll: baseNhaCungCapApi + '/GetAll',
+      getById: baseNhaCungCapApi + '/GetById',
+      create: baseNhaCungCapApi + '/Create',
+      createMultiple: baseNhaCungCapApi + '/CreateMultiple',
+      updateById: baseNhaCungCapApi + '/UpdateById',
+      permanentlyDeleteById: baseNhaCungCapApi + '/PermanentlyDeleteById'
+   },
+   sanBong: {
+      getAll: baseSanBongApi + '/GetAll',
+      getById: baseSanBongApi + '/GetById',
+      create: baseSanBongApi + '/Create',
+      createMultiple: baseSanBongApi + '/CreateMultiple',
+      updateById: baseSanBongApi + '/UpdateById',
+      permanentlyDeleteById: baseSanBongApi + '/PermanentlyDeleteById'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',

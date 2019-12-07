@@ -1,52 +1,52 @@
 import React, { Component } from 'react'
 import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
+import { nhanVien } from '../../entities'
 
 class NhanVienForList extends Component {
    constructor(props) {
       super(props)
 
       this.settings = {
-         entityName: 'nhân viên',
-         entitySlug: 'nhan-vien',
+         entity: nhanVien,
          api: apiRoutes.nhanVien,
          columns: [
             {
-               id: 'MaNhanVien',
                text: 'Mã nhân viên',
                propForValue: 'maNhanVien',
+               propForSorting: 'MaNhanVien',
                isBold: true,
                type: 'listAndPrint'
             },
             {
-               id: 'HoVaTen',
                text: 'Họ và tên',
                propForValue: 'tenNhanVien',
+               propForSorting: 'TenNhanVien',
                type: 'listAndPrint'
             },
             {
-               id: 'GioiTinh',
                text: 'Giới tính',
                propForValue: 'gioiTinh',
+               propForSorting: 'GioiTinh',
                type: 'listAndPrint'
             },
             {
-               id: 'NgaySinh',
                text: 'Ngày sinh',
                propForValue: 'ngaySinh',
+               propForSorting: 'NgaySinh',
                isDateTimeValue: true,
                type: 'listAndPrint'
             },
             {
-               id: 'SoDienThoai',
                text: 'Số điện thoại',
                propForValue: 'soDienThoai',
+               propForSorting: 'SoDienThoai',
                type: 'listAndPrint'
             },
             {
-               id: 'TienLuong',
                text: 'Tiền lương',
                propForValue: 'luong',
+               propForSorting: 'Luong',
                type: 'listAndPrint'
             }
          ]

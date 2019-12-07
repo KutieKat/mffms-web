@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Section from './Section'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { isEmpty, isLength, isAfter, isNumeric } from 'validator'
 import { isEmptyObj, isPhoneNumber, apiPost } from '../utils'
@@ -32,16 +32,16 @@ class ForCreatePage extends Component {
       const { editingData } = this.state
       const { settings, history } = this.props
       const { api, entity } = settings
-      const { entitySlug } = entity
+      const { slug } = entity
       const url = api.create
 
       return apiPost(url, editingData)
          .then(response => {
-            history.push(`/${entitySlug}`)
+            history.push(`/quan-ly/${slug}`)
          })
          .catch(error => {
-            const { errors } = error.response.data.result
-            this.setState({ errors, showAlert: true })
+            // const { errors } = error.response.data.result
+            // this.setState({ showAlert: true })
          })
    }
 
@@ -212,7 +212,7 @@ class ForCreatePage extends Component {
    renderHeader = () => {
       const { settings } = this.props
       const { entity } = settings
-      const { entityName, entitySlug } = entity
+      const { name, slug } = entity
 
       return (
          <span className="breadcrumbs">
@@ -223,13 +223,13 @@ class ForCreatePage extends Component {
                <i className="fas fa-chevron-right"></i>
             </span>
             <span className="breadcrumb">
-               <Link to={`/${entitySlug}`}>Quản lý {entityName}</Link>
+               <Link to={`/${slug}`}>Quản lý {name}</Link>
             </span>
             <span className="breadcrumb-separator">
                <i className="fas fa-chevron-right"></i>
             </span>
             <span className="breadcrumb-active">
-               <Link to="#">Thêm {entityName} mới</Link>
+               <Link to="#">Thêm {name} mới</Link>
             </span>
          </span>
       )
@@ -239,10 +239,10 @@ class ForCreatePage extends Component {
       const { renderErrors, renderForm, renderFormFooter } = this
       const { settings } = this.props
       const { entity } = settings
-      const { entityName } = entity
+      const { name } = entity
       const section = {
-         title: `Thêm ${entityName} mới`,
-         subtitle: `Thêm ${entityName} mới vào hệ thống`,
+         title: `Thêm ${name} mới`,
+         subtitle: `Thêm ${name} mới vào hệ thống`,
          footerRight: renderFormFooter()
       }
 
@@ -392,12 +392,12 @@ class ForCreatePage extends Component {
       const { onSubmit } = this
       const { settings } = this.props
       const { entity } = settings
-      const { entitySlug } = entity
+      const { slug } = entity
 
       return (
          <Fragment>
             <span className="button">
-               <Link to={`/${entitySlug}`}>
+               <Link to={`/quan-ly/${slug}`}>
                   <i className="fas fa-arrow-left"></i>&nbsp;&nbsp;Trở về
                </Link>
             </span>
@@ -427,4 +427,4 @@ class ForCreatePage extends Component {
    }
 }
 
-export default ForCreatePage
+export default withRouter(ForCreatePage)

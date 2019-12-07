@@ -1,39 +1,25 @@
 import React, { Component } from 'react'
 import ForViewPage from '../../components/ForViewPage'
-import { GENDERS } from '../../constants/'
 import apiRoutes from '../../routes/apis'
-import { khachHang } from '../../entities'
+import { nhaCungCap } from '../../entities'
 
-class KhachHangForView extends Component {
+class NhaCungCapForView extends Component {
    constructor(props) {
       super(props)
 
       this.settings = {
-         entity: khachHang,
-         api: apiRoutes.khachHang,
+         entity: nhaCungCap,
+         api: apiRoutes.nhaCungCap,
          fields: [
             {
-               label: 'Mã khách hàng',
-               propForValue: 'maKhachHang',
+               label: 'Mã nhà cung cấp',
+               propForValue: 'maNhaCungCap',
                type: 'input'
             },
             {
-               label: 'Họ và tên',
-               propForValue: 'tenKhachHang',
+               label: 'Tên nhà cung cấp',
+               propForValue: 'tenNhaCungCap',
                type: 'input'
-            },
-            {
-               label: 'Giới tính',
-               propForValue: 'gioiTinh',
-               type: 'select',
-               values: GENDERS,
-               propForItemValue: 'text',
-               propForItemText: 'text'
-            },
-            {
-               label: 'Ngày sinh',
-               propForValue: 'ngaySinh',
-               type: 'date'
             },
             {
                label: 'Số điện thoại',
@@ -69,4 +55,4 @@ class KhachHangForView extends Component {
    }
 }
 
-export default KhachHangForView
+export default NhaCungCapForView

@@ -1,46 +1,45 @@
 import React, { Component } from 'react'
 import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
-import { khachHang } from '../../entities'
+import { nhaCungCap } from '../../entities'
 
-class KhachHangForList extends Component {
+class NhaCungCapForList extends Component {
    constructor(props) {
       super(props)
 
       this.settings = {
-         entity: khachHang,
-         api: apiRoutes.khachHang,
+         entity: nhaCungCap,
+         api: apiRoutes.nhaCungCap,
          columns: [
             {
-               text: 'Mã khách hàng',
-               propForValue: 'maKhachHang',
-               propForSorting: 'MaKhachHang',
+               text: 'Mã nhà cung cấp',
+               propForValue: 'maNhaCungCap',
+               propForSorting: 'MaNhaCungCap',
                isBold: true,
                type: 'listAndPrint'
             },
             {
-               text: 'Họ và tên',
-               propForValue: 'tenKhachHang',
-               propForSorting: 'HoVaTen',
-               type: 'listAndPrint'
-            },
-            {
-               text: 'Giới tính',
-               propForValue: 'gioiTinh',
-               propForSorting: 'GioiTinh',
-               type: 'listAndPrint'
-            },
-            {
-               text: 'Ngày sinh',
-               propForValue: 'ngaySinh',
-               propForSorting: 'NgaySinh',
-               isDateTimeValue: true,
+               text: 'Tên nhà cung cấp',
+               propForValue: 'tenNhaCungCap',
+               propForSorting: 'TenNhaCungCap',
                type: 'listAndPrint'
             },
             {
                text: 'Số điện thoại',
                propForValue: 'soDienThoai',
                propForSorting: 'SoDienThoai',
+               type: 'listAndPrint'
+            },
+            {
+               text: 'Địa chỉ',
+               propForValue: 'soDienThoai',
+               propForSorting: 'DiaChi',
+               type: 'listAndPrint'
+            },
+            {
+               text: 'Ghi chú',
+               propForValue: 'ghiChu',
+               propForSorting: 'GhiChu',
                type: 'listAndPrint'
             }
          ]
@@ -62,4 +61,4 @@ class KhachHangForList extends Component {
    }
 }
 
-export default KhachHangForList
+export default NhaCungCapForList
