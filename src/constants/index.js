@@ -1,6 +1,12 @@
 const APP_SHORT_NAME = 'MFFMS'
 
-const APP_FULL_NAME = 'Mini Football Management System'
+const APP_NAME = 'Mini Football Management System'
+
+const APP_DESCRIPTION =
+   'Mini Football Management System - Hệ thống quản lý sân bóng đá mini'
+
+const APP_ABOUT =
+   'Đồ án môn học Phương pháp phát triển phần mềm hướng đối tượng (SE100.K16.PMCL)'
 
 const PAGE_SIZES = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000]
 
