@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
+import { khachHang } from '../../entities'
 
 class KhachHangForList extends Component {
    constructor(props) {
       super(props)
 
       this.settings = {
-         entityName: 'khách hàng',
-         entitySlug: 'khach-hang',
-         api: apiRoutes.khachHang,
+         entity: khachHang,
          columns: [
             {
                text: 'Mã khách hàng',

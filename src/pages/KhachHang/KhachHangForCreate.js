@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ForCreatePage from '../../components/ForCreatePage'
 import { GENDERS } from '../../constants/'
+import { khachHang } from '../../entities'
 import apiRoutes from '../../routes/apis'
 
 class KhachHangForCreate extends Component {
@@ -8,8 +9,7 @@ class KhachHangForCreate extends Component {
       super(props)
 
       this.settings = {
-         entityName: 'khách hàng',
-         entitySlug: 'khach-hang',
+         entity: khachHang,
          api: apiRoutes.khachHang,
          fields: [
             {

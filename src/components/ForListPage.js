@@ -230,7 +230,8 @@ class ForListPage extends Component {
 
    renderHeader = () => {
       const { settings } = this.props
-      const { entityName, entitySlug } = settings
+      const { entity } = settings
+      const { entityName, entitySlug } = entity
 
       return (
          <section className="breadcrumbs">
@@ -253,7 +254,8 @@ class ForListPage extends Component {
       const { refresh, importData, exportData, exportReport } = this
       const { data } = this.state
       const { settings } = this.props
-      const { entitySlug } = settings
+      const { entity } = settings
+      const { entitySlug } = entity
 
       return (
          <Fragment>
@@ -294,7 +296,8 @@ class ForListPage extends Component {
          renderPagination
       } = this
       const { settings } = this.props
-      const { entityName } = settings
+      const { entity } = settings
+      const { entityName } = entity
       const section = {
          title: `Danh sách ${entityName}`,
          subtitle: `Danh sách tất cả các ${entityName} hiện đang được quản lý`,
@@ -330,7 +333,7 @@ class ForListPage extends Component {
                />
             </div>
 
-            <div className="table-tabs">
+            {/* <div className="table-tabs">
                <span
                   className={status === 0 ? 'table-tab-active' : 'table-tab'}
                   onClick={() => changeStatus(0)}
@@ -353,7 +356,7 @@ class ForListPage extends Component {
                >
                   Đã xóa ({statusStats.inactive})
                </span>
-            </div>
+            </div> */}
          </div>
       )
    }
@@ -389,12 +392,13 @@ class ForListPage extends Component {
                      {column.text}
                   </th>
                ))}
-               <th onClick={() => sortByColumn('TrangThai')}>
+
+               {/* <th onClick={() => sortByColumn('TrangThai')}>
                   {isBeingSorted('TrangThai') && (
                      <i className="fas fa-sort sort-button"></i>
                   )}{' '}
                   Trạng thái
-               </th>
+               </th> */}
             </tr>
          </thead>
       )
@@ -415,7 +419,8 @@ class ForListPage extends Component {
       const { getCurrentStatusColors, getCurrentStatusText } = this
       const { data } = this.state
       const { settings } = this.props
-      const { entitySlug, columns } = settings
+      const { entity, columns } = settings
+      const { entitySlug } = entity
       const idColumn = columns[0].propForValue
 
       return data.map((record, index) => (
@@ -441,6 +446,10 @@ class ForListPage extends Component {
                   </li>
 
                   <li className="table-dropdown-menu-item">
+                     <Link to="#">Xóa khỏi danh sách</Link>
+                  </li>
+
+                  {/* <li className="table-dropdown-menu-item">
                      <Link to="#">Xóa tạm thời</Link>
                   </li>
 
@@ -452,7 +461,7 @@ class ForListPage extends Component {
 
                   <li className="table-dropdown-menu-item">
                      <Link to="#">Xóa vĩnh viễn</Link>
-                  </li>
+                  </li> */}
                </ul>
             </td>
 
@@ -467,14 +476,14 @@ class ForListPage extends Component {
                </td>
             ))}
 
-            <td>
+            {/* <td>
                <span
                   className="active-badge"
                   style={getCurrentStatusColors(record.trangThai)}
                >
                   {getCurrentStatusText(record.trangThai)}
                </span>
-            </td>
+            </td> */}
          </tr>
       ))
    }

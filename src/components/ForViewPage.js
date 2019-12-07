@@ -66,7 +66,8 @@ class ForViewPage extends Component {
 
    renderHeader = () => {
       const { settings } = this.props
-      const { entityName, entitySlug } = settings
+      const { entity } = settings
+      const { entityName, entitySlug } = entity
 
       return (
          <span className="breadcrumbs">
@@ -92,7 +93,8 @@ class ForViewPage extends Component {
    renderBody = () => {
       const { renderForm, renderFormFooter } = this
       const { settings } = this.props
-      const { entityName } = settings
+      const { entity } = settings
+      const { entityName } = entity
       const section = {
          title: `Xem thông tin ${entityName}`,
          subtitle: `Xem thông tin chi tiết của ${entityName}`,
@@ -189,7 +191,8 @@ class ForViewPage extends Component {
 
    renderFormFooter = () => {
       const { settings } = this.props
-      const { entitySlug } = settings
+      const { entity } = settings
+      const { entitySlug } = entity
 
       return (
          <Fragment>

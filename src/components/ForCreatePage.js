@@ -31,7 +31,8 @@ class ForCreatePage extends Component {
    createRecord = () => {
       const { editingData } = this.state
       const { settings, history } = this.props
-      const { api, entitySlug } = settings
+      const { api, entity } = settings
+      const { entitySlug } = entity
       const url = api.create
 
       return apiPost(url, editingData)
@@ -210,7 +211,8 @@ class ForCreatePage extends Component {
 
    renderHeader = () => {
       const { settings } = this.props
-      const { entityName, entitySlug } = settings
+      const { entity } = settings
+      const { entityName, entitySlug } = entity
 
       return (
          <span className="breadcrumbs">
@@ -236,7 +238,8 @@ class ForCreatePage extends Component {
    renderBody = () => {
       const { renderErrors, renderForm, renderFormFooter } = this
       const { settings } = this.props
-      const { entityName } = settings
+      const { entity } = settings
+      const { entityName } = entity
       const section = {
          title: `Thêm ${entityName} mới`,
          subtitle: `Thêm ${entityName} mới vào hệ thống`,
@@ -388,7 +391,8 @@ class ForCreatePage extends Component {
    renderFormFooter = () => {
       const { onSubmit } = this
       const { settings } = this.props
-      const { entitySlug } = settings
+      const { entity } = settings
+      const { entitySlug } = entity
 
       return (
          <Fragment>
