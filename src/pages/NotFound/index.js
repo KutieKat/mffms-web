@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 class NotFound extends Component {
-   render() {
+   ///// METHODS FOR RENDERING UI /////
+
+   renderComponent = () => {
       return (
          <div className="not-found">
             <img
@@ -25,6 +27,12 @@ class NotFound extends Component {
             </span>
          </div>
       )
+   }
+
+   render() {
+      const { renderComponent } = this
+
+      return renderComponent()
    }
 }
 

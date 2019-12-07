@@ -6,6 +6,7 @@ import KhachHangForCreate from '../pages/KhachHang/KhachHangForCreate'
 ///// NhanVien /////
 import NhanVienForList from '../pages/NhanVien/NhanVienForList'
 import NhanVienForCreate from '../pages/NhanVien/NhanVienForCreate'
+import NhanVienForView from '../pages/NhanVien/NhanVienForView'
 
 export default [
    ///// KhachHang /////
@@ -27,6 +28,10 @@ export default [
       path: '/nhan-vien',
       component: NhanVienForList,
       exact: true
+   },
+   {
+      path: '/nhan-vien/xem-thong-tin/:id',
+      component: NhanVienForView
    },
    {
       path: '/nhan-vien/them-moi',

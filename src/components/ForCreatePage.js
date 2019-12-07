@@ -417,7 +417,6 @@ class ForCreatePage extends Component {
    }
 
    render() {
-      console.log('STATE: ', this.state)
       const { renderComponent } = this
 
       return renderComponent()
