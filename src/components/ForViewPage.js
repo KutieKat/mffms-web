@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import Section from './Section'
 import { Link, withRouter } from 'react-router-dom'
 import { apiGet, formatDateString } from '../utils'
-import moment from 'moment'
 
 class ForViewPage extends Component {
    constructor(props) {
@@ -41,6 +40,25 @@ class ForViewPage extends Component {
          }
       } catch (error) {
          console.error(error)
+      }
+   }
+
+   ///// METHODS FOR COMPUTING VALUES /////
+
+   getFieldValue = (valueType, value) => {
+      if (value !== '' && value !== undefined) {
+         switch (valueType) {
+            case 'text': {
+               return value
+            }
+
+            case 'date': {
+               return formatDateString(value)
+            }
+         }
+         return value
+      } else {
+         return '(Chưa có dữ liệu)'
       }
    }
 
@@ -111,6 +129,7 @@ class ForViewPage extends Component {
    }
 
    renderField = field => {
+      const { getFieldValue } = this
       const { data } = this.state
       const { type, propForValue } = field
 
@@ -120,7 +139,7 @@ class ForViewPage extends Component {
                <input
                   className="form-input-disabled"
                   type="text"
-                  value={data && data[propForValue]}
+                  value={getFieldValue('text', data && data[propForValue])}
                   disabled={true}
                />
             )
@@ -131,11 +150,7 @@ class ForViewPage extends Component {
                <input
                   className="form-input-disabled"
                   type="text"
-                  value={
-                     data &&
-                     data[propForValue] &&
-                     formatDateString(data[propForValue])
-                  }
+                  value={getFieldValue('date', data && data[propForValue])}
                   disabled={true}
                />
             )
@@ -164,7 +179,7 @@ class ForViewPage extends Component {
             return (
                <textarea
                   className="form-input-disabled"
-                  value={data && data[propForValue]}
+                  value={getFieldValue('text', data && data[propForValue])}
                   disabled={true}
                ></textarea>
             )
