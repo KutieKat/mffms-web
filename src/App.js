@@ -101,7 +101,57 @@ class App extends Component {
       return <div className="main-header__center">{pathTitle}</div>
    }
 
-   renderHeaderRight = () => {}
+   renderHeaderRight = () => {
+      const { renderProfileInfo, renderProfileDropdownMenu } = this
+
+      return (
+         <div className="main-header__right">
+            {renderProfileInfo()}
+            {renderProfileDropdownMenu()}
+         </div>
+      )
+   }
+
+   renderProfileInfo = () => {
+      return (
+         <Fragment>
+            {/* <span className="main-header__profile-avatar">TD</span> */}
+            <div>
+               <div className="main-header__profile-name">Nguyễn Tiến Dũng</div>
+               <div className="main-header__profile-role">
+                  <i class="fas fa-user-circle"></i> Chủ sân
+               </div>
+            </div>
+         </Fragment>
+      )
+   }
+
+   renderProfileDropdownMenu = () => {
+      return (
+         <div className="main-header__dropdown-menu">
+            <ul className="main-nav__list">
+               <li className="main-nav__list-item">
+                  <NavLink to="#">
+                     <i className="fas fa-address-card"></i>&nbsp;&nbsp;Cập nhật
+                     thông tin
+                  </NavLink>
+               </li>
+               <li className="main-nav__list-item">
+                  <NavLink to="/ho-so/thay-doi-mat-khau">
+                     <i className="fas fa-lock"></i>&nbsp;&nbsp;Thay đổi mật
+                     khẩu
+                  </NavLink>
+               </li>
+               <li className="main-nav__list-item">
+                  <NavLink to="#">
+                     <i className="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Đăng
+                     xuất
+                  </NavLink>
+               </li>
+            </ul>
+         </div>
+      )
+   }
 
    renderMain = () => {
       const { renderMainLeft, renderMainRight } = this
