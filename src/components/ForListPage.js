@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import Section from './Section'
 import { PAGE_SIZES } from '../constants'
-import { formatDateString } from '../utils'
+import { formatDateString, scrollTop } from '../utils'
 import axios from 'axios'
 import { debounce } from 'debounce'
 import LoadingIndicator from './LoadingIndicator'
@@ -47,6 +47,7 @@ class ForListPage extends Component {
    componentDidMount() {
       const { fetchData } = this
 
+      scrollTop()
       fetchData()
    }
 

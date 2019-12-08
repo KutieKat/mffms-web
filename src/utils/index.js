@@ -73,3 +73,7 @@ export const isPhoneNumber = phone => {
 export const apiGet = (url, data) => axios.get(url, data)
 
 export const apiPost = (url, data) => axios.post(url, data)
+
+export const scrollTop = () => {
+   window.scrollTo(0, 0)
+}

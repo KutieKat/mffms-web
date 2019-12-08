@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import Section from './Section'
 import { Link, withRouter } from 'react-router-dom'
-import { apiGet, formatDateString } from '../utils'
+import { apiGet, formatDateString, scrollTop } from '../utils'
 import LoadingIndicator from './LoadingIndicator'
 
 class ForViewPage extends Component {
@@ -20,6 +20,10 @@ class ForViewPage extends Component {
       const { fetchData } = this
 
       fetchData()
+   }
+
+   componentDidMount() {
+      scrollTop()
    }
 
    ///// METHODS FOR INTERACTING WITH API /////

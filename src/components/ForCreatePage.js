@@ -3,7 +3,7 @@ import Section from './Section'
 import { Link, withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { isEmpty, isLength, isAfter, isNumeric } from 'validator'
-import { isEmptyObj, isPhoneNumber, apiPost } from '../utils'
+import { isEmptyObj, isPhoneNumber, apiPost, scrollTop } from '../utils'
 import LoadingIndicator from './LoadingIndicator'
 
 class ForCreatePage extends Component {
@@ -26,6 +26,10 @@ class ForCreatePage extends Component {
       const editingData = initializeEditingData()
 
       this.setState({ editingData })
+   }
+
+   componentDidMount() {
+      scrollTop()
    }
 
    ///// METHODS FOR INTERACTING WITH API /////
