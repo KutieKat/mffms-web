@@ -38,8 +38,8 @@ class ForListPage extends Component {
    ///// METHODS FOR REACT LIFECYCLES /////
 
    componentWillMount() {
-      const { initializeEditingData } = this
-      const searchData = initializeEditingData()
+      const { initializeSearchData } = this
+      const searchData = initializeSearchData()
 
       this.setState({ searchData })
    }
@@ -109,9 +109,13 @@ class ForListPage extends Component {
                })
             }
          } else {
+            this.setState({ loading: false })
+
             throw new Error(response.errors)
          }
       } catch (error) {
+         this.setState({ loading: false })
+
          console.error(error)
       }
    }
@@ -226,6 +230,13 @@ class ForListPage extends Component {
       )
    }
 
+   resetSearchData = () => {
+      const { initializeSearchData } = this
+      const searchData = initializeSearchData()
+
+      this.setState({ searchData })
+   }
+
    importData = () => {}
    exportData = () => {}
    exportReport = () => {}
@@ -240,15 +251,16 @@ class ForListPage extends Component {
 
    ///// METHODS FOR COMPUTING VALUES /////
 
-   initializeEditingData = () => {
+   initializeSearchData = () => {
       const { settings } = this.props
       const { columns } = settings
       let searchData = {}
 
       columns.forEach(field => {
-         const { searchType, propForValue } = field
+         const { search, propForValue } = field
+         const { type } = search
 
-         switch (searchType) {
+         switch (type) {
             case 'input': {
                searchData[propForValue] = ''
                break
@@ -394,53 +406,53 @@ class ForListPage extends Component {
       )
    }
 
-   renderToolbar = () => {
-      const { changeKeyword, changeStatus } = this
-      const { keyword, status, statusStats } = this.state
+   // renderToolbar = () => {
+   //    const { changeKeyword, changeStatus } = this
+   //    const { keyword, status, statusStats } = this.state
 
-      return (
-         <div className="section-body-toolbar">
-            <div className="search-box__wrapper">
-               <span className="search-button">
-                  <i className="fas fa-search"></i>
-               </span>
+   //    return (
+   //       <div className="section-body-toolbar">
+   //          <div className="search-box__wrapper">
+   //             <span className="search-button">
+   //                <i className="fas fa-search"></i>
+   //             </span>
 
-               <input
-                  type="text"
-                  className="search-box"
-                  placeholder="Nhập từ khóa cần tìm kiếm"
-                  value={keyword}
-                  onChange={changeKeyword}
-               />
-            </div>
+   //             <input
+   //                type="text"
+   //                className="search-box"
+   //                placeholder="Nhập từ khóa cần tìm kiếm"
+   //                value={keyword}
+   //                onChange={changeKeyword}
+   //             />
+   //          </div>
 
-            <div className="table-tabs">
-               <span
-                  className={status === 0 ? 'table-tab-active' : 'table-tab'}
-                  onClick={() => changeStatus(0)}
-               >
-                  Tất cả ({statusStats.all})
-               </span>
+   //          <div className="table-tabs">
+   //             <span
+   //                className={status === 0 ? 'table-tab-active' : 'table-tab'}
+   //                onClick={() => changeStatus(0)}
+   //             >
+   //                Tất cả ({statusStats.all})
+   //             </span>
 
-               <span
-                  className={
-                     this.state.status === 1 ? 'table-tab-active' : 'table-tab'
-                  }
-                  onClick={() => changeStatus(1)}
-               >
-                  Đang hiển thị ({statusStats.active})
-               </span>
+   //             <span
+   //                className={
+   //                   this.state.status === 1 ? 'table-tab-active' : 'table-tab'
+   //                }
+   //                onClick={() => changeStatus(1)}
+   //             >
+   //                Đang hiển thị ({statusStats.active})
+   //             </span>
 
-               <span
-                  className={status === -1 ? 'table-tab-active' : 'table-tab'}
-                  onClick={() => changeStatus(-1)}
-               >
-                  Đã xóa ({statusStats.inactive})
-               </span>
-            </div>
-         </div>
-      )
-   }
+   //             <span
+   //                className={status === -1 ? 'table-tab-active' : 'table-tab'}
+   //                onClick={() => changeStatus(-1)}
+   //             >
+   //                Đã xóa ({statusStats.inactive})
+   //             </span>
+   //          </div>
+   //       </div>
+   //    )
+   // }
 
    renderTable = () => {
       const { renderTableHeader, renderTableToolbar, renderTableBody } = this
@@ -487,7 +499,8 @@ class ForListPage extends Component {
    }
 
    renderTableToolbar = () => {
-      const { renderTableToolbarCell } = this
+      const { renderTableToolbarCell, resetSearchData } = this
+      const { searchData } = this.state
       const { settings } = this.props
       const { columns } = settings
 
@@ -495,7 +508,14 @@ class ForListPage extends Component {
          <thead>
             <tr>
                <th className="thead-cell-centered">
-                  <i class="fas fa-search"></i>
+                  {searchData !== null ? (
+                     <i
+                        className="fas fa-times-circle reset-search-data"
+                        onClick={resetSearchData}
+                     ></i>
+                  ) : (
+                     <i className="fas fa-search"></i>
+                  )}
                </th>
 
                {columns.map((column, index) => (
@@ -549,6 +569,7 @@ class ForListPage extends Component {
                   value={searchData[propForValue]}
                   onChange={e => changeSearchData(e, propForValue)}
                >
+                  <option value="-1">Tất cả</option>
                   {values.length > 0 &&
                      values.map((record, index) => (
                         <option key={index} value={record[propForItemValue]}>
@@ -569,7 +590,7 @@ class ForListPage extends Component {
 
       return (
          <LoadingIndicator
-            isLoading={loadingTableData}
+            isLoading={false}
             wrapperTag="tbody"
             colSpan={columns.length}
          >

@@ -1047,6 +1047,12 @@ tr th:not(:first-child) {
    min-width: 120px;
 }
 
+.reset-search-data {
+   font-size: 20px;
+   color: rgba(0, 0, 0, 0.65);
+   margin-top: 6px;
+}
+
 .loading-indicator {
    display: flex;
    flex-direction: column;
