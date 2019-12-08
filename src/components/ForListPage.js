@@ -582,7 +582,6 @@ class ForListPage extends Component {
    }
 
    render() {
-      console.log(this.props)
       const { renderComponent } = this
 
       return renderComponent()

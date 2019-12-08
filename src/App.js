@@ -20,7 +20,10 @@ class App extends Component {
    ///// METHODS FOR REACT LIFECYCLES /////
 
    componentDidMount() {
-      this.setState({ pathTitle: '' })
+      const { getPathTitle } = this
+      const pathTitle = getPathTitle()
+
+      this.setState({ pathTitle })
    }
 
    ///// METHODS FOR HANDLING UI EVENTS /////
@@ -34,6 +37,32 @@ class App extends Component {
          logOut()
          localStorage.removeItem('MFFMS_USER')
       }
+   }
+
+   ///// METHODS FOR COMPUTING VALUES /////
+
+   getPathTitle = () => {
+      const { location } = this.props
+      const { pathname } = location
+      const standardPathName = pathname
+         .split('/')
+         .slice(0, 3)
+         .join('/')
+      let pathTitle = ''
+
+      menu.forEach(item => {
+         const { items } = item
+
+         items.forEach(menuItem => {
+            const { title, path } = menuItem
+
+            if (path === standardPathName) {
+               pathTitle = title
+            }
+         })
+      })
+
+      return pathTitle
    }
 
    ///// METHODS FOR RENDERING UI /////
