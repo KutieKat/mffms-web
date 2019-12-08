@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
 import { nhanVien } from '../../entities'
+import { GENDERS } from '../../constants'
 
 class NhanVienForList extends Component {
    constructor(props) {
@@ -16,38 +17,63 @@ class NhanVienForList extends Component {
                propForValue: 'maNhanVien',
                propForSorting: 'MaNhanVien',
                isBold: true,
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo mã'
+               },
+               displayType: 'listAndPrint'
             },
             {
                text: 'Họ và tên',
                propForValue: 'tenNhanVien',
                propForSorting: 'TenNhanVien',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo họ và tên'
+               },
+               displayType: 'listAndPrint'
             },
             {
                text: 'Giới tính',
                propForValue: 'gioiTinh',
                propForSorting: 'GioiTinh',
-               type: 'listAndPrint'
+               search: {
+                  type: 'select',
+                  values: GENDERS,
+                  propForItemValue: 'text',
+                  propForItemText: 'text'
+               },
+               displayType: 'listAndPrint'
             },
             {
                text: 'Ngày sinh',
                propForValue: 'ngaySinh',
                propForSorting: 'NgaySinh',
                isDateTimeValue: true,
-               type: 'listAndPrint'
+               displayType: 'listAndPrint',
+               search: {
+                  type: 'date'
+               }
             },
             {
                text: 'Số điện thoại',
                propForValue: 'soDienThoai',
                propForSorting: 'SoDienThoai',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo số điện thoại'
+               },
+               displayType: 'listAndPrint'
             },
             {
-               text: 'Tiền lương',
+               text: 'Tiền lương (VNĐ)',
                propForValue: 'luong',
                propForSorting: 'Luong',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo mức lương'
+               },
+               displayType: 'listAndPrint'
             }
          ]
       }

@@ -25,13 +25,21 @@ class ForListPage extends Component {
          pageNumber: 1,
          sortField: 'ThoiGianTao',
          sortOrder: 'DESC',
-         hasNextPage: false
+         hasNextPage: false,
+         searchData: null
       }
 
       this.fetchData = debounce(this.fetchData, 50)
    }
 
    ///// METHODS FOR REACT LIFECYCLES /////
+
+   componentWillMount() {
+      const { initializeEditingData } = this
+      const searchData = initializeEditingData()
+
+      this.setState({ searchData })
+   }
 
    componentDidMount() {
       const { fetchData } = this
@@ -159,6 +167,19 @@ class ForListPage extends Component {
       this.setState({ sortField, sortOrder }, fetchData)
    }
 
+   changeSearchData = (e, fieldName) => {
+      const { searchData } = this.state
+      const value = e.target.value
+
+      if (typeof value === 'number') {
+         value = parseInt(value)
+      }
+
+      searchData[fieldName] = value
+
+      this.setState({ searchData })
+   }
+
    refresh = () => {
       const { fetchData } = this
 
@@ -188,6 +209,42 @@ class ForListPage extends Component {
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
+
+   initializeEditingData = () => {
+      const { settings } = this.props
+      const { columns } = settings
+      let searchData = {}
+
+      columns.forEach(field => {
+         const { searchType, propForValue } = field
+
+         switch (searchType) {
+            case 'input': {
+               searchData[propForValue] = ''
+               break
+            }
+
+            // case 'date': {
+            //    searchData[propForValue] = moment().format('YYYY-MM-DD')
+            //    break
+            // }
+
+            // case 'select': {
+            //    const { values, propForItemValue } = field
+
+            //    searchData[propForValue] = values[0][propForItemValue]
+            //    break
+            // }
+
+            case 'textarea': {
+               searchData[propForValue] = ''
+               break
+            }
+         }
+      })
+
+      return searchData
+   }
 
    getPageNumbers = () => {
       const { totalPages } = this.state
@@ -289,12 +346,7 @@ class ForListPage extends Component {
    }
 
    renderBody = () => {
-      const {
-         renderSectionHeaderRight,
-         renderToolbar,
-         renderTable,
-         renderPagination
-      } = this
+      const { renderSectionHeaderRight, renderTable, renderPagination } = this
       const { settings } = this.props
       const { entity } = settings
       const { name } = entity
@@ -306,7 +358,6 @@ class ForListPage extends Component {
 
       return (
          <Section section={section}>
-            {renderToolbar()}
             {renderTable()}
             {renderPagination()}
          </Section>
@@ -333,7 +384,7 @@ class ForListPage extends Component {
                />
             </div>
 
-            {/* <div className="table-tabs">
+            <div className="table-tabs">
                <span
                   className={status === 0 ? 'table-tab-active' : 'table-tab'}
                   onClick={() => changeStatus(0)}
@@ -356,17 +407,18 @@ class ForListPage extends Component {
                >
                   Đã xóa ({statusStats.inactive})
                </span>
-            </div> */}
+            </div>
          </div>
       )
    }
 
    renderTable = () => {
-      const { renderTableHeader, renderTableBody } = this
+      const { renderTableHeader, renderTableToolbar, renderTableBody } = this
 
       return (
          <table className="table">
             {renderTableHeader()}
+            {renderTableToolbar()}
             {renderTableBody()}
          </table>
       )
@@ -402,6 +454,81 @@ class ForListPage extends Component {
             </tr>
          </thead>
       )
+   }
+
+   renderTableToolbar = () => {
+      const { renderTableToolbarCell } = this
+      const { settings } = this.props
+      const { columns } = settings
+
+      return (
+         <thead>
+            <tr>
+               <th className="thead-cell-centered">
+                  <i class="fas fa-search"></i>
+               </th>
+
+               {columns.map((column, index) => (
+                  <th key={index}>{renderTableToolbarCell(column)}</th>
+               ))}
+            </tr>
+         </thead>
+      )
+   }
+
+   renderTableToolbarCell = column => {
+      const { changeSearchData } = this
+      const { searchData } = this.state
+      const { search, propForValue } = column
+      const { type, placeholder } = search
+
+      switch (type) {
+         case 'input': {
+            return (
+               <input
+                  className="form-input-outline"
+                  type="text"
+                  placeholder={placeholder}
+                  value={searchData[propForValue]}
+                  onChange={e => changeSearchData(e, propForValue)}
+               />
+            )
+         }
+
+         // case 'date': {
+         //    return (
+         //       <input
+         //          className="form-input-outline"
+         //          type="date"
+         //          placeholder={placeholder}
+         //          value={editingData[propForValue]}
+         //          onChange={e => changeEditingData(e, propForValue)}
+         //          onFocus={hideAlert}
+         //          disabled={disabled}
+         //       />
+         //    )
+         // }
+
+         case 'select': {
+            const { search } = column
+            const { values, propForItemText, propForItemValue } = search
+
+            return (
+               <select
+                  className="form-input-outline"
+                  value={searchData[propForValue]}
+                  onChange={e => changeSearchData(e, propForValue)}
+               >
+                  {values.length > 0 &&
+                     values.map((record, index) => (
+                        <option key={index} value={record[propForItemValue]}>
+                           {record[propForItemText]}
+                        </option>
+                     ))}
+               </select>
+            )
+         }
+      }
    }
 
    renderTableBody = () => {

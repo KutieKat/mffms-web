@@ -16,25 +16,61 @@ class SanBongForList extends Component {
                propForValue: 'maSanBong',
                propForSorting: 'MaSanBong',
                isBold: true,
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo mã'
+               },
+               displayType: 'listAndPrint'
             },
             {
                text: 'Tên sân bóng',
                propForValue: 'tenSanBong',
                propForSorting: 'TenSanBong',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo tên'
+               },
+               displayType: 'listAndPrint'
             },
             {
-               text: 'Diện tích',
+               text: 'Chiều dài (m)',
+               propForValue: 'chieuDai',
+               propForSorting: 'ChieuDai',
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo chiều dài'
+               },
+               displayType: 'listAndPrint'
+            },
+            {
+               text: 'Chiều rộng (m)',
+               propForValue: 'chieuRong',
+               propForSorting: 'ChieuRong',
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo chiều rộng'
+               },
+               displayType: 'listAndPrint'
+            },
+            {
+               text: 'Diện tích (m2)',
                propForValue: 'dienTich',
                propForSorting: 'dienTich',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo diện tích'
+               },
+               displayType: 'listAndPrint'
             },
             {
                text: 'Ghi chú',
                propForValue: 'ghiChu',
                propForSorting: 'GhiChu',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo ghi chú'
+               },
+               displayType: 'listAndPrint'
             }
          ]
       }

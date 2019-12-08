@@ -15,32 +15,52 @@ class NhaCungCapForList extends Component {
                text: 'Mã nhà cung cấp',
                propForValue: 'maNhaCungCap',
                propForSorting: 'MaNhaCungCap',
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo mã'
+               },
                isBold: true,
-               type: 'listAndPrint'
+               displayType: 'listAndPrint'
             },
             {
                text: 'Tên nhà cung cấp',
                propForValue: 'tenNhaCungCap',
                propForSorting: 'TenNhaCungCap',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo tên'
+               },
+               displayType: 'listAndPrint'
             },
             {
                text: 'Số điện thoại',
                propForValue: 'soDienThoai',
                propForSorting: 'SoDienThoai',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo số điện thoại'
+               },
+               displayType: 'listAndPrint'
             },
             {
                text: 'Địa chỉ',
                propForValue: 'soDienThoai',
                propForSorting: 'DiaChi',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo địa chỉ'
+               },
+               displayType: 'listAndPrint'
             },
             {
                text: 'Ghi chú',
                propForValue: 'ghiChu',
                propForSorting: 'GhiChu',
-               type: 'listAndPrint'
+               search: {
+                  type: 'input',
+                  placeholder: 'Tìm theo ghi chú'
+               },
+               displayType: 'listAndPrint'
             }
          ]
       }

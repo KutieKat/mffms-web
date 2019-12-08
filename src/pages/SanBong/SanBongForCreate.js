@@ -25,27 +25,35 @@ class SanBongForCreate extends Component {
                ]
             },
             {
-               label: 'Diện tích',
-               propForValue: 'dienTich',
-               placeholder: 'Nhập diện tích của sân bóng',
-               type: 'textarea',
+               label: 'Chiều dài',
+               propForValue: 'chieuDai',
+               placeholder: 'Nhập chiều dài của sân bóng',
+               type: 'input',
                validators: [
                   {
                      rule: 'isNumeric',
                      message:
-                        'Diện tích của sân bóng chỉ được bao gồm các chữ số (0-9)!'
-                  },
+                        'Chiều dài của sân bóng chỉ được bao gồm các chữ số (0-9)!'
+                  }
+               ]
+            },
+            {
+               label: 'Chiều rộng',
+               propForValue: 'chieuRong',
+               placeholder: 'Nhập chiều rộng của sân bóng',
+               type: 'input',
+               validators: [
                   {
-                     rule: 'notEmpty',
+                     rule: 'isNumeric',
                      message:
-                        'Diện tích của sân bóng là thông tin bắt buộc và không được để trống!'
+                        'Chiều rộng của sân bóng chỉ được bao gồm các chữ số (0-9)!'
                   }
                ]
             },
             {
                label: 'Ghi chú',
                propForValue: 'ghiChu',
-               placeholder: 'Nhập ghi chú về khách hàng (nếu có)',
+               placeholder: 'Nhập ghi chú về sân bóng (nếu có)',
                type: 'textarea'
             }
          ]
