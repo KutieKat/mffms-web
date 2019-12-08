@@ -74,6 +74,8 @@ export const apiGet = (url, data) => axios.get(url, data)
 
 export const apiPost = (url, data) => axios.post(url, data)
 
+export const apiDelete = url => axios.delete(url)
+
 export const scrollTop = () => {
    window.scrollTo(0, 0)
 }

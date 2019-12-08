@@ -1053,6 +1053,10 @@ tr th:not(:first-child) {
    margin-top: 6px;
 }
 
+.popup-header__main-section img {
+   user-select: none;
+}
+
 .loading-indicator {
    display: flex;
    flex-direction: column;

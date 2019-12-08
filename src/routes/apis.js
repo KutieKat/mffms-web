@@ -13,7 +13,7 @@ export default {
       create: baseKhachHangApi + '/Create',
       createMultiple: baseKhachHangApi + '/CreateMultiple',
       updateById: baseKhachHangApi + '/UpdateById',
-      permanentlyDeleteById: baseKhachHangApi + '/PermanentlyDeleteById'
+      deleteById: baseKhachHangApi + '/PermanentlyDeleteById'
    },
    nhanVien: {
       getAll: baseNhanVienApi + '/GetAll',
@@ -21,7 +21,7 @@ export default {
       create: baseNhanVienApi + '/Create',
       createMultiple: baseNhanVienApi + '/CreateMultiple',
       updateById: baseNhanVienApi + '/UpdateById',
-      permanentlyDeleteById: baseNhanVienApi + '/PermanentlyDeleteById'
+      deleteById: baseNhanVienApi + '/PermanentlyDeleteById'
    },
    nhaCungCap: {
       getAll: baseNhaCungCapApi + '/GetAll',
@@ -29,7 +29,7 @@ export default {
       create: baseNhaCungCapApi + '/Create',
       createMultiple: baseNhaCungCapApi + '/CreateMultiple',
       updateById: baseNhaCungCapApi + '/UpdateById',
-      permanentlyDeleteById: baseNhaCungCapApi + '/PermanentlyDeleteById'
+      deleteById: baseNhaCungCapApi + '/PermanentlyDeleteById'
    },
    sanBong: {
       getAll: baseSanBongApi + '/GetAll',
@@ -37,7 +37,7 @@ export default {
       create: baseSanBongApi + '/Create',
       createMultiple: baseSanBongApi + '/CreateMultiple',
       updateById: baseSanBongApi + '/UpdateById',
-      permanentlyDeleteById: baseSanBongApi + '/PermanentlyDeleteById'
+      deleteById: baseSanBongApi + '/PermanentlyDeleteById'
    },
    dichVu: {
       getAll: baseDichVuApi + '/GetAll',
@@ -45,7 +45,7 @@ export default {
       create: baseDichVuApi + '/Create',
       createMultiple: baseDichVuApi + '/CreateMultiple',
       updateById: baseDichVuApi + '/UpdateById',
-      permanentlyDeleteById: baseDichVuApi + '/PermanentlyDeleteById'
+      deleteById: baseDichVuApi + '/PermanentlyDeleteById'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',

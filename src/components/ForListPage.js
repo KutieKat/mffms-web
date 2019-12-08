@@ -6,6 +6,7 @@ import { formatDateString, scrollTop } from '../utils'
 import axios from 'axios'
 import { debounce } from 'debounce'
 import LoadingIndicator from './LoadingIndicator'
+import DeleteDialog from './DeleteDialog'
 
 class ForListPage extends Component {
    constructor(props) {
@@ -29,7 +30,9 @@ class ForListPage extends Component {
          hasNextPage: false,
          searchData: null,
          loading: true,
-         loadingTableData: false
+         loadingTableData: false,
+         showDeleteDialog: false,
+         recordToDelete: ''
       }
 
       this.fetchData = debounce(this.fetchData, 50)
@@ -241,6 +244,26 @@ class ForListPage extends Component {
    importData = () => {}
    exportData = () => {}
    exportReport = () => {}
+
+   toggleShowDeleteDialog = () => {
+      const { showDeleteDialog } = this.state
+
+      this.setState({ showDeleteDialog: !showDeleteDialog })
+   }
+
+   deleteById = recordId => {
+      const { toggleShowDeleteDialog } = this
+      const recordToDelete = recordId
+
+      this.setState({ recordToDelete }, toggleShowDeleteDialog)
+   }
+
+   deleteByIdOnSuccess = () => {
+      const { toggleShowDeleteDialog, refresh } = this
+
+      toggleShowDeleteDialog()
+      refresh()
+   }
 
    ///// METHODS FOR CHECKING VALUES /////
 
@@ -601,7 +624,7 @@ class ForListPage extends Component {
    }
 
    renderTableData = () => {
-      const { getCurrentStatusColors, getCurrentStatusText } = this
+      const { getCurrentStatusColors, getCurrentStatusText, deleteById } = this
       const { data } = this.state
       const { settings } = this.props
       const { entity, columns } = settings
@@ -630,7 +653,10 @@ class ForListPage extends Component {
                      </Link>
                   </li>
 
-                  <li className="table-dropdown-menu-item">
+                  <li
+                     className="table-dropdown-menu-item"
+                     onClick={() => deleteById(record[idColumn])}
+                  >
                      <Link to="#">Xóa khỏi danh sách</Link>
                   </li>
 
@@ -755,14 +781,36 @@ class ForListPage extends Component {
       )
    }
 
+   renderDialogs = () => {
+      const { toggleShowDeleteDialog, deleteByIdOnSuccess } = this
+      const { showDeleteDialog, recordToDelete } = this.state
+      const { settings } = this.props
+      const { entity, api } = settings
+      const deleteDialogSettings = {
+         isOpen: showDeleteDialog,
+         onClose: toggleShowDeleteDialog,
+         onSuccess: deleteByIdOnSuccess,
+         entity,
+         id: recordToDelete,
+         api
+      }
+
+      return (
+         <Fragment>
+            <DeleteDialog settings={deleteDialogSettings} />
+         </Fragment>
+      )
+   }
+
    renderComponent = () => {
-      const { renderHeader, renderBody } = this
+      const { renderHeader, renderBody, renderDialogs } = this
       const { loading } = this.state
 
       return (
          <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
+            {renderDialogs()}
          </LoadingIndicator>
       )
    }
