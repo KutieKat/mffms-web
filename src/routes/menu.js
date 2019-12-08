@@ -35,12 +35,7 @@ const menu = [
          {
             title: 'Quản lý cài đặt',
             path: '/he-thong/cai-dat',
-            icon: 'fas fa-sliders-h'
-         },
-         {
-            title: 'Đăng xuất',
-            path: '#',
-            icon: 'fas fa-sign-out-alt'
+            icon: 'fas fa-tools'
          }
       ]
    }
