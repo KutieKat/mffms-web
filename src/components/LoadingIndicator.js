@@ -4,20 +4,55 @@ class LoadingIndicator extends Component {
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
-      const { isLoading, children } = this.props
+      const { isLoading, children, wrapperTag, colSpan } = this.props
 
-      return isLoading ? (
-         <div className="loading-indicator">
-            <div className="lds-ripple">
-               <div></div>
-               <div></div>
-            </div>
+      if (isLoading) {
+         switch (wrapperTag) {
+            case 'tobdy': {
+               return (
+                  <tbody className="loading-indicator">
+                     <tr colSpan={colSpan}>
+                        <td>
+                           <div className="lds-ripple">
+                              <div></div>
+                              <div></div>
+                           </div>
 
-            <div>Đang tải dữ liệu, vui lòng chờ đợi trong giây lát</div>
-         </div>
-      ) : (
-         <div className="animated fadeIn">{children}</div>
-      )
+                           <div>
+                              Đang tải dữ liệu, vui lòng chờ đợi trong giây lát
+                           </div>
+                        </td>
+                     </tr>
+                  </tbody>
+               )
+            }
+
+            default: {
+               return (
+                  <div className="loading-indicator">
+                     <div className="lds-ripple">
+                        <div></div>
+                        <div></div>
+                     </div>
+
+                     <div>
+                        Đang tải dữ liệu, vui lòng chờ đợi trong giây lát
+                     </div>
+                  </div>
+               )
+            }
+         }
+      } else {
+         switch (wrapperTag) {
+            case 'tbody': {
+               return <tbody className="animated fadeIn">{children}</tbody>
+            }
+
+            default: {
+               return <div className="animated fadeIn">{children}</div>
+            }
+         }
+      }
    }
 
    render() {

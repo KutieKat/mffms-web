@@ -296,7 +296,7 @@ ul {
 }
 
 .table thead {
-   border-bottom: 3px solid #3d4145;
+   /* border-bottom: 3px solid #3d4145; */
 }
 
 .table thead th {

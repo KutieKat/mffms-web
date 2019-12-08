@@ -28,7 +28,8 @@ class ForListPage extends Component {
          sortOrder: 'DESC',
          hasNextPage: false,
          searchData: null,
-         loading: true
+         loading: true,
+         loadingTableData: false
       }
 
       this.fetchData = debounce(this.fetchData, 50)
@@ -72,7 +73,7 @@ class ForListPage extends Component {
       return params
    }
 
-   fetchData = async () => {
+   fetchData = async (isFirstLoad = true) => {
       const { formRequestParams } = this
       const { settings } = this.props
       const { api } = settings
@@ -90,13 +91,23 @@ class ForListPage extends Component {
                statusStatistics
             } = response.data.result
 
-            this.setState({
-               totalItems,
-               totalPages,
-               data,
-               statusStatistics,
-               loading: false
-            })
+            if (isFirstLoad) {
+               this.setState({
+                  totalItems,
+                  totalPages,
+                  data,
+                  statusStatistics,
+                  loading: false
+               })
+            } else {
+               this.setState({
+                  totalItems,
+                  totalPages,
+                  data,
+                  statusStatistics,
+                  loadingTableData: false
+               })
+            }
          } else {
             throw new Error(response.errors)
          }
@@ -119,15 +130,21 @@ class ForListPage extends Component {
    }
 
    changePageSize = e => {
+      const { fetchData } = this
       const pageSize = parseInt(e.target.value)
 
-      this.setState({ pageSize })
+      this.setState({ pageSize, loadingTableData: true }, () =>
+         fetchData(false)
+      )
    }
 
    changePageNumber = e => {
+      const { fetchData } = this
       const pageNumber = parseInt(e.target.value)
 
-      this.setState({ pageNumber })
+      this.setState({ pageNumber, loadingTableData: true }, () =>
+         fetchData(false)
+      )
    }
 
    showPrevPage = () => {
@@ -138,7 +155,9 @@ class ForListPage extends Component {
          pageNumber--
       }
 
-      this.setState({ pageNumber }, fetchData)
+      this.setState({ pageNumber, loadingTableData: true }, () =>
+         fetchData(false)
+      )
    }
 
    showNextPage = () => {
@@ -149,7 +168,9 @@ class ForListPage extends Component {
          pageNumber++
       }
 
-      this.setState({ pageNumber }, fetchData)
+      this.setState({ pageNumber, loadingTableData: true }, () =>
+         fetchData(false)
+      )
    }
 
    sortByColumn = columnName => {
@@ -167,10 +188,13 @@ class ForListPage extends Component {
          }
       }
 
-      this.setState({ sortField, sortOrder, loading: true }, fetchData)
+      this.setState({ sortField, sortOrder, loadingTableData: true }, () =>
+         fetchData(false)
+      )
    }
 
    changeSearchData = (e, fieldName) => {
+      const { fetchData } = this
       const { searchData } = this.state
       const value = e.target.value
 
@@ -180,7 +204,9 @@ class ForListPage extends Component {
 
       searchData[fieldName] = value
 
-      this.setState({ searchData })
+      this.setState({ searchData, loadingTableData: true }, () =>
+         fetchData(false)
+      )
    }
 
    refresh = () => {
@@ -537,12 +563,18 @@ class ForListPage extends Component {
 
    renderTableBody = () => {
       const { renderTableData, renderEmptyTable } = this
-      const { data } = this.state
+      const { data, loadingTableData } = this.state
+      const { settings } = this.props
+      const { columns } = settings
 
       return (
-         <tbody>
+         <LoadingIndicator
+            isLoading={loadingTableData}
+            wrapperTag="tbody"
+            colSpan={columns.length}
+         >
             {data.length > 0 ? renderTableData() : renderEmptyTable()}
-         </tbody>
+         </LoadingIndicator>
       )
    }
 
