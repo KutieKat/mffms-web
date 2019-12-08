@@ -119,7 +119,7 @@ class App extends Component {
             <div>
                <div className="main-header__profile-name">Nguyễn Tiến Dũng</div>
                <div className="main-header__profile-role">
-                  <i class="fas fa-user-circle"></i> Chủ sân
+                  <i className="fas fa-user-circle"></i> Chủ sân
                </div>
             </div>
          </Fragment>
