@@ -2,13 +2,15 @@ import React, { Component, Fragment } from 'react'
 import Section from './Section'
 import { Link, withRouter } from 'react-router-dom'
 import { apiGet, formatDateString } from '../utils'
+import LoadingIndicator from './LoadingIndicator'
 
 class ForViewPage extends Component {
    constructor(props) {
       super(props)
 
       this.state = {
-         data: null
+         data: null,
+         loading: true
       }
    }
 
@@ -34,7 +36,7 @@ class ForViewPage extends Component {
          if (response && response.data.status === 'SUCCESS') {
             const { data } = response.data.result
 
-            this.setState({ data })
+            this.setState({ data, loading: false })
          } else {
             throw new Error(response.errors)
          }
@@ -207,12 +209,13 @@ class ForViewPage extends Component {
 
    renderComponent = () => {
       const { renderHeader, renderBody } = this
+      const { loading } = this.state
 
       return (
-         <Fragment>
+         <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
-         </Fragment>
+         </LoadingIndicator>
       )
    }
 

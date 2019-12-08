@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { isEmpty, isLength, isAfter, isNumeric } from 'validator'
 import { isEmptyObj, isPhoneNumber, apiPost } from '../utils'
+import LoadingIndicator from './LoadingIndicator'
 
 class ForCreatePage extends Component {
    constructor(props) {
@@ -13,7 +14,8 @@ class ForCreatePage extends Component {
          errors: null,
          serverErrors: null,
          editingData: null,
-         showAlert: false
+         showAlert: false,
+         loading: false
       }
    }
 
@@ -37,9 +39,11 @@ class ForCreatePage extends Component {
 
       return apiPost(url, editingData)
          .then(response => {
+            this.setState({ loading: false })
             history.push(`/quan-ly/${slug}`)
          })
          .catch(error => {
+            this.setState({ loading: false })
             // const { errors } = error.response.data.result
             // this.setState({ showAlert: true })
          })
@@ -69,7 +73,7 @@ class ForCreatePage extends Component {
       const errors = validateFields()
 
       if (!errors) {
-         this.setState({ showAlert: false }, createRecord)
+         this.setState({ showAlert: false, loading: true }, createRecord)
       } else {
          this.setState({ errors, showAlert: true })
       }
@@ -411,12 +415,13 @@ class ForCreatePage extends Component {
 
    renderComponent = () => {
       const { renderHeader, renderBody } = this
+      const { loading } = this.state
 
       return (
-         <Fragment>
+         <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
-         </Fragment>
+         </LoadingIndicator>
       )
    }
 

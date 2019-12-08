@@ -5,6 +5,7 @@ import { PAGE_SIZES } from '../constants'
 import { formatDateString } from '../utils'
 import axios from 'axios'
 import { debounce } from 'debounce'
+import LoadingIndicator from './LoadingIndicator'
 
 class ForListPage extends Component {
    constructor(props) {
@@ -26,7 +27,8 @@ class ForListPage extends Component {
          sortField: 'ThoiGianTao',
          sortOrder: 'DESC',
          hasNextPage: false,
-         searchData: null
+         searchData: null,
+         loading: true
       }
 
       this.fetchData = debounce(this.fetchData, 50)
@@ -92,7 +94,8 @@ class ForListPage extends Component {
                totalItems,
                totalPages,
                data,
-               statusStatistics
+               statusStatistics,
+               loading: false
             })
          } else {
             throw new Error(response.errors)
@@ -164,7 +167,7 @@ class ForListPage extends Component {
          }
       }
 
-      this.setState({ sortField, sortOrder }, fetchData)
+      this.setState({ sortField, sortOrder, loading: true }, fetchData)
    }
 
    changeSearchData = (e, fieldName) => {
@@ -190,7 +193,8 @@ class ForListPage extends Component {
             pageNumber: 1,
             pageSize: 10,
             keyword: '',
-            status: 0
+            status: 0,
+            loading: true
          },
          fetchData
       )
@@ -699,12 +703,13 @@ class ForListPage extends Component {
 
    renderComponent = () => {
       const { renderHeader, renderBody } = this
+      const { loading } = this.state
 
       return (
-         <Fragment>
+         <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
-         </Fragment>
+         </LoadingIndicator>
       )
    }
 
