@@ -14,7 +14,7 @@ class NhaCungCapForCreate extends Component {
             {
                label: 'Tên nhà cung cấp',
                propForValue: 'tenNhaCungCap',
-               placeholder: 'Nhập tên của của nhà cung cấp',
+               placeholder: 'Nhập tên của nhà cung cấp',
                type: 'input',
                validators: [
                   {
