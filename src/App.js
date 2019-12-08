@@ -1,17 +1,11 @@
 import React, { Component, Fragment } from 'react'
-import {
-   BrowserRouter as Router,
-   Route,
-   Switch,
-   NavLink,
-   withRouter
-} from 'react-router-dom'
+import { Route, Switch, NavLink, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as actions from './redux/actions'
-import menuRoutes from './routes/menus'
+import menu from './routes/menu'
 import pageRoutes from './routes/pages'
-import { isEmpty } from './utils'
 import NotFound from './pages/NotFound'
+import { APP_NAME, APP_SHORT_NAME } from './constants'
 import './styles.css'
 
 class App extends Component {
@@ -23,53 +17,136 @@ class App extends Component {
       }
    }
 
+   ///// METHODS FOR REACT LIFECYCLES /////
+
    componentDidMount() {
-      let pathTitle = ''
-      this.setState({ pathTitle })
+      this.setState({ pathTitle: '' })
    }
 
-   logOut() {
+   ///// METHODS FOR HANDLING UI EVENTS /////
+
+   logOut = () => {
+      const { logOut } = this
+
       if (
          window.confirm('Bạn có chắc chắn muốn đăng xuất khỏi MFFMS hay không?')
       ) {
-         this.props.logOut()
+         logOut()
          localStorage.removeItem('MFFMS_USER')
       }
    }
 
-   renderMenuSection(title, menuItems) {
+   ///// METHODS FOR RENDERING UI /////
+
+   renderHeader = () => {
+      const { renderHeaderLeft, renderHeaderCenter, renderHeaderRight } = this
+
+      return (
+         <header className="main-header">
+            {renderHeaderLeft()}
+            {renderHeaderCenter()}
+            {renderHeaderRight()}
+         </header>
+      )
+   }
+
+   renderHeaderLeft = () => {
+      return (
+         <div className="main-header__left">
+            <h1 className="main-header__title">
+               <img
+                  src="/images/logo.png"
+                  alt="Logo"
+                  className="main-header__logo"
+               />
+               {APP_SHORT_NAME}
+            </h1>
+            <p className="main-header__subtitle">{APP_NAME}</p>
+         </div>
+      )
+   }
+
+   renderHeaderCenter = () => {
+      const { pathTitle } = this.state
+
+      return <div className="main-header__center">{pathTitle}</div>
+   }
+
+   renderHeaderRight = () => {}
+
+   renderMain = () => {
+      const { renderMainLeft, renderMainRight } = this
+
       return (
          <Fragment>
-            <div className="main-nav__title">{title}</div>
-            <ul className="main-nav__list">
-               {menuItems.map((menu, index) =>
-                  menu.path !== '/dang-xuat' ? (
-                     <li className="main-nav__list-item" key={index}>
-                        <NavLink
-                           to={menu.path}
-                           onClick={() =>
-                              this.setState({ pathTitle: menu.title })
-                           }
-                           activeClassName="main-nav__list-item--active"
-                           exact={menu.exact}
-                        >
-                           <i className={menu.icon}></i>&nbsp;&nbsp;{menu.title}
-                        </NavLink>
-                     </li>
-                  ) : (
-                     <li className="main-nav__list-item" key={index}>
-                        <NavLink to="#" onClick={() => this.logOut()}>
-                           <i className={menu.icon}></i>&nbsp;&nbsp;{menu.title}
-                        </NavLink>
-                     </li>
-                  )
-               )}
-            </ul>
+            <main className="main">
+               {renderMainLeft()}
+               {renderMainRight()}
+            </main>
          </Fragment>
       )
    }
 
-   renderRoutes() {
+   renderMainLeft = () => {
+      const { renderMenu } = this
+
+      return <div className="main-left">{renderMenu()}</div>
+   }
+
+   renderMenu = () => {
+      const { logOut } = this
+
+      return menu.map((item, index) => {
+         const { title, items } = item
+
+         return (
+            <Fragment key={index}>
+               <div className="main-nav__title">{title}</div>
+               <ul className="main-nav__list">
+                  {items.map((menuItem, index) =>
+                     menuItem.path !== '/dang-xuat' ? (
+                        <li className="main-nav__list-item" key={index}>
+                           <NavLink
+                              to={menuItem.path}
+                              onClick={() =>
+                                 this.setState({ pathTitle: menuItem.title })
+                              }
+                              activeClassName="main-nav__list-item--active"
+                              exact={menuItem.exact}
+                           >
+                              <i className={menuItem.icon}></i>&nbsp;&nbsp;
+                              {menuItem.title}
+                           </NavLink>
+                        </li>
+                     ) : (
+                        <li className="main-nav__list-item" key={index}>
+                           <NavLink to="#" onClick={logOut}>
+                              <i className={menuItem.icon}></i>&nbsp;&nbsp;
+                              {menuItem.title}
+                           </NavLink>
+                        </li>
+                     )
+                  )}
+               </ul>
+            </Fragment>
+         )
+      })
+   }
+
+   renderMainRight = () => {
+      const { renderRoutes } = this
+
+      return (
+         <div className="main-right">
+            <Switch>
+               {renderRoutes()}
+               <Route component={NotFound} />
+            </Switch>
+         </div>
+      )
+   }
+
+   renderRoutes = () => {
       return pageRoutes.map((pageRoute, index) => (
          <Route
             key={index}
@@ -80,42 +157,21 @@ class App extends Component {
       ))
    }
 
-   render() {
+   renderComponent = () => {
+      const { renderHeader, renderMain } = this
+
       return (
          <Fragment>
-            <header className="main-header">
-               <div className="main-header__left">
-                  <h1 className="main-header__title">
-                     <img
-                        src="/images/logo.png"
-                        alt="Logo"
-                        className="main-header__logo"
-                     />
-                     MFFMS
-                  </h1>
-                  <p className="main-header__subtitle">
-                     Mini Football Field Management System
-                  </p>
-               </div>
-
-               <div className="main-header__center">{this.state.pathTitle}</div>
-            </header>
-
-            <main className="main">
-               <div className="main-left">
-                  {this.renderMenuSection('Nghiệp vụ', menuRoutes.business)}
-                  {this.renderMenuSection('Hệ thống', menuRoutes.system)}
-               </div>
-
-               <div className="main-right">
-                  <Switch>
-                     {this.renderRoutes()}
-                     <Route component={NotFound} />
-                  </Switch>
-               </div>
-            </main>
+            {renderHeader()}
+            {renderMain()}
          </Fragment>
       )
+   }
+
+   render() {
+      const { renderComponent } = this
+
+      return renderComponent()
    }
 }
 
