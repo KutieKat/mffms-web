@@ -16,7 +16,7 @@ body {
 }
 
 main {
-   height: 100vh;
+   min-height: 100vh;
 }
 
 .main-header {
@@ -547,6 +547,7 @@ form {
 .not-found__subtitle {
    color: #6c757d;
    font-size: 14px;
+   margin-bottom: 12px;
 }
 
 .table-tab,
@@ -1031,6 +1032,19 @@ input[type='file'] {
 .thead-cell-centered {
    vertical-align: middle !important;
    text-align: center !important;
+}
+
+select {
+   -webkit-appearance: none;
+   background: url(/images/down.png) #fff;
+   background-repeat: no-repeat;
+   background-size: 20px 20px;
+   background-position: 90%;
+   cursor: pointer;
+}
+
+tr th:not(:first-child) {
+   min-width: 120px;
 }
 
 .loading-indicator {
