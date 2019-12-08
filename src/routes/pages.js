@@ -18,6 +18,11 @@ import SanBongForList from '../pages/SanBong/SanBongForList'
 import SanBongForView from '../pages/SanBong/SanBongForView'
 import SanBongForCreate from '../pages/SanBong/SanBongForCreate'
 
+///// DichVu /////
+import DichVuForList from '../pages/DichVu/DichVuForList'
+import DichVuForView from '../pages/DichVu/DichVuForView'
+import DichVuForCreate from '../pages/DichVu/DichVuForCreate'
+
 export default [
    ///// KhachHang /////
    {
@@ -77,5 +82,20 @@ export default [
    {
       path: '/quan-ly/san-bong/them-moi',
       component: SanBongForCreate
+   },
+
+   ///// DichVu /////
+   {
+      path: '/quan-ly/dich-vu',
+      component: DichVuForList,
+      exact: true
+   },
+   {
+      path: '/quan-ly/dich-vu/xem-thong-tin/:id',
+      component: DichVuForView
+   },
+   {
+      path: '/quan-ly/dich-vu/them-moi',
+      component: DichVuForCreate
    }
 ]

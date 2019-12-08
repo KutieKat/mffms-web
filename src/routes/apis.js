@@ -3,6 +3,7 @@ const baseKhachHangApi = baseApi + '/KhachHang'
 const baseNhanVienApi = baseApi + '/NhanVien'
 const baseNhaCungCapApi = baseApi + '/NhaCungCap'
 const baseSanBongApi = baseApi + '/SanBong'
+const baseDichVuApi = baseApi + '/DichVu'
 const baseCaiDatApi = baseApi + '/CaiDat'
 
 export default {
@@ -37,6 +38,14 @@ export default {
       createMultiple: baseSanBongApi + '/CreateMultiple',
       updateById: baseSanBongApi + '/UpdateById',
       permanentlyDeleteById: baseSanBongApi + '/PermanentlyDeleteById'
+   },
+   dichVu: {
+      getAll: baseDichVuApi + '/GetAll',
+      getById: baseDichVuApi + '/GetById',
+      create: baseDichVuApi + '/Create',
+      createMultiple: baseDichVuApi + '/CreateMultiple',
+      updateById: baseDichVuApi + '/UpdateById',
+      permanentlyDeleteById: baseDichVuApi + '/PermanentlyDeleteById'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',

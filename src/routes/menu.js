@@ -18,9 +18,14 @@ const menu = [
             icon: 'far fa-futbol'
          },
          {
+            title: 'Quản lý dịch vụ',
+            path: '/quan-ly/dich-vu',
+            icon: 'fas fa-concierge-bell'
+         },
+         {
             title: 'Quản lý nhà cung cấp',
             path: '/quan-ly/nha-cung-cap',
-            icon: 'fas fa-industry'
+            icon: 'fas fa-hands-helping'
          }
       ]
    },
