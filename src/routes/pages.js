@@ -2,11 +2,13 @@
 import KhachHangForList from '../pages/KhachHang/KhachHangForList'
 import KhachHangForView from '../pages/KhachHang/KhachHangForView'
 import KhachHangForCreate from '../pages/KhachHang/KhachHangForCreate'
+import KhachHangForStats from '../pages/KhachHang/KhachHangForStats'
 
 ///// NhanVien /////
 import NhanVienForList from '../pages/NhanVien/NhanVienForList'
 import NhanVienForCreate from '../pages/NhanVien/NhanVienForCreate'
 import NhanVienForView from '../pages/NhanVien/NhanVienForView'
+import NhanVienForStats from '../pages/NhanVien/NhanVienForStats'
 
 ///// NhaCungCap /////
 import NhaCungCapForList from '../pages/NhaCungCap/NhaCungCapForList'
@@ -17,6 +19,7 @@ import NhaCungCapForCreate from '../pages/NhaCungCap/NhaCungCapForCreate'
 import SanBongForList from '../pages/SanBong/SanBongForList'
 import SanBongForView from '../pages/SanBong/SanBongForView'
 import SanBongForCreate from '../pages/SanBong/SanBongForCreate'
+import SanBongForStats from '../pages/SanBong/SanBongForStats'
 
 ///// DichVu /////
 import DichVuForList from '../pages/DichVu/DichVuForList'
@@ -38,6 +41,10 @@ export default [
       path: '/quan-ly/khach-hang/them-moi',
       component: KhachHangForCreate
    },
+   {
+      path: '/thong-ke/khach-hang',
+      component: KhachHangForStats
+   },
 
    ///// NhanVien /////
    {
@@ -52,6 +59,10 @@ export default [
    {
       path: '/quan-ly/nhan-vien/them-moi',
       component: NhanVienForCreate
+   },
+   {
+      path: '/thong-ke/nhan-vien',
+      component: NhanVienForStats
    },
 
    ///// NhaCungCap /////
@@ -82,6 +93,10 @@ export default [
    {
       path: '/quan-ly/san-bong/them-moi',
       component: SanBongForCreate
+   },
+   {
+      path: '/thong-ke/san-bong',
+      component: SanBongForStats
    },
 
    ///// DichVu /////

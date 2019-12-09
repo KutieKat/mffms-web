@@ -194,6 +194,10 @@ ul {
    padding: 24px;
 }
 
+.section__body--frameless {
+   padding: 0;
+}
+
 .section-body-header {
    display: flex;
    justify-content: space-between;
@@ -1082,6 +1086,36 @@ tr th:not(:first-child) {
 
 .popup-header__main-section img {
    user-select: none;
+}
+
+.stats-cards {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   grid-column-gap: 24px;
+   grid-row-gap: 24px;
+}
+
+.stats-card__label {
+   background-color: #3d4145;
+   padding: 12px 24px;
+   color: white;
+   font-weight: 600;
+}
+
+.stats-card__body {
+   padding: 28px;
+   text-align: center;
+   background-color: white;
+   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.05);
+}
+
+.stats-card__value {
+   font-size: 32px;
+   font-weight: 600;
+}
+
+.stats-card__unit {
+   color: #6a6c6f;
 }
 
 .loading-indicator {

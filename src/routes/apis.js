@@ -8,6 +8,7 @@ const baseCaiDatApi = baseApi + '/CaiDat'
 
 export default {
    khachHang: {
+      getGeneralStats: baseKhachHangApi + '/GetGeneralStatistics',
       getAll: baseKhachHangApi + '/GetAll',
       getById: baseKhachHangApi + '/GetById',
       create: baseKhachHangApi + '/Create',

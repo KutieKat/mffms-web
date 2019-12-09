@@ -38,9 +38,18 @@ class Section extends Component {
    }
 
    renderBody = () => {
-      const { children } = this.props
+      const { children, section } = this.props
+      const { framedBody = true } = section
 
-      return <div className="section__body">{children}</div>
+      return (
+         <div
+            className={
+               framedBody ? 'section__body' : 'section__body--frameless'
+            }
+         >
+            {children}
+         </div>
+      )
    }
 
    renderFooter = () => {
