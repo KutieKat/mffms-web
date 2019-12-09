@@ -367,7 +367,7 @@ class ForListPage extends Component {
             </span>
 
             <span className="breadcrumb-active">
-               <Link to={`/${slug}`}>Quản lý {name}</Link>
+               <Link to="#">Quản lý {name}</Link>
             </span>
          </section>
       )
@@ -404,7 +404,7 @@ class ForListPage extends Component {
 
             {data.length !== 0 && (
                <span className="button" onClick={exportReport}>
-                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
+                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;In danh sách
                </span>
             )}
          </Fragment>

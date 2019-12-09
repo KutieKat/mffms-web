@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ForViewPage from '../../components/ForCreatePage'
+import ForViewPage from '../../components/ForViewPage'
 import { sanBong } from '../../entities'
 import apiRoutes from '../../routes/apis'
 

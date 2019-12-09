@@ -79,3 +79,7 @@ export const apiDelete = url => axios.delete(url)
 export const scrollTop = () => {
    window.scrollTo(0, 0)
 }
+
+export const print = () => {
+   window.print()
+}

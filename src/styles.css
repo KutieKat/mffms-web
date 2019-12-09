@@ -834,10 +834,6 @@ input[type='file'] {
    margin-bottom: 12px;
 }
 
-.print-page__header-top-left p {
-   text-transform: uppercase;
-}
-
 @media print {
    @page {
       margin: 0;
@@ -856,8 +852,16 @@ input[type='file'] {
       background-color: white !important;
    }
 
+   .print-page__header-top-left p {
+      text-align: left;
+   }
+
    .print-page p {
       line-height: 1.5;
+   }
+
+   .printing-page__company {
+      text-transform: uppercase;
    }
 
    .main-header,
@@ -943,7 +947,7 @@ input[type='file'] {
    .print-page__splitter {
       width: 160px;
       border-bottom: 1px solid #111;
-      margin: 0 auto;
+      /* margin: 0 auto; */
       margin-top: 6px;
    }
 
@@ -962,6 +966,29 @@ input[type='file'] {
 
    .popup-wrapper {
       display: none !important;
+   }
+
+   .printing-page form {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: 24px;
+   }
+
+   .printing-page .form-group {
+      margin: 0;
+      margin-bottom: 12px;
+   }
+
+   .printing-page form label,
+   .printing-page form input,
+   .printing-page form select,
+   .printing-page form textarea {
+      padding-left: 0 !important;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      background-color: transparent;
    }
 }
 

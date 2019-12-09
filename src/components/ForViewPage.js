@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import Section from './Section'
 import { Link, withRouter } from 'react-router-dom'
-import { apiGet, formatDateString, scrollTop } from '../utils'
+import { apiGet, formatDateString, scrollTop, print } from '../utils'
 import LoadingIndicator from './LoadingIndicator'
+import ForDetailsPrintPage from './ForDetailsPrintPage'
 
 class ForViewPage extends Component {
    constructor(props) {
@@ -49,6 +50,20 @@ class ForViewPage extends Component {
       }
    }
 
+   ///// METHODS FOR HANDLING UI EVENTS /////
+
+   refresh = () => {
+      const { fetchData } = this
+
+      this.setState({ loading: true }, fetchData)
+   }
+
+   exportData = () => {}
+
+   exportReport = () => {
+      print()
+   }
+
    ///// METHODS FOR COMPUTING VALUES /////
 
    getFieldValue = (valueType, value) => {
@@ -84,7 +99,7 @@ class ForViewPage extends Component {
                <i className="fas fa-chevron-right"></i>
             </span>
             <span className="breadcrumb">
-               <Link to={`/${slug}`}>Quản lý {name}</Link>
+               <Link to={`/quan-ly/${slug}`}>Quản lý {name}</Link>
             </span>
             <span className="breadcrumb-separator">
                <i className="fas fa-chevron-right"></i>
@@ -96,14 +111,40 @@ class ForViewPage extends Component {
       )
    }
 
+   renderSectionHeaderRight = () => {
+      const { refresh, exportData, exportReport } = this
+      const { data } = this.state
+
+      return (
+         <Fragment>
+            <span className="button" onClick={refresh}>
+               <i className="fas fa-redo"></i>&nbsp;&nbsp;Tải lại
+            </span>
+
+            {data !== null && (
+               <span className="button" onClick={exportData}>
+                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất dữ liệu
+               </span>
+            )}
+
+            {data !== null && (
+               <span className="button" onClick={exportReport}>
+                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;In thông tin
+               </span>
+            )}
+         </Fragment>
+      )
+   }
+
    renderBody = () => {
-      const { renderForm, renderFormFooter } = this
+      const { renderSectionHeaderRight, renderForm, renderFormFooter } = this
       const { settings } = this.props
       const { entity } = settings
       const { name } = entity
       const section = {
          title: `Xem thông tin ${name}`,
          subtitle: `Xem thông tin chi tiết của ${name}`,
+         headerRight: renderSectionHeaderRight(),
          footerRight: renderFormFooter()
       }
 
@@ -213,12 +254,21 @@ class ForViewPage extends Component {
 
    renderComponent = () => {
       const { renderHeader, renderBody } = this
-      const { loading } = this.state
+      const { data, loading } = this.state
+      const { settings } = this.props
+      const { entity, api, fields } = settings
+      const printSettings = {
+         entity,
+         api,
+         fields,
+         data
+      }
 
       return (
          <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
+            <ForDetailsPrintPage settings={printSettings} />
          </LoadingIndicator>
       )
    }

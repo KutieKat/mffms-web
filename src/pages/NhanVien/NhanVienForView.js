@@ -13,6 +13,11 @@ class NhanVienForView extends Component {
          api: apiRoutes.nhanVien,
          fields: [
             {
+               label: 'Mã nhân viên',
+               propForValue: 'maNhanVien',
+               type: 'input'
+            },
+            {
                label: 'Họ và tên',
                propForValue: 'tenNhanVien',
                type: 'input'
