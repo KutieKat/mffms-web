@@ -70,9 +70,13 @@ export const isPhoneNumber = phone => {
    return flag
 }
 
+export const isAfter = (date, dateToCheck) => dateToCheck.diff(date) >= 0
+
 export const apiGet = (url, data) => axios.get(url, data)
 
 export const apiPost = (url, data) => axios.post(url, data)
+
+export const apiPut = (url, data) => axios.put(url, data)
 
 export const apiDelete = url => axios.delete(url)
 

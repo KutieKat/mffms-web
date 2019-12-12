@@ -2,6 +2,7 @@
 import KhachHangForList from '../pages/KhachHang/KhachHangForList'
 import KhachHangForView from '../pages/KhachHang/KhachHangForView'
 import KhachHangForCreate from '../pages/KhachHang/KhachHangForCreate'
+import KhachHangForUpdate from '../pages/KhachHang/KhachHangForUpdate'
 import KhachHangForStats from '../pages/KhachHang/KhachHangForStats'
 
 ///// NhanVien /////
@@ -41,6 +42,10 @@ export default [
    {
       path: '/quan-ly/khach-hang/them-moi',
       component: KhachHangForCreate
+   },
+   {
+      path: '/quan-ly/khach-hang/cap-nhat/:id',
+      component: KhachHangForUpdate
    },
    {
       path: '/thong-ke/khach-hang',

@@ -6,13 +6,14 @@ import { isEmpty, isLength, isNumeric } from 'validator'
 import {
    isEmptyObj,
    isPhoneNumber,
-   apiPost,
+   apiGet,
+   apiPut,
    scrollTop,
    isAfter
 } from '../utils'
 import LoadingIndicator from './LoadingIndicator'
 
-class ForCreatePage extends Component {
+class ForUpdatePage extends Component {
    constructor(props) {
       super(props)
 
@@ -35,19 +36,44 @@ class ForCreatePage extends Component {
    }
 
    componentDidMount() {
+      const { fetchData } = this
+
       scrollTop()
+      fetchData()
    }
 
    ///// METHODS FOR INTERACTING WITH API /////
 
-   createRecord = () => {
-      const { editingData } = this.state
-      const { settings, history } = this.props
-      const { api, entity } = settings
-      const { slug } = entity
-      const url = api.create
+   fetchData = async () => {
+      const { settings, match } = this.props
+      const { api } = settings
+      const { id } = match.params
+      const url = `${api.getById}/${id}`
 
-      return apiPost(url, editingData)
+      try {
+         const response = await apiGet(url)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({ editingData: data, loading: false })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   updateRecord = () => {
+      const { editingData } = this.state
+      const { settings, match, history } = this.props
+      const { api, entity } = settings
+      const { id } = match.params
+      const { slug } = entity
+      const url = `${api.updateById}/${id}`
+
+      return apiPut(url, editingData)
          .then(response => {
             this.setState({ loading: false })
             history.push(`/quan-ly/${slug}`)
@@ -79,11 +105,11 @@ class ForCreatePage extends Component {
    }
 
    submit = () => {
-      const { validateFields, createRecord } = this
+      const { validateFields, updateRecord } = this
       const errors = validateFields()
 
       if (!errors) {
-         this.setState({ showAlert: false, loading: true }, createRecord)
+         this.setState({ showAlert: false, loading: true }, updateRecord)
       } else {
          this.setState({ errors, showAlert: true })
       }
@@ -243,7 +269,7 @@ class ForCreatePage extends Component {
                <i className="fas fa-chevron-right"></i>
             </span>
             <span className="breadcrumb-active">
-               <Link to="#">Thêm {name} mới</Link>
+               <Link to="#">Cập nhật thông tin của {name}</Link>
             </span>
          </span>
       )
@@ -255,8 +281,8 @@ class ForCreatePage extends Component {
       const { entity } = settings
       const { name } = entity
       const section = {
-         title: `Thêm ${name} mới`,
-         subtitle: `Thêm ${name} mới vào hệ thống`,
+         title: `Cập nhật thông tin ${name}`,
+         subtitle: `Cập nhật lại thông tin của ${name} trên hệ thống`,
          footerRight: renderFormFooter()
       }
 
@@ -327,7 +353,9 @@ class ForCreatePage extends Component {
             return (
                <input
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -351,7 +379,7 @@ class ForCreatePage extends Component {
                   }
                   type="date"
                   placeholder={placeholder}
-                  value={editingData[propForValue]}
+                  value={moment(editingData[propForValue]).format('YYYY-MM-DD')}
                   onChange={e => changeEditingData(e, propForValue)}
                   onFocus={hideAlert}
                   disabled={disabled}
@@ -442,4 +470,4 @@ class ForCreatePage extends Component {
    }
 }
 
-export default withRouter(ForCreatePage)
+export default withRouter(ForUpdatePage)
