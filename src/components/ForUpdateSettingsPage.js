@@ -13,7 +13,7 @@ import {
 } from '../utils'
 import LoadingIndicator from './LoadingIndicator'
 
-class ForUpdatePage extends Component {
+class ForUpdateSettingsPage extends Component {
    constructor(props) {
       super(props)
 
@@ -47,8 +47,7 @@ class ForUpdatePage extends Component {
    fetchData = async () => {
       const { settings, match } = this.props
       const { api } = settings
-      const { id } = match.params
-      const url = `${api.getById}/${id}`
+      const url = api.getAll
 
       try {
          const response = await apiGet(url)
@@ -65,18 +64,34 @@ class ForUpdatePage extends Component {
       }
    }
 
+   restoreSettings = () => {
+      const { fetchData } = this
+      const { settings } = this.props
+      const { api } = settings
+      const url = api.restore
+
+      return apiPut(url)
+         .then(response => {
+            this.setState({ loading: false }, fetchData)
+         })
+         .catch(error => {
+            this.setState({ loading: false })
+            // const { errors } = error.response.data.result
+            // this.setState({ showAlert: true })
+         })
+   }
+
    updateRecord = () => {
       const { editingData } = this.state
       const { settings, match, history } = this.props
       const { api, entity } = settings
-      const { id } = match.params
-      const { slug } = entity
+      const id = editingData && editingData.maCaiDat
       const url = `${api.updateById}/${id}`
 
       return apiPut(url, editingData)
          .then(response => {
             this.setState({ loading: false })
-            history.push(`/quan-ly/${slug}`)
+            // history.push(`/quan-ly/${slug}`)
          })
          .catch(error => {
             this.setState({ loading: false })
@@ -102,6 +117,12 @@ class ForUpdatePage extends Component {
 
    hideAlert = () => {
       this.setState({ showAlert: false, errors: null })
+   }
+
+   restore = () => {
+      const { restoreSettings } = this
+
+      this.setState({ showAlert: false, loading: true }, restoreSettings)
    }
 
    submit = () => {
@@ -255,23 +276,19 @@ class ForUpdatePage extends Component {
       const { name, slug } = entity
 
       return (
-         <span className="breadcrumbs">
+         <section className="breadcrumbs">
             <span className="breadcrumb-home">
-               <Link to="/">Mini Football Field Management System (MFFMS)</Link>
+               <Link to="/">Mini Football Field Management System (GTMS)</Link>
             </span>
+
             <span className="breadcrumb-separator">
                <i className="fas fa-chevron-right"></i>
             </span>
-            <span className="breadcrumb">
-               <Link to={`/quan-ly/${slug}`}>Quản lý {name}</Link>
-            </span>
-            <span className="breadcrumb-separator">
-               <i className="fas fa-chevron-right"></i>
-            </span>
+
             <span className="breadcrumb-active">
-               <Link to="#">Cập nhật thông tin {name}</Link>
+               <Link to="#">Quản lý {name}</Link>
             </span>
-         </span>
+         </section>
       )
    }
 
@@ -281,8 +298,8 @@ class ForUpdatePage extends Component {
       const { entity } = settings
       const { name } = entity
       const section = {
-         title: `Cập nhật thông tin ${name}`,
-         subtitle: `Cập nhật lại thông tin ${name} trên hệ thống`,
+         title: `Quản lý ${name}`,
+         subtitle: `Quản lý thông tin ${name} trên hệ thống`,
          footerRight: renderFormFooter()
       }
 
@@ -431,17 +448,16 @@ class ForUpdatePage extends Component {
    }
 
    renderFormFooter = () => {
-      const { submit } = this
+      const { submit, restore } = this
       const { settings } = this.props
       const { entity } = settings
       const { slug } = entity
 
       return (
          <Fragment>
-            <span className="button">
-               <Link to={`/quan-ly/${slug}`}>
-                  <i className="fas fa-arrow-left"></i>&nbsp;&nbsp;Trở về
-               </Link>
+            <span className="button" onClick={restore}>
+               <i className="fas fa-redo"></i>&nbsp;&nbsp;Khôi phục giá trị mặc
+               định
             </span>
 
             <span className="button" onClick={submit}>
@@ -470,4 +486,4 @@ class ForUpdatePage extends Component {
    }
 }
 
-export default withRouter(ForUpdatePage)
+export default withRouter(ForUpdateSettingsPage)

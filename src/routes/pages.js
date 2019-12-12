@@ -33,6 +33,16 @@ import DichVuForCreate from '../pages/DichVu/DichVuForCreate'
 import DichVuForUpdate from '../pages/DichVu/DichVuForUpdate'
 import DichVuForStats from '../pages/DichVu/DichVuForStats'
 
+///// TaiSanThietBi /////
+import TaiSanThietBiForList from '../pages/TaiSanThietBi/TaiSanThietBiForList'
+import TaiSanThietBiForView from '../pages/TaiSanThietBi/TaiSanThietBiForView'
+import TaiSanThietBiForCreate from '../pages/TaiSanThietBi/TaiSanThietBiForCreate'
+import TaiSanThietBiForUpdate from '../pages/TaiSanThietBi/TaiSanThietBiForUpdate'
+import TaiSanThietBiForStats from '../pages/TaiSanThietBi/TaiSanThietBiForStats'
+
+///// CaiDat /////
+import CaiDatForUpdate from '../pages/CaiDat/CaiDatForUpdate'
+
 export default [
    ///// KhachHang /////
    {
@@ -126,6 +136,29 @@ export default [
       component: SanBongForStats
    },
 
+   ///// TaiSanThietBi /////
+   {
+      path: '/quan-ly/tai-san-thiet-bi',
+      component: TaiSanThietBiForList,
+      exact: true
+   },
+   {
+      path: '/quan-ly/tai-san-thiet-bi/xem-thong-tin/:id',
+      component: TaiSanThietBiForView
+   },
+   {
+      path: '/quan-ly/tai-san-thiet-bi/them-moi',
+      component: TaiSanThietBiForCreate
+   },
+   {
+      path: '/quan-ly/tai-san-thiet-bi/cap-nhat/:id',
+      component: TaiSanThietBiForUpdate
+   },
+   {
+      path: '/thong-ke/tai-san-thiet-bi',
+      component: TaiSanThietBiForStats
+   },
+
    ///// DichVu /////
    {
       path: '/quan-ly/dich-vu',
@@ -147,5 +180,11 @@ export default [
    {
       path: '/thong-ke/dich-vu',
       component: DichVuForStats
+   },
+
+   ///// CaiDat /////
+   {
+      path: '/he-thong/cai-dat',
+      component: CaiDatForUpdate
    }
 ]

@@ -30,4 +30,31 @@ const POSITIONS = [
    }
 ]
 
-export { APP_SHORT_NAME, APP_NAME, APP_DESCRIPTION, PAGE_SIZES, GENDERS, POSITIONS }
+const ASSET_STATUSES = [
+   {
+      value: 'Hoạt động tốt',
+      text: 'Hoạt động tốt'
+   },
+   {
+      value: 'Đang sửa chữa',
+      text: 'Đang sửa chữa'
+   },
+   {
+      value: 'Đang bảo hành',
+      text: 'Đang bảo hành'
+   },
+   {
+      value: 'Đã qua sử dụng',
+      text: 'Đã qua sử dụng'
+   }
+]
+
+export {
+   APP_SHORT_NAME,
+   APP_NAME,
+   APP_DESCRIPTION,
+   PAGE_SIZES,
+   GENDERS,
+   POSITIONS,
+   ASSET_STATUSES
+}

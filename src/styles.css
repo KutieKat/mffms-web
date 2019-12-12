@@ -1070,7 +1070,8 @@ select {
    background: url(/images/down.png) #fff;
    background-repeat: no-repeat;
    background-size: 20px 20px;
-   background-position: 90%;
+   /* background-position: 90%; */
+   background-position: 99%;
    cursor: pointer;
 }
 
