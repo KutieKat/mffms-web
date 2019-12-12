@@ -16,6 +16,7 @@ import NhanVienForStats from '../pages/NhanVien/NhanVienForStats'
 import NhaCungCapForList from '../pages/NhaCungCap/NhaCungCapForList'
 import NhaCungCapForView from '../pages/NhaCungCap/NhaCungCapForView'
 import NhaCungCapForCreate from '../pages/NhaCungCap/NhaCungCapForCreate'
+import NhaCungCapForUpdate from '../pages/NhaCungCap/NhaCungCapForUpdate'
 import NhaCungCapForStats from '../pages/NhaCungCap/NhaCungCapForStats'
 
 ///// SanBong /////
@@ -89,6 +90,10 @@ export default [
    {
       path: '/quan-ly/nha-cung-cap/them-moi',
       component: NhaCungCapForCreate
+   },
+   {
+      path: '/quan-ly/nha-cung-cap/cap-nhat/:id',
+      component: NhaCungCapForUpdate
    },
    {
       path: '/thong-ke/nha-cung-cap',
