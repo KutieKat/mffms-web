@@ -6,10 +6,10 @@ import { nhanVien } from '../../entities'
 import moment from 'moment'
 
 class NhanVienForCreate extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: nhanVien,
          api: apiRoutes.nhanVien,
          fields: [
@@ -150,12 +150,6 @@ class NhanVienForCreate extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForCreatePage settings={settings} />
    }

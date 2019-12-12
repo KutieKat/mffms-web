@@ -4,10 +4,10 @@ import { sanBong } from '../../entities'
 import apiRoutes from '../../routes/apis'
 
 class SanBongForCreate extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: sanBong,
          api: apiRoutes.sanBong,
          fields: [
@@ -58,12 +58,6 @@ class SanBongForCreate extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForCreatePage settings={settings} />
    }

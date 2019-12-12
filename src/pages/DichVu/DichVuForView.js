@@ -4,10 +4,10 @@ import apiRoutes from '../../routes/apis'
 import { dichVu } from '../../entities'
 
 class DichVuForView extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: dichVu,
          api: apiRoutes.dichVu,
          fields: [
@@ -38,12 +38,6 @@ class DichVuForView extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForViewPage settings={settings} />
    }

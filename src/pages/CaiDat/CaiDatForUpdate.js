@@ -4,10 +4,10 @@ import { caiDat } from '../../entities'
 import apiRoutes from '../../routes/apis'
 
 class CaiDatForUpdate extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: caiDat,
          api: apiRoutes.caiDat,
          fields: [
@@ -93,12 +93,6 @@ class CaiDatForUpdate extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForUpdateSettingsPage settings={settings} />
    }

@@ -5,10 +5,10 @@ import { khachHang } from '../../entities'
 import { GENDERS } from '../../constants'
 
 class KhachHangForList extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: khachHang,
          api: apiRoutes.khachHang,
          columns: [
@@ -67,12 +67,6 @@ class KhachHangForList extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForListPage settings={settings} />
    }

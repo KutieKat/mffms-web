@@ -4,10 +4,10 @@ import apiRoutes from '../../routes/apis'
 import { taiSanThietBi } from '../../entities'
 
 class TaiSanThietBiForStats extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: taiSanThietBi,
          api: apiRoutes.taiSanThietBi,
          cards: [
@@ -19,12 +19,6 @@ class TaiSanThietBiForStats extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForStatsPage settings={settings} />
    }

@@ -5,10 +5,10 @@ import apiRoutes from '../../routes/apis'
 import { nhanVien } from '../../entities'
 
 class NhanVienForView extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: nhanVien,
          api: apiRoutes.nhanVien,
          fields: [
@@ -70,12 +70,6 @@ class NhanVienForView extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForViewPage settings={settings} />
    }

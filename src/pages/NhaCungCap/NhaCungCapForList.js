@@ -4,10 +4,10 @@ import apiRoutes from '../../routes/apis'
 import { nhaCungCap } from '../../entities'
 
 class NhaCungCapForList extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: nhaCungCap,
          api: apiRoutes.nhaCungCap,
          columns: [
@@ -64,12 +64,6 @@ class NhaCungCapForList extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForListPage settings={settings} />
    }

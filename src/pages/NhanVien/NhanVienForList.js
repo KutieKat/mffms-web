@@ -5,10 +5,10 @@ import { nhanVien } from '../../entities'
 import { GENDERS } from '../../constants'
 
 class NhanVienForList extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: nhanVien,
          api: apiRoutes.nhanVien,
          columns: [
@@ -77,12 +77,6 @@ class NhanVienForList extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForListPage settings={settings} />
    }

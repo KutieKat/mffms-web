@@ -4,10 +4,10 @@ import { nhaCungCap } from '../../entities'
 import apiRoutes from '../../routes/apis'
 
 class NhaCungCapForUpdate extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: nhaCungCap,
          api: apiRoutes.nhaCungCap,
          fields: [
@@ -73,12 +73,6 @@ class NhaCungCapForUpdate extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForUpdatePage settings={settings} />
    }

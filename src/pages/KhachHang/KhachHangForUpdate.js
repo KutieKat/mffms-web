@@ -6,10 +6,10 @@ import apiRoutes from '../../routes/apis'
 import moment from 'moment'
 
 class KhachHangForUpdate extends Component {
-   constructor(props) {
-      super(props)
+   ///// METHODS FOR RENDERING UI /////
 
-      this.settings = {
+   renderComponent = () => {
+      const settings = {
          entity: khachHang,
          api: apiRoutes.khachHang,
          fields: [
@@ -108,12 +108,6 @@ class KhachHangForUpdate extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForUpdatePage settings={settings} />
    }
