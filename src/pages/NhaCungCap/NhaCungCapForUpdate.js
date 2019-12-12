@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import ForUpdatePage from '../../components/ForUpdatePage'
 import { nhaCungCap } from '../../entities'
 import apiRoutes from '../../routes/apis'
-import moment from 'moment'
 
 class NhaCungCapForUpdate extends Component {
    constructor(props) {
