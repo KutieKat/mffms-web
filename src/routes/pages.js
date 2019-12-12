@@ -17,19 +17,21 @@ import NhaCungCapForList from '../pages/NhaCungCap/NhaCungCapForList'
 import NhaCungCapForView from '../pages/NhaCungCap/NhaCungCapForView'
 import NhaCungCapForCreate from '../pages/NhaCungCap/NhaCungCapForCreate'
 import NhaCungCapForUpdate from '../pages/NhaCungCap/NhaCungCapForUpdate'
-import SanBongForUpdate from '../pages/SanBong/SanBongForUpdate'
 import NhaCungCapForStats from '../pages/NhaCungCap/NhaCungCapForStats'
 
 ///// SanBong /////
 import SanBongForList from '../pages/SanBong/SanBongForList'
 import SanBongForView from '../pages/SanBong/SanBongForView'
 import SanBongForCreate from '../pages/SanBong/SanBongForCreate'
+import SanBongForUpdate from '../pages/SanBong/SanBongForUpdate'
 import SanBongForStats from '../pages/SanBong/SanBongForStats'
 
 ///// DichVu /////
 import DichVuForList from '../pages/DichVu/DichVuForList'
 import DichVuForView from '../pages/DichVu/DichVuForView'
 import DichVuForCreate from '../pages/DichVu/DichVuForCreate'
+import DichVuForUpdate from '../pages/DichVu/DichVuForUpdate'
+import DichVuForStats from '../pages/DichVu/DichVuForStats'
 
 export default [
    ///// KhachHang /////
@@ -137,5 +139,13 @@ export default [
    {
       path: '/quan-ly/dich-vu/them-moi',
       component: DichVuForCreate
+   },
+   {
+      path: '/quan-ly/dich-vu/cap-nhat/:id',
+      component: DichVuForUpdate
+   },
+   {
+      path: '/thong-ke/dich-vu',
+      component: DichVuForStats
    }
 ]
