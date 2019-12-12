@@ -113,7 +113,8 @@ class ForCreatePage extends Component {
             case 'select': {
                const { values, propForItemValue } = field
 
-               editingData[propForValue] = values[0][propForItemValue]
+               editingData[propForValue] =
+                  values[0] && values[0][propForItemValue]
                break
             }
 
@@ -436,6 +437,7 @@ class ForCreatePage extends Component {
    }
 
    render() {
+      console.log('DEBUG PROPS: ', this.props)
       const { renderComponent } = this
 
       return renderComponent()

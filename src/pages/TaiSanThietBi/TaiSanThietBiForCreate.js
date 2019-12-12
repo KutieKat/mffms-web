@@ -3,12 +3,58 @@ import ForCreatePage from '../../components/ForCreatePage'
 import { ASSET_STATUSES } from '../../constants/'
 import { taiSanThietBi } from '../../entities'
 import apiRoutes from '../../routes/apis'
+import { apiGet } from '../../utils'
 
 class TaiSanThietBiForCreate extends Component {
    constructor(props) {
       super(props)
 
-      this.settings = {
+      this.state = {
+         providers: []
+      }
+   }
+
+   ////// METHODS FOR REACT LIFECYCLES /////
+
+   componentDidMount() {
+      const { fetchData } = this
+
+      fetchData()
+   }
+
+   ///// METHODS FOR INTERACTING WITH API /////
+
+   fetchData = () => {
+      const { fetchProviders } = this
+
+      fetchProviders()
+   }
+
+   fetchProviders = async () => {
+      const url = apiRoutes.nhaCungCap.getAll
+      const queries = { pageSize: 1000 }
+
+      try {
+         const response = await apiGet(url, queries)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({ providers: data })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   ///// METHODS FOR RENDERING UI /////
+
+   renderComponent = () => {
+      const { providers } = this.state
+
+      const settings = {
          entity: taiSanThietBi,
          api: apiRoutes.taiSanThietBi,
          fields: [
@@ -34,10 +80,9 @@ class TaiSanThietBiForCreate extends Component {
                label: 'Nhà cung cấp',
                propForValue: 'nhaCungCap',
                type: 'select',
-               dataSourceType: 'api',
-               dataSource: apiRoutes.nhaCungCap,
-               propForItemValue: 'tenNhaCungCap',
-               propForItemText: 'maNhaCungCap'
+               values: providers,
+               propForItemValue: 'maNhaCungCap',
+               propForItemText: 'tenNhaCungCap'
             },
             {
                label: 'Thông tin bảo hành',
@@ -56,19 +101,12 @@ class TaiSanThietBiForCreate extends Component {
                label: 'Trạng thái',
                propForValue: 'trangThai',
                type: 'select',
-               dataSourceType: 'hardCoded',
-               dataSource: ASSET_STATUSES,
+               values: ASSET_STATUSES,
                propForItemValue: 'text',
                propForItemText: 'text'
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForCreatePage settings={settings} />
    }

@@ -32,19 +32,19 @@ const POSITIONS = [
 
 const ASSET_STATUSES = [
    {
-      value: 'Hoạt động tốt',
+      value: 0,
       text: 'Hoạt động tốt'
    },
    {
-      value: 'Đang sửa chữa',
+      value: 1,
       text: 'Đang sửa chữa'
    },
    {
-      value: 'Đang bảo hành',
+      value: 2,
       text: 'Đang bảo hành'
    },
    {
-      value: 'Đã qua sử dụng',
+      value: 3,
       text: 'Đã qua sử dụng'
    }
 ]

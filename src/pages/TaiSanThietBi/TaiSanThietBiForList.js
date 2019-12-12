@@ -3,12 +3,58 @@ import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
 import { taiSanThietBi } from '../../entities'
 import { ASSET_STATUSES } from '../../constants'
+import { apiGet } from '../../utils'
 
 class TaiSanThietBiForList extends Component {
    constructor(props) {
       super(props)
 
-      this.settings = {
+      this.state = {
+         providers: []
+      }
+   }
+
+   ////// METHODS FOR REACT LIFECYCLES /////
+
+   componentDidMount() {
+      const { fetchData } = this
+
+      fetchData()
+   }
+
+   ///// METHODS FOR INTERACTING WITH API /////
+
+   fetchData = () => {
+      const { fetchProviders } = this
+
+      fetchProviders()
+   }
+
+   fetchProviders = async () => {
+      const url = apiRoutes.nhaCungCap.getAll
+      const queries = { pageSize: 1000 }
+
+      try {
+         const response = await apiGet(url, queries)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({ providers: data })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   ///// METHODS FOR RENDERING UI /////
+
+   renderComponent = () => {
+      const { providers } = this.state
+
+      const settings = {
          entity: taiSanThietBi,
          api: apiRoutes.taiSanThietBi,
          columns: [
@@ -39,8 +85,7 @@ class TaiSanThietBiForList extends Component {
                propForSorting: 'NhaCungCap',
                search: {
                   type: 'select',
-                  dataSourceType: 'api',
-                  dataSource: apiRoutes.nhaCungCap,
+                  values: providers,
                   propForItemValue: 'maNhaCungCap',
                   propForItemText: 'tenNhaCungCap'
                }
@@ -61,9 +106,7 @@ class TaiSanThietBiForList extends Component {
                propForSorting: 'TinhTrang',
                search: {
                   type: 'select',
-                  dataSourceType: 'hardCoded',
-                  // values: ASSET_STATUSES,
-                  dataSource: ASSET_STATUSES,
+                  values: ASSET_STATUSES,
                   propForItemValue: 'text',
                   propForItemText: 'text'
                },
@@ -71,12 +114,6 @@ class TaiSanThietBiForList extends Component {
             }
          ]
       }
-   }
-
-   ///// METHODS FOR RENDERING UI /////
-
-   renderComponent = () => {
-      const { settings } = this
 
       return <ForListPage settings={settings} />
    }
