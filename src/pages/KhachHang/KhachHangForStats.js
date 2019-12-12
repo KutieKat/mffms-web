@@ -4,48 +4,54 @@ import apiRoutes from '../../routes/apis'
 import { khachHang } from '../../entities'
 
 class KhachHangForStats extends Component {
-   constructor(props) {
-      super(props)
+    constructor(props) {
+        super(props)
 
-      this.settings = {
-         entity: khachHang,
-         api: apiRoutes.khachHang,
-         cards: [
-            {
-               label: 'Tổng số khách hàng',
-               propForValue: 'totalCustomers', // customers
-               icon: 'fas fa-users',
-               unit: 'Người'
-            },
-            {
-               label: 'Tổng số khách hàng nam',
-               propForValue: 'maleCustomers',
-               icon: 'fas fa-users',
-               unit: 'Người'
-            },
-            {
-               label: 'Tống số khách hàng nữ',
-               propForValue: 'femaleCustomers',
-               icon: 'fas fa-users',
-               unit: 'Người'
-            }
-         ]
-      }
-   }
+        this.settings = {
+            entity: khachHang,
+            api: apiRoutes.khachHang,
+            cards: [{
+                    label: 'Tổng số khách hàng',
+                    propForValue: 'total', // customers
+                    icon: 'fas fa-users',
+                    unit: 'Người'
+                },
+                {
+                    label: 'Tổng số học sinh',
+                    propForValue: 'student',
+                    icon: 'fas fa-users',
+                    unit: 'Người'
+                },
+                {
+                    label: 'Tống số thanh niên',
+                    propForValue: 'youth',
+                    icon: 'fas fa-users',
+                    unit: 'Người'
+                },
+                {
+                    label: 'Tổng số người lớn',
+                    propForValue: 'adult',
+                    icon: 'fas fa-users',
+                    unit: 'Người'
+                },
+            ]
+        }
+    }
 
-   ///// METHODS FOR RENDERING UI /////
+    ///// METHODS FOR RENDERING UI /////
 
-   renderComponent = () => {
-      const { settings } = this
+    renderComponent = () => {
+        const { settings } = this
 
-      return <ForStatsPage settings={settings} />
-   }
+        return <ForStatsPage settings = { settings }
+        />
+    }
 
-   render() {
-      const { renderComponent } = this
+    render() {
+        const { renderComponent } = this
 
-      return renderComponent()
-   }
+        return renderComponent()
+    }
 }
 
 export default KhachHangForStats
