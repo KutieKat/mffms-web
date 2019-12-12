@@ -4,36 +4,35 @@ import apiRoutes from '../../routes/apis'
 import { nhaCungCap } from '../../entities'
 
 class NhaCungCapForStats extends Component {
-   constructor(props) {
-      super(props)
+    constructor(props) {
+        super(props)
 
-      this.settings = {
-         entity: nhaCungCap,
-         api: apiRoutes.nhaCungCap,
-         cards: [
-            {
-               label: 'Tổng số nhà cung cấp',
-               propForValue: 'total',
-               icon: 'fas fa-users',
-               unit: 'Nhà cung cấp'
-            }
-         ]
-      }
-   }
+        this.settings = {
+            entity: nhaCungCap,
+            api: apiRoutes.nhaCungCap,
+            cards: [{
+                label: 'Tổng số nhà cung cấp',
+                propForValue: 'total',
+                icon: 'fas fa-users',
+                unit: 'Nhà cung cấp'
+            }]
+        }
+    }
 
-   ///// METHODS FOR RENDERING UI /////
+    ///// METHODS FOR RENDERING UI /////
 
-   renderComponent = () => {
-      const { settings } = this
+    renderComponent = () => {
+        const { settings } = this
 
-      return <ForStatsPage settings={settings} />
-   }
+        return <ForStatsPage settings = { settings }
+        />
+    }
 
-   render() {
-      const { renderComponent } = this
+    render() {
+        const { renderComponent } = this
 
-      return renderComponent()
-   }
+        return renderComponent()
+    }
 }
 
 export default NhaCungCapForStats
