@@ -98,8 +98,8 @@ class TaiSanThietBiForCreate extends Component {
                ]
             },
             {
-               label: 'Trạng thái',
-               propForValue: 'trangThai',
+               label: 'Tình trạng',
+               propForValue: 'tinhTrang',
                type: 'select',
                values: ASSET_STATUSES,
                propForItemValue: 'text',

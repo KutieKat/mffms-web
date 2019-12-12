@@ -38,6 +38,13 @@ class ForCreatePage extends Component {
       scrollTop()
    }
 
+   componentWillReceiveProps(nextProps) {
+      const { initializeEditingData } = this
+      const editingData = initializeEditingData(nextProps)
+
+      this.setState({ editingData })
+   }
+
    ///// METHODS FOR INTERACTING WITH API /////
 
    createRecord = () => {
@@ -91,8 +98,8 @@ class ForCreatePage extends Component {
 
    ///// METHODS FOR COMPUTING VALUES /////
 
-   initializeEditingData = () => {
-      const { settings } = this.props
+   initializeEditingData = (props = this.props) => {
+      const { settings } = props
       const { fields } = settings
       let editingData = {}
 
@@ -437,7 +444,6 @@ class ForCreatePage extends Component {
    }
 
    render() {
-      console.log('DEBUG PROPS: ', this.props)
       const { renderComponent } = this
 
       return renderComponent()

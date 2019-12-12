@@ -392,7 +392,7 @@ class ForListPage extends Component {
                </Link>
             </span>
 
-            <span className="button" onClick={importData}>
+            {/* <span className="button" onClick={importData}>
                <i className="fas fa-file-import"></i>&nbsp;&nbsp;Nhập dữ liệu
             </span>
 
@@ -406,7 +406,7 @@ class ForListPage extends Component {
                <span className="button" onClick={exportReport}>
                   <i className="fas fa-file-export"></i>&nbsp;&nbsp;In danh sách
                </span>
-            )}
+            )} */}
          </Fragment>
       )
    }

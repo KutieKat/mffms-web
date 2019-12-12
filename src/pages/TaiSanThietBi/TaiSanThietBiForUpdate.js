@@ -59,6 +59,12 @@ class TaiSanThietBiForUpdate extends Component {
          api: apiRoutes.taiSanThietBi,
          fields: [
             {
+               label: 'Mã tài sản thiết bị',
+               propForValue: 'maTSTB',
+               type: 'input',
+               disabled: true
+            },
+            {
                label: 'Tên tài sản thiết bị',
                propForValue: 'tenTSTB',
                placeholder: 'Nhập tên đầy đủ của thiết bị',

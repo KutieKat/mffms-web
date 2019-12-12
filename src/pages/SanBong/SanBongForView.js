@@ -22,9 +22,19 @@ class SanBongForView extends Component {
                type: 'input'
             },
             {
-               label: 'Diện tích',
+               label: 'Chiều dài (m)',
+               propForValue: 'chieuDai',
+               type: 'input'
+            },
+            {
+               label: 'Chiều rộng (m)',
+               propForValue: 'chieuRong',
+               type: 'input'
+            },
+            {
+               label: 'Diện tích (m2)',
                propForValue: 'dienTich',
-               type: 'textarea'
+               type: 'input'
             },
             {
                label: 'Ghi chú',

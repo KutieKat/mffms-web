@@ -35,6 +35,13 @@ class ForUpdatePage extends Component {
       this.setState({ editingData })
    }
 
+   componentWillReceiveProps(nextProps) {
+      const { initializeEditingData } = this
+      const editingData = initializeEditingData(nextProps)
+
+      this.setState({ editingData })
+   }
+
    componentDidMount() {
       const { fetchData } = this
 
@@ -117,8 +124,8 @@ class ForUpdatePage extends Component {
 
    ///// METHODS FOR COMPUTING VALUES /////
 
-   initializeEditingData = () => {
-      const { settings } = this.props
+   initializeEditingData = (props = this.props) => {
+      const { settings } = props
       const { fields } = settings
       let editingData = {}
 
@@ -139,7 +146,8 @@ class ForUpdatePage extends Component {
             case 'select': {
                const { values, propForItemValue } = field
 
-               editingData[propForValue] = values[0][propForItemValue]
+               editingData[propForValue] =
+                  values[0] && values[0][propForItemValue]
                break
             }
 

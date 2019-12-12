@@ -31,7 +31,7 @@ class SanBongForUpdate extends Component {
                ]
             },
             {
-               label: 'Chiều dài',
+               label: 'Chiều dài (m)',
                propForValue: 'chieuDai',
                placeholder: 'Nhập chiều dài của sân bóng',
                type: 'input',
@@ -44,7 +44,7 @@ class SanBongForUpdate extends Component {
                ]
             },
             {
-               label: 'Chiều rộng',
+               label: 'Chiều rộng (m)',
                propForValue: 'chieuRong',
                placeholder: 'Nhập chiều rộng của sân bóng',
                type: 'input',

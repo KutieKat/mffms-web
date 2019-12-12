@@ -4,7 +4,7 @@ const baseNhanVienApi = baseApi + '/NhanVien'
 const baseNhaCungCapApi = baseApi + '/NhaCungCap'
 const baseSanBongApi = baseApi + '/SanBong'
 const baseDichVuApi = baseApi + '/DichVu'
-const baseTaiSanThietBiApi = baseApi + '/DichVu'
+const baseTaiSanThietBiApi = baseApi + '/TaiSanThietBi'
 const baseCaiDatApi = baseApi + '/CaiDat'
 
 export default {

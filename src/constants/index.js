@@ -49,6 +49,21 @@ const ASSET_STATUSES = [
    }
 ]
 
+const PAYMENT_STATUSES = [
+   {
+      value: 0,
+      text: 'Chưa thanh toán'
+   },
+   {
+      value: 1,
+      text: 'Đã thanh toán một phần'
+   },
+   {
+      value: 2,
+      text: 'Đã thanh toán xong'
+   }
+]
+
 export {
    APP_SHORT_NAME,
    APP_NAME,
@@ -56,5 +71,6 @@ export {
    PAGE_SIZES,
    GENDERS,
    POSITIONS,
-   ASSET_STATUSES
+   ASSET_STATUSES,
+   PAYMENT_STATUSES
 }
