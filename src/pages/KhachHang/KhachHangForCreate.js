@@ -3,6 +3,7 @@ import ForCreatePage from '../../components/ForCreatePage'
 import { GENDERS } from '../../constants/'
 import { khachHang } from '../../entities'
 import apiRoutes from '../../routes/apis'
+import moment from 'moment'
 
 class KhachHangForCreate extends Component {
    constructor(props) {
@@ -52,7 +53,7 @@ class KhachHangForCreate extends Component {
                   },
                   {
                      rule: 'isAfter',
-                     date: new Date().toLocaleDateString(),
+                     date: moment.utc().startOf('day'),
                      message:
                         'Ngày sinh của khách hàng phải lớn hơn hoặc bằng ngày hiện tại!'
                   }

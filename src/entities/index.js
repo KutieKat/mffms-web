@@ -28,4 +28,17 @@ const caiDat = {
    slug: 'cai-dat'
 }
 
-export { khachHang, nhanVien, nhaCungCap, sanBong, dichVu, caiDat }
+const taiSanThietBi = {
+   name: 'tài sản thiết bị',
+   slug: 'tai-san-thiet-bi'
+}
+
+export {
+   khachHang,
+   nhanVien,
+   nhaCungCap,
+   sanBong,
+   dichVu,
+   taiSanThietBi,
+   caiDat
+}

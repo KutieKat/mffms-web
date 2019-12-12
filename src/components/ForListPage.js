@@ -648,7 +648,7 @@ class ForListPage extends Component {
                   </li>
 
                   <li className="table-dropdown-menu-item">
-                     <Link to={'/sinh-vien/cap-nhat/' + record[idColumn]}>
+                     <Link to={`/quan-ly/${slug}/cap-nhat/${record[idColumn]}`}>
                         Cập nhật thông tin
                      </Link>
                   </li>

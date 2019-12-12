@@ -6,13 +6,14 @@ import { isEmpty, isLength, isNumeric } from 'validator'
 import {
    isEmptyObj,
    isPhoneNumber,
-   apiPost,
+   apiGet,
+   apiPut,
    scrollTop,
    isAfter
 } from '../utils'
 import LoadingIndicator from './LoadingIndicator'
 
-class ForCreatePage extends Component {
+class ForUpdateSettingsPage extends Component {
    constructor(props) {
       super(props)
 
@@ -35,22 +36,62 @@ class ForCreatePage extends Component {
    }
 
    componentDidMount() {
+      const { fetchData } = this
+
       scrollTop()
+      fetchData()
    }
 
    ///// METHODS FOR INTERACTING WITH API /////
 
-   createRecord = () => {
-      const { editingData } = this.state
-      const { settings, history } = this.props
-      const { api, entity } = settings
-      const { slug } = entity
-      const url = api.create
+   fetchData = async () => {
+      const { settings, match } = this.props
+      const { api } = settings
+      const url = api.getAll
 
-      return apiPost(url, editingData)
+      try {
+         const response = await apiGet(url)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({ editingData: data, loading: false })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   restoreSettings = () => {
+      const { fetchData } = this
+      const { settings } = this.props
+      const { api } = settings
+      const url = api.restore
+
+      return apiPut(url)
+         .then(response => {
+            this.setState({ loading: false }, fetchData)
+         })
+         .catch(error => {
+            this.setState({ loading: false })
+            // const { errors } = error.response.data.result
+            // this.setState({ showAlert: true })
+         })
+   }
+
+   updateRecord = () => {
+      const { editingData } = this.state
+      const { settings, match, history } = this.props
+      const { api, entity } = settings
+      const id = editingData && editingData.maCaiDat
+      const url = `${api.updateById}/${id}`
+
+      return apiPut(url, editingData)
          .then(response => {
             this.setState({ loading: false })
-            history.push(`/quan-ly/${slug}`)
+            // history.push(`/quan-ly/${slug}`)
          })
          .catch(error => {
             this.setState({ loading: false })
@@ -78,12 +119,18 @@ class ForCreatePage extends Component {
       this.setState({ showAlert: false, errors: null })
    }
 
+   restore = () => {
+      const { restoreSettings } = this
+
+      this.setState({ showAlert: false, loading: true }, restoreSettings)
+   }
+
    submit = () => {
-      const { validateFields, createRecord } = this
+      const { validateFields, updateRecord } = this
       const errors = validateFields()
 
       if (!errors) {
-         this.setState({ showAlert: false, loading: true }, createRecord)
+         this.setState({ showAlert: false, loading: true }, updateRecord)
       } else {
          this.setState({ errors, showAlert: true })
       }
@@ -113,8 +160,7 @@ class ForCreatePage extends Component {
             case 'select': {
                const { values, propForItemValue } = field
 
-               editingData[propForValue] =
-                  values[0] && values[0][propForItemValue]
+               editingData[propForValue] = values[0][propForItemValue]
                break
             }
 
@@ -161,7 +207,7 @@ class ForCreatePage extends Component {
 
          switch (rule) {
             case 'notEmpty': {
-               if (isEmpty(data)) {
+               if (isEmpty(data.toString(10))) {
                   errors.push(message)
                }
 
@@ -189,7 +235,7 @@ class ForCreatePage extends Component {
             }
 
             case 'isNumeric': {
-               if (!isNumeric(data)) {
+               if (!isNumeric(data.toString())) {
                   errors.push(message)
                }
 
@@ -230,23 +276,19 @@ class ForCreatePage extends Component {
       const { name, slug } = entity
 
       return (
-         <span className="breadcrumbs">
+         <section className="breadcrumbs">
             <span className="breadcrumb-home">
-               <Link to="/">Mini Football Field Management System (MFFMS)</Link>
+               <Link to="/">Mini Football Field Management System (GTMS)</Link>
             </span>
+
             <span className="breadcrumb-separator">
                <i className="fas fa-chevron-right"></i>
             </span>
-            <span className="breadcrumb">
-               <Link to={`/quan-ly/${slug}`}>Quản lý {name}</Link>
-            </span>
-            <span className="breadcrumb-separator">
-               <i className="fas fa-chevron-right"></i>
-            </span>
+
             <span className="breadcrumb-active">
-               <Link to="#">Thêm {name} mới</Link>
+               <Link to="#">Quản lý {name}</Link>
             </span>
-         </span>
+         </section>
       )
    }
 
@@ -256,8 +298,8 @@ class ForCreatePage extends Component {
       const { entity } = settings
       const { name } = entity
       const section = {
-         title: `Thêm ${name} mới`,
-         subtitle: `Thêm ${name} mới vào hệ thống`,
+         title: `Quản lý ${name}`,
+         subtitle: `Quản lý thông tin ${name} trên hệ thống`,
          footerRight: renderFormFooter()
       }
 
@@ -328,7 +370,9 @@ class ForCreatePage extends Component {
             return (
                <input
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -352,7 +396,7 @@ class ForCreatePage extends Component {
                   }
                   type="date"
                   placeholder={placeholder}
-                  value={editingData[propForValue]}
+                  value={moment(editingData[propForValue]).format('YYYY-MM-DD')}
                   onChange={e => changeEditingData(e, propForValue)}
                   onFocus={hideAlert}
                   disabled={disabled}
@@ -404,17 +448,16 @@ class ForCreatePage extends Component {
    }
 
    renderFormFooter = () => {
-      const { submit } = this
+      const { submit, restore } = this
       const { settings } = this.props
       const { entity } = settings
       const { slug } = entity
 
       return (
          <Fragment>
-            <span className="button">
-               <Link to={`/quan-ly/${slug}`}>
-                  <i className="fas fa-arrow-left"></i>&nbsp;&nbsp;Trở về
-               </Link>
+            <span className="button" onClick={restore}>
+               <i className="fas fa-redo"></i>&nbsp;&nbsp;Khôi phục giá trị mặc
+               định
             </span>
 
             <span className="button" onClick={submit}>
@@ -437,11 +480,10 @@ class ForCreatePage extends Component {
    }
 
    render() {
-      console.log('DEBUG PROPS: ', this.props)
       const { renderComponent } = this
 
       return renderComponent()
    }
 }
 
-export default withRouter(ForCreatePage)
+export default withRouter(ForUpdateSettingsPage)
