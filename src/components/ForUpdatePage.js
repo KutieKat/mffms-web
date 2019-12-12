@@ -186,7 +186,7 @@ class ForUpdatePage extends Component {
 
          switch (rule) {
             case 'notEmpty': {
-               if (isEmpty(data)) {
+               if (isEmpty(data.toString(10))) {
                   errors.push(message)
                }
 
@@ -214,7 +214,7 @@ class ForUpdatePage extends Component {
             }
 
             case 'isNumeric': {
-               if (!isNumeric(data)) {
+               if (!isNumeric(data.toString())) {
                   errors.push(message)
                }
 

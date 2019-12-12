@@ -9,6 +9,7 @@ import KhachHangForStats from '../pages/KhachHang/KhachHangForStats'
 import NhanVienForList from '../pages/NhanVien/NhanVienForList'
 import NhanVienForCreate from '../pages/NhanVien/NhanVienForCreate'
 import NhanVienForView from '../pages/NhanVien/NhanVienForView'
+import NhanVienForUpdate from '../pages/NhanVien/NhanVienForUpdate'
 import NhanVienForStats from '../pages/NhanVien/NhanVienForStats'
 
 ///// NhaCungCap /////
@@ -65,6 +66,10 @@ export default [
    {
       path: '/quan-ly/nhan-vien/them-moi',
       component: NhanVienForCreate
+   },
+   {
+      path: '/quan-ly/nhan-vien/cap-nhat/:id',
+      component: NhanVienForUpdate
    },
    {
       path: '/thong-ke/nhan-vien',

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import ForCreatePage from '../../components/ForCreatePage'
+import ForUpdatePage from '../../components/ForUpdatePage'
 import { GENDERS, POSITIONS } from '../../constants/'
 import apiRoutes from '../../routes/apis'
 import { nhanVien } from '../../entities'
 import moment from 'moment'
 
-class NhanVienForCreate extends Component {
+class NhanVienForUpdate extends Component {
    constructor(props) {
       super(props)
 
@@ -13,6 +13,12 @@ class NhanVienForCreate extends Component {
          entity: nhanVien,
          api: apiRoutes.nhanVien,
          fields: [
+            {
+               label: 'Mã nhân viên',
+               propForValue: 'maNhanVien',
+               type: 'input',
+               disabled: true
+            },
             {
                label: 'Họ và tên',
                propForValue: 'tenNhanVien',
@@ -157,7 +163,7 @@ class NhanVienForCreate extends Component {
    renderComponent = () => {
       const { settings } = this
 
-      return <ForCreatePage settings={settings} />
+      return <ForUpdatePage settings={settings} />
    }
 
    render() {
@@ -167,4 +173,4 @@ class NhanVienForCreate extends Component {
    }
 }
 
-export default NhanVienForCreate
+export default NhanVienForUpdate
