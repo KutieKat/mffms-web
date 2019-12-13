@@ -19,7 +19,7 @@ class KhachHangForList extends Component {
                isBold: true,
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo mã'
+                  placeholder: 'Mã khách hàng'
                },
                displayType: 'listAndPrint'
             },
@@ -29,7 +29,7 @@ class KhachHangForList extends Component {
                propForSorting: 'HoVaTen',
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo họ và tên'
+                  placeholder: 'Họ và tên'
                },
                displayType: 'listAndPrint'
             },
@@ -40,8 +40,9 @@ class KhachHangForList extends Component {
                search: {
                   type: 'select',
                   values: GENDERS,
-                  propForItemValue: 'text',
-                  propForItemText: 'text'
+                  propForItemValue: 'value',
+                  propForItemText: 'label',
+                  placeholder: 'Giới tính'
                },
                displayType: 'listAndPrint'
             },
@@ -50,7 +51,8 @@ class KhachHangForList extends Component {
                propForValue: 'ngaySinh',
                propForSorting: 'NgaySinh',
                search: {
-                  type: 'date'
+                  type: 'date',
+                  placeholder: 'Ngày sinh'
                },
                isDateTimeValue: true,
                displayType: 'listAndPrint'
@@ -61,7 +63,7 @@ class KhachHangForList extends Component {
                propForSorting: 'SoDienThoai',
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo SĐT'
+                  placeholder: 'Số điện thoại'
                },
                displayType: 'listAndPrint'
             }
