@@ -590,16 +590,20 @@ form {
    left: 0;
    top: 0;
    background-color: rgba(0, 0, 0, 0.5);
+   z-index: 10;
+   display: flex;
+   align-items: center;
+   justify-content: center;
 }
 
 .popup {
-   position: absolute;
-   transform: translate(-50%, -50%);
+   /* position: absolute; */
+   /* transform: translate(-50%, -50%); */
    background-color: white;
    box-shadow: 0 0.25rem 0.125rem 0 rgba(0, 0, 0, 0.025);
    min-width: 600px;
-   left: 50%;
-   top: 50%;
+   /* left: 50%;
+   top: 50%; */
    border-radius: 6px;
 }
 
@@ -1065,15 +1069,14 @@ input[type='file'] {
    text-align: center !important;
 }
 
-select {
+/* select {
    -webkit-appearance: none;
    background: url(/images/down.png) #fff;
    background-repeat: no-repeat;
    background-size: 20px 20px;
-   /* background-position: 90%; */
    background-position: 99%;
    cursor: pointer;
-}
+} */
 
 tr th:not(:first-child) {
    min-width: 120px;
@@ -1117,6 +1120,46 @@ tr th:not(:first-child) {
 
 .stats-card__unit {
    color: #6a6c6f;
+}
+
+/* .form-input-outline--thin {
+   width: 100%;
+   padding: 7.2px 12px;
+   border-radius: 4px;
+   outline: none;
+   border-radius: 3px;
+   border: none;
+   border: 1px solid hsl(0, 0%, 80%);
+   font-size: 14px;
+   font-weight: 600;
+} */
+
+/* .form-input-outline--thin:focus {
+   border: 1.5px solid #007bff;
+} */
+
+/* .css-1wa3eu0-placeholder {
+   font-weight: normal;
+} */
+
+/* .css-yk16xz-control {
+   padding: 3px 6px;
+   border: 2px solid #edf0f5;
+   font-size: 14px;
+   font-weight: normal;
+   outline: none !important;
+   box-shadow: none !important;
+} */
+
+span.form-input-outline {
+   display: block;
+   font-weight: normal;
+   color: gray;
+   width: 200px;
+}
+
+.css-1okebmr-indicatorSeparator {
+   display: none;
 }
 
 .loading-indicator {

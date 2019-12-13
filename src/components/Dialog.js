@@ -5,7 +5,6 @@ class Dialog extends Component {
 
    renderHeader = () => {
       const { renderHeaderTop, renderHeaderMain } = this
-      const { settings } = this.props
 
       return (
          <header className="popup__header">
@@ -32,7 +31,9 @@ class Dialog extends Component {
 
       return (
          <div className="popup-header__main-section">
-            <img src={iconUrl} className="popup__image" />
+            {iconUrl !== undefined && (
+               <img src={iconUrl} className="popup__image" />
+            )}
             <h4 className="popup-header__title">{title}</h4>
          </div>
       )
@@ -60,14 +61,18 @@ class Dialog extends Component {
                {closeButtonText}
             </span>
 
-            <span
-               className={
-                  enableSubmit ? 'popup-button-danger' : 'popup-button-default'
-               }
-               onClick={enableSubmit ? onSubmit : null}
-            >
-               {submitButtonText}
-            </span>
+            {onSubmit !== undefined && (
+               <span
+                  className={
+                     enableSubmit
+                        ? 'popup-button-danger'
+                        : 'popup-button-default'
+                  }
+                  onClick={enableSubmit ? onSubmit : null}
+               >
+                  {submitButtonText}
+               </span>
+            )}
          </footer>
       )
    }

@@ -11,8 +11,9 @@ const APP_ABOUT =
 const PAGE_SIZES = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000]
 
 const GENDERS = [
-   { value: 'Nam', text: 'Nam' },
-   { value: 'Nữ', text: 'Nữ' }
+   { value: '', label: 'Tất cả' },
+   { value: 'Nam', label: 'Nam' },
+   { value: 'Nữ', label: 'Nữ' }
 ]
 
 const POSITIONS = [

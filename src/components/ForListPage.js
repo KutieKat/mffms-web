@@ -7,6 +7,20 @@ import axios from 'axios'
 import { debounce } from 'debounce'
 import LoadingIndicator from './LoadingIndicator'
 import DeleteDialog from './DeleteDialog'
+import Select from 'react-select'
+import { DateRangePicker } from 'react-date-range'
+import Dialog from './Dialog'
+import moment from 'moment'
+
+const customStyles = {
+   control: () => ({
+      border: '2px solid #edf0f5',
+      display: 'flex',
+      fontWeight: 'normal',
+      paddingTop: '3px',
+      paddingBottom: '2px'
+   })
+}
 
 class ForListPage extends Component {
    constructor(props) {
@@ -32,7 +46,10 @@ class ForListPage extends Component {
          loading: true,
          loadingTableData: false,
          showDeleteDialog: false,
-         recordToDelete: ''
+         recordToDelete: '',
+
+         showDateRangePicker: false,
+         activeDateRangePicker: ''
       }
 
       this.fetchData = debounce(this.fetchData, 50)
@@ -57,6 +74,7 @@ class ForListPage extends Component {
    ///// METHODS FOR INTERACTING WITH API /////
 
    formRequestParams = () => {
+      const { searchData } = this.state
       const params = {}
       const {
          keyword,
@@ -73,6 +91,18 @@ class ForListPage extends Component {
       params['pageNumber'] = pageNumber
       params['pageSize'] = pageSize
       params['trangThai'] = status
+
+      Object.keys(searchData).forEach(key => {
+         if (searchData[key] !== undefined) {
+            if (key.includes('date_') === true) {
+               params[key.replace('date_', '')] = moment(
+                  searchData[key]
+               ).format('YYYY-MM-DD')
+            } else {
+               params[key] = searchData[key]
+            }
+         }
+      })
 
       return params
    }
@@ -125,6 +155,42 @@ class ForListPage extends Component {
    }
 
    ///// METHODS FOR HANDLING UI EVENTS /////
+
+   toggleDateRangePicker = propName => {
+      const state = { ...this.state }
+      const showDateRangePicker = state['showDateRangePicker']
+
+      if (showDateRangePicker) {
+         state['showDateRangePicker'] = false
+         state['activeDateRangePicker'] = ''
+      } else {
+         state['showDateRangePicker'] = true
+         state['searchData']['date_' + propName + 'BatDau'] = new Date()
+         state['searchData']['date_' + propName + 'KetThuc'] = new Date()
+         state['activeDateRangePicker'] = propName
+      }
+
+      this.setState({ ...state })
+   }
+
+   changeDateRange = selectedOption => {
+      const { fetchData } = this
+      const state = { ...this.state }
+      const activeDateRangePicker = state['activeDateRangePicker']
+      const { range1 } = selectedOption
+      const { startDate, endDate } = range1
+
+      state['searchData'][
+         'date_' + activeDateRangePicker + 'BatDau'
+      ] = startDate
+      state['searchData']['date_' + activeDateRangePicker + 'KetThuc'] = endDate
+      state['showDateRangePicker'] = false
+      state['activeDateRangePicker'] = ''
+
+      this.setState({ ...state }, () => {
+         fetchData(false)
+      })
+   }
 
    changeKeyword = e => {
       const { fetchData } = this
@@ -201,10 +267,9 @@ class ForListPage extends Component {
       )
    }
 
-   changeSearchData = (e, fieldName) => {
+   changeSearchData = (value, fieldName) => {
       const { fetchData } = this
       const { searchData } = this.state
-      const value = e.target.value
 
       if (typeof value === 'number') {
          value = parseInt(value)
@@ -235,10 +300,12 @@ class ForListPage extends Component {
    }
 
    resetSearchData = () => {
-      const { initializeSearchData } = this
+      const { initializeSearchData, fetchData } = this
       const searchData = initializeSearchData()
 
-      this.setState({ searchData })
+      this.setState({ searchData }, () => {
+         fetchData(false)
+      })
    }
 
    importData = () => {}
@@ -276,6 +343,7 @@ class ForListPage extends Component {
    ///// METHODS FOR COMPUTING VALUES /////
 
    initializeSearchData = () => {
+      // console.log('Được gọi 1 lần!!!')
       const { settings } = this.props
       const { columns } = settings
       let searchData = {}
@@ -290,17 +358,17 @@ class ForListPage extends Component {
                break
             }
 
-            // case 'date': {
-            //    searchData[propForValue] = moment().format('YYYY-MM-DD')
-            //    break
-            // }
+            case 'date': {
+               searchData['date_' + propForValue + 'BatDau'] = undefined
+               searchData['date_' + propForValue + 'KetThuc'] = undefined
+               break
+            }
 
-            // case 'select': {
-            //    const { values, propForItemValue } = field
-
-            //    searchData[propForValue] = values[0][propForItemValue]
-            //    break
-            // }
+            case 'select': {
+               const { values, propForItemValue } = search
+               searchData[propForValue] = values[0][propForItemValue]
+               break
+            }
 
             case 'textarea': {
                searchData[propForValue] = ''
@@ -346,6 +414,22 @@ class ForListPage extends Component {
 
          case 1:
             return 'Đang hiển thị'
+      }
+   }
+
+   getDateRangePickerValue = (propName, defaultValue = '') => {
+      const { searchData } = this.state
+      const startDate = searchData['date_' + propName + 'BatDau']
+      const endDate = searchData['date_' + propName + 'KetThuc']
+
+      if (startDate === undefined && endDate === undefined) {
+         return defaultValue
+      } else {
+         const value = `${formatDateString(startDate)} - ${formatDateString(
+            endDate
+         )}`
+
+         return value
       }
    }
 
@@ -551,7 +635,11 @@ class ForListPage extends Component {
    }
 
    renderTableToolbarCell = column => {
-      const { changeSearchData } = this
+      const {
+         changeSearchData,
+         toggleDateRangePicker,
+         getDateRangePickerValue
+      } = this
       const { searchData } = this.state
       const { search, propForValue } = column
       const { type, placeholder } = search
@@ -564,43 +652,38 @@ class ForListPage extends Component {
                   type="text"
                   placeholder={placeholder}
                   value={searchData[propForValue]}
-                  onChange={e => changeSearchData(e, propForValue)}
+                  onChange={e => changeSearchData(e.target.value, propForValue)}
                />
             )
          }
 
-         // case 'date': {
-         //    return (
-         //       <input
-         //          className="form-input-outline"
-         //          type="date"
-         //          placeholder={placeholder}
-         //          value={editingData[propForValue]}
-         //          onChange={e => changeEditingData(e, propForValue)}
-         //          onFocus={hideAlert}
-         //          disabled={disabled}
-         //       />
-         //    )
-         // }
+         case 'date': {
+            return (
+               <span
+                  className="form-input-outline"
+                  onClick={() => toggleDateRangePicker(propForValue)}
+               >
+                  {getDateRangePickerValue(propForValue, placeholder)}
+               </span>
+            )
+         }
 
          case 'select': {
             const { search } = column
             const { values, propForItemText, propForItemValue } = search
 
             return (
-               <select
-                  className="form-input-outline"
-                  value={searchData[propForValue]}
-                  onChange={e => changeSearchData(e, propForValue)}
-               >
-                  <option value="-1">Tất cả</option>
-                  {values.length > 0 &&
-                     values.map((record, index) => (
-                        <option key={index} value={record[propForItemValue]}>
-                           {record[propForItemText]}
-                        </option>
-                     ))}
-               </select>
+               <Select
+                  value={values.find(
+                     item => item.value === searchData[propForValue]
+                  )}
+                  onChange={option =>
+                     changeSearchData(option.value, propForValue)
+                  }
+                  options={values}
+                  placeholder={placeholder}
+                  styles={customStyles}
+               />
             )
          }
       }
@@ -802,20 +885,50 @@ class ForListPage extends Component {
       )
    }
 
+   renderDateRangePickers = dateRangePicker => {
+      const { changeDateRange, toggleDateRangePicker } = this
+      const { searchData, showDateRangePicker } = this.state
+      const selectionRange = {
+         startDate: searchData['date_' + dateRangePicker + 'BatDau'],
+         endDate: searchData['date_' + dateRangePicker + 'KetThuc']
+      }
+      const settings = {
+         title: `Chọn khoảng thời gian`,
+         onClose: () => toggleDateRangePicker(dateRangePicker),
+         isOpen: showDateRangePicker
+      }
+
+      return (
+         <Dialog settings={settings}>
+            <DateRangePicker
+               ranges={[selectionRange]}
+               onChange={changeDateRange}
+            />
+         </Dialog>
+      )
+   }
+
    renderComponent = () => {
-      const { renderHeader, renderBody, renderDialogs } = this
-      const { loading } = this.state
+      const {
+         renderHeader,
+         renderBody,
+         renderDialogs,
+         renderDateRangePickers
+      } = this
+      const { loading, showDateRangePicker, activeDateRangePicker } = this.state
 
       return (
          <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
             {renderDialogs()}
+            {renderDateRangePickers(activeDateRangePicker)}
          </LoadingIndicator>
       )
    }
 
    render() {
+      console.log('STATE: ', this.state)
       const { renderComponent } = this
 
       return renderComponent()

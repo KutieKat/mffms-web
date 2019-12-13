@@ -7,6 +7,8 @@ import pageRoutes from './routes/pages'
 import NotFound from './pages/NotFound'
 import { APP_NAME, APP_SHORT_NAME } from './constants'
 import './styles.css'
+import 'react-date-range/dist/styles.css'
+import 'react-date-range/dist/theme/default.css'
 
 class App extends Component {
    constructor(props) {
