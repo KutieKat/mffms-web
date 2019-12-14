@@ -1122,35 +1122,6 @@ tr th:not(:first-child) {
    color: #6a6c6f;
 }
 
-/* .form-input-outline--thin {
-   width: 100%;
-   padding: 7.2px 12px;
-   border-radius: 4px;
-   outline: none;
-   border-radius: 3px;
-   border: none;
-   border: 1px solid hsl(0, 0%, 80%);
-   font-size: 14px;
-   font-weight: 600;
-} */
-
-/* .form-input-outline--thin:focus {
-   border: 1.5px solid #007bff;
-} */
-
-/* .css-1wa3eu0-placeholder {
-   font-weight: normal;
-} */
-
-/* .css-yk16xz-control {
-   padding: 3px 6px;
-   border: 2px solid #edf0f5;
-   font-size: 14px;
-   font-weight: normal;
-   outline: none !important;
-   box-shadow: none !important;
-} */
-
 span.form-input-outline {
    display: block;
    font-weight: normal;
@@ -1160,6 +1131,12 @@ span.form-input-outline {
 
 .css-1okebmr-indicatorSeparator {
    display: none;
+}
+
+.slider-wrapper {
+   display: flex;
+   align-items: center;
+   height: 42px;
 }
 
 .loading-indicator {

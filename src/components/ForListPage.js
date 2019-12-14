@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import Section from './Section'
 import { PAGE_SIZES } from '../constants'
-import { formatDateString, scrollTop } from '../utils'
+import { formatDateString, scrollTop, numberWithCommas } from '../utils'
 import axios from 'axios'
 import { debounce } from 'debounce'
 import LoadingIndicator from './LoadingIndicator'
@@ -11,6 +11,9 @@ import Select from 'react-select'
 import { DateRangePicker } from 'react-date-range'
 import Dialog from './Dialog'
 import moment from 'moment'
+const Slider = require('rc-slider')
+const createSliderWithTooltip = Slider.createSliderWithTooltip
+const Range = createSliderWithTooltip(Slider.Range)
 
 const customStyles = {
    control: () => ({
@@ -76,16 +79,8 @@ class ForListPage extends Component {
    formRequestParams = () => {
       const { searchData } = this.state
       const params = {}
-      const {
-         keyword,
-         sortField,
-         sortOrder,
-         pageNumber,
-         pageSize,
-         status
-      } = this.state
+      const { sortField, sortOrder, pageNumber, pageSize, status } = this.state
 
-      params['keyword'] = keyword
       params['sortField'] = sortField
       params['sortOrder'] = sortOrder
       params['pageNumber'] = pageNumber
@@ -94,10 +89,12 @@ class ForListPage extends Component {
 
       Object.keys(searchData).forEach(key => {
          if (searchData[key] !== undefined) {
-            if (key.includes('date_') === true) {
+            if (key.includes('date_')) {
                params[key.replace('date_', '')] = moment(
                   searchData[key]
                ).format('YYYY-MM-DD')
+            } else if (key.includes('range_')) {
+               params[key.replace('range_', '')] = searchData[key]
             } else {
                params[key] = searchData[key]
             }
@@ -343,7 +340,6 @@ class ForListPage extends Component {
    ///// METHODS FOR COMPUTING VALUES /////
 
    initializeSearchData = () => {
-      // console.log('Được gọi 1 lần!!!')
       const { settings } = this.props
       const { columns } = settings
       let searchData = {}
@@ -370,8 +366,9 @@ class ForListPage extends Component {
                break
             }
 
-            case 'textarea': {
-               searchData[propForValue] = ''
+            case 'slider': {
+               searchData['range_' + propForValue + 'BatDau'] = 0
+               searchData['range_' + propForValue + 'KetThuc'] = 1000000000
                break
             }
          }
@@ -430,6 +427,29 @@ class ForListPage extends Component {
          )}`
 
          return value
+      }
+   }
+
+   getCellValue = (column, record) => {
+      const { type, propForValue } = column
+      const value = record[propForValue]
+
+      switch (type) {
+         case 'date': {
+            return formatDateString(value)
+         }
+
+         case 'number': {
+            return numberWithCommas(value)
+         }
+
+         case 'string': {
+            return value
+         }
+
+         default: {
+            return value
+         }
       }
    }
 
@@ -686,6 +706,35 @@ class ForListPage extends Component {
                />
             )
          }
+
+         case 'slider': {
+            return (
+               <div className="slider-wrapper">
+                  <Range
+                     min={0}
+                     max={100000000}
+                     step={1000000}
+                     value={[
+                        searchData['range_' + propForValue + 'BatDau'],
+                        searchData['range_' + propForValue + 'KetThuc']
+                     ]}
+                     onChange={range => {
+                        const [startValue, endValue] = range
+
+                        changeSearchData(
+                           startValue,
+                           'range_' + propForValue + 'BatDau'
+                        )
+                        changeSearchData(
+                           endValue,
+                           'range_' + propForValue + 'KetThuc'
+                        )
+                     }}
+                     tipFormatter={value => `${numberWithCommas(value)}`}
+                  />
+               </div>
+            )
+         }
       }
    }
 
@@ -707,7 +756,12 @@ class ForListPage extends Component {
    }
 
    renderTableData = () => {
-      const { getCurrentStatusColors, getCurrentStatusText, deleteById } = this
+      const {
+         getCurrentStatusColors,
+         getCurrentStatusText,
+         deleteById,
+         getCellValue
+      } = this
       const { data } = this.state
       const { settings } = this.props
       const { entity, columns } = settings
@@ -764,9 +818,7 @@ class ForListPage extends Component {
                   className={column.isBold ? 'table-text-bold' : ''}
                   key={index}
                >
-                  {column.isDateTimeValue
-                     ? formatDateString(record[column.propForValue])
-                     : record[column.propForValue]}
+                  {getCellValue(column, record)}
                </td>
             ))}
 

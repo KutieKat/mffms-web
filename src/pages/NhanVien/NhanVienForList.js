@@ -17,9 +17,10 @@ class NhanVienForList extends Component {
                propForValue: 'maNhanVien',
                propForSorting: 'MaNhanVien',
                isBold: true,
+               type: 'string',
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo mã'
+                  placeholder: 'Mã nhân viên'
                },
                displayType: 'listAndPrint'
             },
@@ -27,9 +28,10 @@ class NhanVienForList extends Component {
                text: 'Họ và tên',
                propForValue: 'tenNhanVien',
                propForSorting: 'TenNhanVien',
+               type: 'string',
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo họ và tên'
+                  placeholder: 'Họ và tên'
                },
                displayType: 'listAndPrint'
             },
@@ -37,11 +39,12 @@ class NhanVienForList extends Component {
                text: 'Giới tính',
                propForValue: 'gioiTinh',
                propForSorting: 'GioiTinh',
+               type: 'string',
                search: {
                   type: 'select',
                   values: GENDERS,
-                  propForItemValue: 'text',
-                  propForItemText: 'text'
+                  propForItemValue: 'value',
+                  propForItemText: 'label'
                },
                displayType: 'listAndPrint'
             },
@@ -49,19 +52,21 @@ class NhanVienForList extends Component {
                text: 'Ngày sinh',
                propForValue: 'ngaySinh',
                propForSorting: 'NgaySinh',
-               isDateTimeValue: true,
-               displayType: 'listAndPrint',
+               type: 'date',
                search: {
-                  type: 'date'
-               }
+                  type: 'date',
+                  placeholder: 'Ngày sinh'
+               },
+               displayType: 'listAndPrint'
             },
             {
                text: 'Số điện thoại',
                propForValue: 'soDienThoai',
                propForSorting: 'SoDienThoai',
+               type: 'string',
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo số điện thoại'
+                  placeholder: 'Số điện thoại'
                },
                displayType: 'listAndPrint'
             },
@@ -69,9 +74,10 @@ class NhanVienForList extends Component {
                text: 'Tiền lương (VNĐ)',
                propForValue: 'luong',
                propForSorting: 'Luong',
+               type: 'number',
                search: {
-                  type: 'input',
-                  placeholder: 'Tìm theo mức lương'
+                  type: 'slider',
+                  placeholder: 'Mức lương'
                },
                displayType: 'listAndPrint'
             }
