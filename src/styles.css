@@ -1139,6 +1139,46 @@ span.form-input-outline {
    height: 42px;
 }
 
+.stats-toolbar {
+   margin-bottom: 24px;
+}
+
+.stats-tabs {
+   margin-bottom: 24px;
+   background-color: white;
+   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.05);
+   padding-left: 16px;
+}
+
+.stats-tab {
+   display: inline-block;
+   padding: 12px 16px;
+   border-top: 3px solid white;
+   border-bottom: 3px solid white;
+   cursor: pointer;
+   user-select: none;
+}
+
+.stats-tab:hover {
+   border-bottom: 3px solid rgba(255, 198, 7, 0.2);
+}
+
+.stats-tab--active {
+   border-bottom: 3px solid #ffc607 !important;
+   font-weight: 600;
+}
+
+.stats-date-range-picker-toggler {
+   display: inline-block;
+   padding: 6px 12px;
+   background-color: #3d4145;
+   border-radius: 4px;
+   color: white;
+   font-size: 12px;
+   margin-left: 12px;
+   cursor: pointer;
+}
+
 .loading-indicator {
    display: flex;
    flex-direction: column;

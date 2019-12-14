@@ -10,8 +10,13 @@ const APP_ABOUT =
 
 const PAGE_SIZES = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000]
 
-const GENDERS = [
+const GENDERS_FOR_SEARCH = [
    { value: '', label: 'Tất cả' },
+   { value: 'Nam', label: 'Nam' },
+   { value: 'Nữ', label: 'Nữ' }
+]
+
+const GENDERS = [
    { value: 'Nam', label: 'Nam' },
    { value: 'Nữ', label: 'Nữ' }
 ]
@@ -65,13 +70,52 @@ const PAYMENT_STATUSES = [
    }
 ]
 
+const STATS_TABS = [
+   {
+      value: 0,
+      text: 'Từ trước đến nay'
+   },
+   {
+      value: 1,
+      text: 'Hôm nay'
+   },
+   {
+      value: 2,
+      text: 'Tuần này'
+   },
+   {
+      value: 3,
+      text: 'Tháng này'
+   },
+   {
+      value: 4,
+      text: 'Quý này'
+   },
+   {
+      value: 5,
+      text: 'Năm nay'
+   },
+   {
+      value: 6,
+      text: 'Tùy chọn'
+   }
+]
+
+const SHORT_FETCHING_DATA_INTERVAL = 30000
+
+const LONG_FETCHING_DATA_INTERVAL = 60000
+
 export {
    APP_SHORT_NAME,
    APP_NAME,
    APP_DESCRIPTION,
    PAGE_SIZES,
    GENDERS,
+   GENDERS_FOR_SEARCH,
    POSITIONS,
    ASSET_STATUSES,
-   PAYMENT_STATUSES
+   PAYMENT_STATUSES,
+   STATS_TABS,
+   LONG_FETCHING_DATA_INTERVAL,
+   SHORT_FETCHING_DATA_INTERVAL
 }

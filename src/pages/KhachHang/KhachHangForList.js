@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
 import { khachHang } from '../../entities'
-import { GENDERS } from '../../constants'
+import { GENDERS_FOR_SEARCH } from '../../constants'
 
 class KhachHangForList extends Component {
    ///// METHODS FOR RENDERING UI /////
@@ -27,6 +27,7 @@ class KhachHangForList extends Component {
                text: 'Họ và tên',
                propForValue: 'tenKhachHang',
                propForSorting: 'HoVaTen',
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Họ và tên'
@@ -37,9 +38,10 @@ class KhachHangForList extends Component {
                text: 'Giới tính',
                propForValue: 'gioiTinh',
                propForSorting: 'GioiTinh',
+               type: 'string',
                search: {
                   type: 'select',
-                  values: GENDERS,
+                  values: GENDERS_FOR_SEARCH,
                   propForItemValue: 'value',
                   propForItemText: 'label',
                   placeholder: 'Giới tính'
@@ -50,17 +52,18 @@ class KhachHangForList extends Component {
                text: 'Ngày sinh',
                propForValue: 'ngaySinh',
                propForSorting: 'NgaySinh',
+               type: 'date',
                search: {
                   type: 'date',
                   placeholder: 'Ngày sinh'
                },
-               isDateTimeValue: true,
                displayType: 'listAndPrint'
             },
             {
                text: 'Số điện thoại',
                propForValue: 'soDienThoai',
                propForSorting: 'SoDienThoai',
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Số điện thoại'

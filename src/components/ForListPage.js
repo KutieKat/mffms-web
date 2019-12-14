@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import Section from './Section'
-import { PAGE_SIZES } from '../constants'
-import { formatDateString, scrollTop, numberWithCommas } from '../utils'
+import { PAGE_SIZES, SHORT_FETCHING_DATA_INTERVAL } from '../constants'
+import { formatDateString, scrollTop, numberWithCommas, apiGet } from '../utils'
 import axios from 'axios'
 import { debounce } from 'debounce'
 import LoadingIndicator from './LoadingIndicator'
@@ -50,7 +50,6 @@ class ForListPage extends Component {
          loadingTableData: false,
          showDeleteDialog: false,
          recordToDelete: '',
-
          showDateRangePicker: false,
          activeDateRangePicker: ''
       }
@@ -72,6 +71,12 @@ class ForListPage extends Component {
 
       scrollTop()
       fetchData()
+   }
+
+   componentWillUnmount() {
+      if (this.fetchingDataInterval) {
+         clearInterval(this.fetchingDataInterval)
+      }
    }
 
    ///// METHODS FOR INTERACTING WITH API /////
@@ -104,15 +109,26 @@ class ForListPage extends Component {
       return params
    }
 
+   fetchDataByInterval = () => {
+      const { fetchData, fetchingDataInterval } = this
+
+      if (fetchingDataInterval === undefined) {
+         this.fetchingDataInterval = setInterval(
+            fetchData,
+            SHORT_FETCHING_DATA_INTERVAL
+         )
+      }
+   }
+
    fetchData = async (isFirstLoad = true) => {
-      const { formRequestParams } = this
+      const { formRequestParams, fetchDataByInterval } = this
       const { settings } = this.props
       const { api } = settings
       const url = api.getAll
       const params = formRequestParams()
 
       try {
-         const response = await axios.get(url, { params })
+         const response = await apiGet(url, { params })
 
          if (response && response.data.status === 'SUCCESS') {
             const {
@@ -123,29 +139,35 @@ class ForListPage extends Component {
             } = response.data.result
 
             if (isFirstLoad) {
-               this.setState({
-                  totalItems,
-                  totalPages,
-                  data,
-                  statusStatistics,
-                  loading: false
-               })
+               this.setState(
+                  {
+                     totalItems,
+                     totalPages,
+                     data,
+                     statusStatistics,
+                     loading: false
+                  },
+                  fetchDataByInterval
+               )
             } else {
-               this.setState({
-                  totalItems,
-                  totalPages,
-                  data,
-                  statusStatistics,
-                  loadingTableData: false
-               })
+               this.setState(
+                  {
+                     totalItems,
+                     totalPages,
+                     data,
+                     statusStatistics,
+                     loadingTableData: false
+                  },
+                  fetchDataByInterval
+               )
             }
          } else {
-            this.setState({ loading: false })
+            this.setState({ loading: false }, fetchDataByInterval)
 
             throw new Error(response.errors)
          }
       } catch (error) {
-         this.setState({ loading: false })
+         this.setState({ loading: false }, fetchDataByInterval)
 
          console.error(error)
       }

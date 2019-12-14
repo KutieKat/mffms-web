@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
 import { nhanVien } from '../../entities'
-import { GENDERS } from '../../constants'
+import { GENDERS_FOR_SEARCH } from '../../constants'
 
 class NhanVienForList extends Component {
    ///// METHODS FOR RENDERING UI /////
@@ -42,7 +42,7 @@ class NhanVienForList extends Component {
                type: 'string',
                search: {
                   type: 'select',
-                  values: GENDERS,
+                  values: GENDERS_FOR_SEARCH,
                   propForItemValue: 'value',
                   propForItemText: 'label'
                },
