@@ -433,7 +433,6 @@ class ForStatsPage extends Component {
    }
 
    render() {
-      console.log('STATS - STATE: ', this.state)
       const { renderComponent } = this
 
       return renderComponent()

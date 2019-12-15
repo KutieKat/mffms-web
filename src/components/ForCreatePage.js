@@ -10,7 +10,20 @@ import {
    scrollTop,
    isAfter
 } from '../utils'
+import { connect } from 'react-redux'
+import { showNotification } from '../redux/actions'
 import LoadingIndicator from './LoadingIndicator'
+import Select from 'react-select'
+
+const customStyles = {
+   control: () => ({
+      border: '2px solid #edf0f5',
+      display: 'flex',
+      fontWeight: 'normal',
+      paddingTop: '3px',
+      paddingBottom: '2px'
+   })
+}
 
 class ForCreatePage extends Component {
    constructor(props) {
@@ -48,6 +61,7 @@ class ForCreatePage extends Component {
    ///// METHODS FOR INTERACTING WITH API /////
 
    createRecord = () => {
+      const { showErrorNotification, showSuccessNotification } = this
       const { editingData } = this.state
       const { settings, history } = this.props
       const { api, entity } = settings
@@ -56,10 +70,12 @@ class ForCreatePage extends Component {
 
       return apiPost(url, editingData)
          .then(response => {
+            showSuccessNotification()
             this.setState({ loading: false })
             history.push(`/quan-ly/${slug}`)
          })
          .catch(error => {
+            showErrorNotification()
             this.setState({ loading: false })
             // const { errors } = error.response.data.result
             // this.setState({ showAlert: true })
@@ -68,9 +84,8 @@ class ForCreatePage extends Component {
 
    ///// METHODS FOR HANDLING UI EVENTS /////
 
-   changeEditingData = (e, fieldName) => {
+   changeEditingData = (value, fieldName) => {
       const { editingData } = this.state
-      const value = e.target.value
 
       if (typeof value === 'number') {
          value = parseInt(value)
@@ -86,12 +101,15 @@ class ForCreatePage extends Component {
    }
 
    submit = () => {
+      const { showErrorNotification } = this
       const { validateFields, createRecord } = this
       const errors = validateFields()
 
       if (!errors) {
+         showErrorNotification()
          this.setState({ showAlert: false, loading: true }, createRecord)
       } else {
+         showErrorNotification()
          this.setState({ errors, showAlert: true })
       }
    }
@@ -231,6 +249,22 @@ class ForCreatePage extends Component {
 
    ///// METHODS FOR RENDERING UI /////
 
+   showSuccessNotification = () => {
+      const { showNotification, settings } = this.props
+      const { entity } = settings
+      const { name } = entity
+
+      showNotification('success', `Thêm ${name} mới thành công!`)
+   }
+
+   showErrorNotification = () => {
+      const { showNotification, settings } = this.props
+      const { entity } = settings
+      const { name } = entity
+
+      showNotification('error', `Thêm ${name} mới thất bại!`)
+   }
+
    renderHeader = () => {
       const { settings } = this.props
       const { entity } = settings
@@ -342,7 +376,9 @@ class ForCreatePage extends Component {
                   type="text"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e => changeEditingData(e, propForValue)}
+                  onChange={e =>
+                     changeEditingData(e.target.value, propForValue)
+                  }
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -360,7 +396,9 @@ class ForCreatePage extends Component {
                   type="date"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e => changeEditingData(e, propForValue)}
+                  onChange={e =>
+                     changeEditingData(e.target.value, propForValue)
+                  }
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -371,23 +409,18 @@ class ForCreatePage extends Component {
             const { values, propForItemText, propForItemValue } = field
 
             return (
-               <select
-                  className={
-                     isValidField(propForValue)
-                        ? 'form-input-alert'
-                        : 'form-input-outline'
+               <Select
+                  value={values.find(
+                     item => item.value === editingData[propForValue]
+                  )}
+                  onChange={option =>
+                     changeEditingData(option.value, propForValue)
                   }
-                  value={editingData[propForValue]}
-                  onChange={e => changeEditingData(e, propForValue)}
+                  options={values}
+                  placeholder={placeholder}
+                  styles={customStyles}
                   onFocus={hideAlert}
-               >
-                  {values.length > 0 &&
-                     values.map((record, index) => (
-                        <option key={index} value={record[propForItemValue]}>
-                           {record[propForItemText]}
-                        </option>
-                     ))}
-               </select>
+               />
             )
          }
 
@@ -401,7 +434,9 @@ class ForCreatePage extends Component {
                   }
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e => changeEditingData(e, propForValue)}
+                  onChange={e =>
+                     changeEditingData(e.target.value, propForValue)
+                  }
                   onFocus={hideAlert}
                   disabled={disabled}
                ></textarea>
@@ -424,7 +459,7 @@ class ForCreatePage extends Component {
                </Link>
             </span>
 
-            <span className="button" onClick={submit}>
+            <span className="button button-primary" onClick={submit}>
                <i className="fas fa-save"></i>&nbsp;&nbsp;Lưu lại
             </span>
          </Fragment>
@@ -450,4 +485,4 @@ class ForCreatePage extends Component {
    }
 }
 
-export default withRouter(ForCreatePage)
+export default withRouter(connect(null, { showNotification })(ForCreatePage))

@@ -277,7 +277,7 @@ class ForDetailsPrintPage extends Component {
                <p className="printing-page__signature">(Ký và ghi rõ họ tên)</p>
             </div>
 
-            <div className="printing-page__footer-main-center"></div>
+            {/* <div className="printing-page__footer-main-center"></div> */}
 
             <div className="printing-page__footer-main-right">
                <p className="printing-page__job-title">NGƯỜI LẬP</p>
@@ -287,14 +287,21 @@ class ForDetailsPrintPage extends Component {
       )
    }
 
+   renderInternalCss = () => {
+      const style = `<style>@media print { @page { size: portrait; } }</style>`
+
+      return <div dangerouslySetInnerHTML={{ __html: style }}></div>
+   }
+
    renderComponent = () => {
-      const { renderHeader, renderBody, renderFooter } = this
+      const { renderHeader, renderBody, renderFooter, renderInternalCss } = this
 
       return (
          <div className="printing-page">
             {renderHeader()}
             {renderBody()}
             {renderFooter()}
+            {renderInternalCss()}
          </div>
       )
    }

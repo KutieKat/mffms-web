@@ -11,7 +11,20 @@ import {
    scrollTop,
    isAfter
 } from '../utils'
+import { connect } from 'react-redux'
+import { showNotification } from '../redux/actions'
 import LoadingIndicator from './LoadingIndicator'
+import Select from 'react-select'
+
+const customStyles = {
+   control: () => ({
+      border: '2px solid #edf0f5',
+      display: 'flex',
+      fontWeight: 'normal',
+      paddingTop: '3px',
+      paddingBottom: '2px'
+   })
+}
 
 class ForUpdatePage extends Component {
    constructor(props) {
@@ -73,6 +86,7 @@ class ForUpdatePage extends Component {
    }
 
    updateRecord = () => {
+      const { showErrorNotification, showSuccessNotification } = this
       const { editingData } = this.state
       const { settings, match, history } = this.props
       const { api, entity } = settings
@@ -82,10 +96,12 @@ class ForUpdatePage extends Component {
 
       return apiPut(url, editingData)
          .then(response => {
+            showSuccessNotification()
             this.setState({ loading: false })
             history.push(`/quan-ly/${slug}`)
          })
          .catch(error => {
+            showErrorNotification()
             this.setState({ loading: false })
             // const { errors } = error.response.data.result
             // this.setState({ showAlert: true })
@@ -112,12 +128,15 @@ class ForUpdatePage extends Component {
    }
 
    submit = () => {
+      const { showErrorNotification } = this
       const { validateFields, updateRecord } = this
       const errors = validateFields()
 
       if (!errors) {
+         showErrorNotification()
          this.setState({ showAlert: false, loading: true }, updateRecord)
       } else {
+         showErrorNotification()
          this.setState({ errors, showAlert: true })
       }
    }
@@ -256,6 +275,22 @@ class ForUpdatePage extends Component {
    }
 
    ///// METHODS FOR RENDERING UI /////
+
+   showSuccessNotification = () => {
+      const { showNotification, settings } = this.props
+      const { entity } = settings
+      const { name } = entity
+
+      showNotification('success', `Cập nhật thông tin ${name} thành công!`)
+   }
+
+   showErrorNotification = () => {
+      const { showNotification, settings } = this.props
+      const { entity } = settings
+      const { name } = entity
+
+      showNotification('error', `Cập nhật thông tin ${name} thất bại!`)
+   }
 
    renderHeader = () => {
       const { settings } = this.props
@@ -399,23 +434,18 @@ class ForUpdatePage extends Component {
             const { values, propForItemText, propForItemValue } = field
 
             return (
-               <select
-                  className={
-                     isValidField(propForValue)
-                        ? 'form-input-alert'
-                        : 'form-input-outline'
+               <Select
+                  value={values.find(
+                     item => item.value === editingData[propForValue]
+                  )}
+                  onChange={option =>
+                     changeEditingData(option.value, propForValue)
                   }
-                  value={editingData[propForValue]}
-                  onChange={e => changeEditingData(e, propForValue)}
+                  options={values}
+                  placeholder={placeholder}
+                  styles={customStyles}
                   onFocus={hideAlert}
-               >
-                  {values.length > 0 &&
-                     values.map((record, index) => (
-                        <option key={index} value={record[propForItemValue]}>
-                           {record[propForItemText]}
-                        </option>
-                     ))}
-               </select>
+               />
             )
          }
 
@@ -452,7 +482,7 @@ class ForUpdatePage extends Component {
                </Link>
             </span>
 
-            <span className="button" onClick={submit}>
+            <span className="button button-primary" onClick={submit}>
                <i className="fas fa-save"></i>&nbsp;&nbsp;Lưu lại
             </span>
          </Fragment>
@@ -478,4 +508,4 @@ class ForUpdatePage extends Component {
    }
 }
 
-export default withRouter(ForUpdatePage)
+export default withRouter(connect(null, { showNotification })(ForUpdatePage))

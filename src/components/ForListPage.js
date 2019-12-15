@@ -11,6 +11,8 @@ import Select from 'react-select'
 import { DateRangePicker } from 'react-date-range'
 import Dialog from './Dialog'
 import moment from 'moment'
+import exportFromJSON from 'export-from-json'
+
 const Slider = require('rc-slider')
 const createSliderWithTooltip = Slider.createSliderWithTooltip
 const Range = createSliderWithTooltip(Slider.Range)
@@ -328,7 +330,18 @@ class ForListPage extends Component {
    }
 
    importData = () => {}
-   exportData = () => {}
+
+   exportData = async () => {
+      const { data } = this.state
+      const { settings } = this.props
+      const { entity } = settings
+      const { slug } = entity
+      const fileName = `${slug}-${moment().format('DDMMYYYY')}`
+      const exportType = 'json'
+
+      await exportFromJSON({ data, fileName, exportType })
+   }
+
    exportReport = () => {}
 
    toggleShowDeleteDialog = () => {
@@ -518,21 +531,21 @@ class ForListPage extends Component {
                </Link>
             </span>
 
-            {/* <span className="button" onClick={importData}>
-               <i className="fas fa-file-import"></i>&nbsp;&nbsp;Nhập dữ liệu
-            </span>
-
             {data.length !== 0 && (
                <span className="button" onClick={exportData}>
                   <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất dữ liệu
                </span>
             )}
 
+            {/* <span className="button" onClick={importData}>
+               <i className="fas fa-file-import"></i>&nbsp;&nbsp;Nhập dữ liệu
+            </span> */}
+
             {data.length !== 0 && (
                <span className="button" onClick={exportReport}>
-                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;In danh sách
+                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
                </span>
-            )} */}
+            )}
          </Fragment>
       )
    }
@@ -1002,7 +1015,6 @@ class ForListPage extends Component {
    }
 
    render() {
-      console.log('STATE: ', this.state)
       const { renderComponent } = this
 
       return renderComponent()

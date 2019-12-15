@@ -1,31 +1,37 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import * as actions from '../../redux/actions'
+import { showNotification } from '../../redux/actions'
 import apiRoutes from '../../routes/apis'
-import { apiPost } from '../../utils'
-import { APP_DESCRIPTION, APP_ABOUT } from '../../constants'
+import { apiPost, isEmptyObj } from '../../utils'
+import { APP_SHORT_NAME, APP_DESCRIPTION, APP_ABOUT } from '../../constants'
+import LoadingIndicator from '../../components/LoadingIndicator'
 
 class Login extends Component {
    constructor(props) {
       super(props)
+
       this.state = {
          userData: {
             tenDangNhap: '',
             matKhau: ''
-         }
+         },
+         loading: false,
+         showAlert: false,
+         errors: null
       }
    }
 
    ///// METHODS FOR HANDLING UI EVENTS /////
 
-   changeUserData(fieldName, value) {
+   changeUserData = (fieldName, value) => {
       const userData = { ...this.state.userData }
       userData[fieldName] = value
+
       this.setState({ userData })
    }
 
-   login = async e => {
-      e.preventDefault()
+   login = async () => {
+      const { reset, showSuccessNotification, showErrorNotification } = this
 
       try {
          const { reset } = this
@@ -35,13 +41,13 @@ class Login extends Component {
          const response = await apiPost(url, userData)
 
          if (response && response.status == 200) {
-            logIn({})
+            // Show home page
          } else {
-            alert('Đăng nhập vào tài khoản thất bại! Vui lòng kiểm tra lại!')
+            showErrorNotification()
             reset()
          }
       } catch (error) {
-         alert('Đăng nhập vào tài khoản thất bại! Vui lòng kiểm tra lại!')
+         showErrorNotification()
          reset()
       }
    }
@@ -55,36 +61,124 @@ class Login extends Component {
       })
    }
 
+   submit = e => {
+      e.preventDefault()
+      const {
+         validateFields,
+         login,
+         showSuccessNotification,
+         showErrorNotification
+      } = this
+      const errors = validateFields()
+
+      if (!errors) {
+         showSuccessNotification()
+         this.setState({ showAlert: false, loading: true }, login)
+      } else {
+         showErrorNotification()
+         this.setState({ errors, showAlert: true })
+      }
+   }
+
+   hideAlert = () => {
+      this.setState({ showAlert: false, errors: null })
+   }
+
+   ///// METHODDS FOR CHECKING VALUES /////
+
+   validateFields = () => {
+      const { userData } = this.state
+      const { tenDangNhap, matKhau } = userData
+      let errors = {}
+      let tenDangNhapErrors = []
+      let matKhauErrors = []
+
+      if (tenDangNhap === '') {
+         tenDangNhapErrors.push(
+            'Tên đăng nhập là thông tin bắt buộc và không được để trống!'
+         )
+      }
+
+      if (matKhau === '') {
+         matKhauErrors.push(
+            'Mật khẩu là thông tin bắt buộc và không được để trống!'
+         )
+      }
+
+      if (matKhau.length < 6) {
+         matKhauErrors.push('Mật khẩu phải có ít nhất 6 ký tự!')
+      }
+
+      errors['tenDangNhap'] = {
+         name: 'Tên đăng nhập',
+         errors: tenDangNhapErrors
+      }
+
+      errors['matKhau'] = {
+         name: 'Mật khẩu',
+         errors: matKhauErrors
+      }
+
+      return !isEmptyObj(errors) ? errors : null
+   }
+
+   isValidField = fieldName => {
+      const { errors } = this.state
+
+      return (
+         errors &&
+         Object.keys(errors)
+            .map(key => key.toLowerCase())
+            .indexOf(fieldName.toLowerCase()) > -1
+      )
+   }
+
    ///// METHODS FOR RENDERING UI /////
+
+   showSuccessNotification = () => {
+      const { showNotification } = this.props
+
+      showNotification('success', 'Đăng nhập thành công!')
+   }
+
+   showErrorNotification = () => {
+      const { showNotification } = this.props
+
+      showNotification('error', 'Đăng nhập thất bại!')
+   }
 
    renderFormHeader = () => {
       return (
          <div className="login-form__header">
             <img src="/images/logo.png" className="login-form__icon" />
+            <h1 className="login-form__title">{APP_SHORT_NAME}</h1>
             <p className="text-center login-form__description">
                {APP_DESCRIPTION}
             </p>
+            <hr />
          </div>
       )
    }
 
    renderFormBody = () => {
-      const { changeUserData } = this
+      const { changeUserData, hideAlert, isValidField } = this
       const { userData } = this.state
-      const { tenDangNhap, matKhau } = userData
 
       return (
          <Fragment>
-            <hr />
-
             <div className="form-group">
                <label>Tên đăng nhập</label>
                <input
                   type="text"
                   placeholder="Nhập tên đăng nhập của bạn"
-                  className="form-input-outline"
-                  value={tenDangNhap}
+                  className={
+                     isValidField('tenDangNhap')
+                        ? 'form-input-alert'
+                        : 'form-input-outline'
+                  }
+                  value={userData && userData.tenDangNhap}
                   onChange={e => changeUserData('tenDangNhap', e.target.value)}
+                  onFocus={hideAlert}
                   autoComplete="off"
                />
             </div>
@@ -94,9 +188,14 @@ class Login extends Component {
                <input
                   type="password"
                   placeholder="Nhập mật khẩu của bạn"
-                  className="form-input-outline"
-                  value={matKhau}
+                  className={
+                     isValidField('matKhau')
+                        ? 'form-input-alert'
+                        : 'form-input-outline'
+                  }
+                  value={userData && userData.matKhau}
                   onChange={e => changeUserData('matKhau', e.target.value)}
+                  onFocus={hideAlert}
                   autoComplete="off"
                />
             </div>
@@ -115,24 +214,59 @@ class Login extends Component {
    }
 
    renderForm = () => {
-      const { login, renderFormHeader, renderFormBody, renderFormFooter } = this
+      const {
+         submit,
+         renderFormHeader,
+         renderErrors,
+         renderFormBody,
+         renderFormFooter
+      } = this
 
       return (
-         <form onSubmit={login} className="login-form">
+         <form onSubmit={submit} className="login-form">
             {renderFormHeader()}
+            {renderErrors()}
             {renderFormBody()}
             {renderFormFooter()}
          </form>
       )
    }
 
-   renderComponent = () => {
-      const { renderForm } = this
+   renderErrors = () => {
+      const { showAlert, errors } = this.state
 
       return (
-         <div className="container">
-            <div className="col-md-6 offset-md-3 loginBox">{renderForm()}</div>
-         </div>
+         showAlert && (
+            <div className="section__alert">
+               <ul>
+                  {Object.keys(errors).map(error => {
+                     const subErrors = errors[error].errors
+
+                     return subErrors.map((subError, index) => (
+                        <li key={index}>
+                           <i className="fas fa-exclamation-triangle"></i>{' '}
+                           <strong>{errors[error].name}:</strong> {subError}
+                        </li>
+                     ))
+                  })}
+               </ul>
+            </div>
+         )
+      )
+   }
+
+   renderComponent = () => {
+      const { renderForm } = this
+      const { loading } = this.state
+
+      return (
+         <LoadingIndicator isLoading={loading}>
+            <div className="container">
+               <div className="col-md-6 offset-md-3 loginBox">
+                  {renderForm()}
+               </div>
+            </div>
+         </LoadingIndicator>
       )
    }
 
@@ -143,4 +277,4 @@ class Login extends Component {
    }
 }
 
-export default connect(null, actions)(Login)
+export default connect(null, { showNotification })(Login)

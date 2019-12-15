@@ -6,10 +6,13 @@ import menu from './routes/menu'
 import pageRoutes from './routes/pages'
 import NotFound from './pages/NotFound'
 import { APP_NAME, APP_SHORT_NAME } from './constants'
+import Login from './pages/Login'
+import Notification from './components/Notification'
 import './styles.css'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 import 'rc-slider/assets/index.css'
+import 'react-notifications/lib/notifications.css'
 
 class App extends Component {
    constructor(props) {
@@ -239,13 +242,19 @@ class App extends Component {
       ))
    }
 
+   renderNotification = () => {
+      return <Notification />
+   }
+
    renderComponent = () => {
-      const { renderHeader, renderMain } = this
+      const { renderHeader, renderMain, renderNotification } = this
 
       return (
          <Fragment>
+            {/* <Login /> */}
             {renderHeader()}
             {renderMain()}
+            {renderNotification()}
          </Fragment>
       )
    }

@@ -4,6 +4,24 @@ import { Link, withRouter } from 'react-router-dom'
 import { apiGet, formatDateString, scrollTop, print } from '../utils'
 import LoadingIndicator from './LoadingIndicator'
 import ForDetailsPrintPage from './ForDetailsPrintPage'
+import Select from 'react-select'
+import moment from 'moment'
+import exportFromJSON from 'export-from-json'
+import ExportDetailsReportDialog from './ExportDetailsReportDialog'
+import Excel from 'exceljs'
+import { saveAs } from 'file-saver'
+import { excelFormat } from '../utils'
+
+const customStyles = {
+   control: () => ({
+      border: '2px solid #edf0f5',
+      display: 'flex',
+      fontWeight: 'normal',
+      paddingTop: '3px',
+      paddingBottom: '2px',
+      backgroundColor: '#edf0f5'
+   })
+}
 
 class ForViewPage extends Component {
    constructor(props) {
@@ -11,7 +29,8 @@ class ForViewPage extends Component {
 
       this.state = {
          data: null,
-         loading: true
+         loading: true,
+         showExportDetailsDialog: false
       }
    }
 
@@ -58,10 +77,151 @@ class ForViewPage extends Component {
       this.setState({ loading: true }, fetchData)
    }
 
-   exportData = () => {}
+   exportData = async () => {
+      const { data } = this.state
+      const { settings } = this.props
+      const { entity } = settings
+      const { slug } = entity
+      const fileName = `${slug}-${moment().format('DDMMYYYY')}`
+      const exportType = 'json'
 
-   exportReport = () => {
+      await exportFromJSON({ data: [data], fileName, exportType })
+   }
+
+   exportToPdf = () => {
       print()
+   }
+
+   exportToXlsx = () => {
+      // const { getCellValue } = this
+      const { data } = this.state
+      const { settings } = this.props
+      const { entity, fields } = settings
+      const { name } = entity
+      let workbook = new Excel.Workbook()
+      let worksheet = workbook.addWorksheet(moment().format('DD-MM-YYYY'), {
+         pageSetup: { fitToPage: true, orientation: 'portrait' }
+      })
+      let currentRowCount = 7
+      let self = this
+
+      workbook.Props = {
+         Title: 'Title',
+         Subject: 'Subject',
+         Author: 'MFFMS',
+         CreatedDate: moment()
+      }
+
+      worksheet.mergeCells('A1:G1')
+      worksheet.getCell('A1').value = 'SÂN BÓNG MINI NĂM NHỎ'
+      worksheet.getCell('A1').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A2:G2')
+      worksheet.getCell('A2').value =
+         'Địa chỉ: Đối diện Đại học thể dục, thể thao TP HCM'
+      worksheet.getCell('A2').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A3:G3')
+      worksheet.getCell('A3').value =
+         'Số điện thoại: 0902123456 - Fax: 0902123456'
+      worksheet.getCell('A3').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A5:M5')
+      worksheet.getCell(
+         'M5'
+      ).value = `THÔNG TIN CHI TIẾT VỀ  ${name.toUpperCase()}`
+      worksheet.getCell('M5').font = { ...excelFormat.boldFont, size: 18 }
+      worksheet.getCell('M5').alignment = excelFormat.center
+
+      fields.forEach((field, index) => {
+         const { label, propForValue, type } = field
+
+         worksheet.mergeCells(`B${currentRowCount}:D${currentRowCount}`)
+         worksheet.mergeCells(`E${currentRowCount}:L${currentRowCount}`)
+
+         worksheet.getCell(`B${currentRowCount}`).value = label
+         worksheet.getCell(`B${currentRowCount}`).font = excelFormat.boldFont
+
+         worksheet.getCell(`E${currentRowCount}`).value = (type => {
+            switch (type) {
+               case 'date': {
+                  return formatDateString(data[propForValue])
+               }
+
+               default: {
+                  return data[propForValue]
+               }
+            }
+         })(type)
+         worksheet.getCell(`E${currentRowCount}`).font = excelFormat.normalFont
+
+         currentRowCount += index !== fields.length - 1 ? 2 : 0
+      })
+
+      worksheet.mergeCells(
+         'G' + (currentRowCount + 2) + ':M' + (currentRowCount + 2)
+      )
+      worksheet.getCell(
+         'G' + (currentRowCount + 2)
+      ).value = `Thành phố Hồ Chí Minh, ngày ${moment().format(
+         'DD'
+      )} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}`
+      worksheet.getCell('G' + (currentRowCount + 2)).font =
+         excelFormat.italicFont
+      worksheet.getCell('G' + (currentRowCount + 2)).alignment =
+         excelFormat.right
+
+      worksheet.mergeCells(
+         'B' + (currentRowCount + 4) + ':D' + (currentRowCount + 4)
+      )
+      worksheet.getCell('B' + (currentRowCount + 4)).value = `NGƯỜI DUYỆT`
+      worksheet.getCell('B' + (currentRowCount + 4)).font = excelFormat.boldFont
+      worksheet.getCell('B' + (currentRowCount + 4)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'J' + (currentRowCount + 4) + ':L' + (currentRowCount + 4)
+      )
+      worksheet.getCell('J' + (currentRowCount + 4)).value = `NGƯỜI LẬP`
+      worksheet.getCell('J' + (currentRowCount + 4)).font = excelFormat.boldFont
+      worksheet.getCell('J' + (currentRowCount + 4)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'A' + (currentRowCount + 5) + ':E' + (currentRowCount + 5)
+      )
+      worksheet.getCell(
+         'A' + (currentRowCount + 5)
+      ).value = `(Ký và ghi rõ họ tên)`
+      worksheet.getCell('A' + (currentRowCount + 5)).font =
+         excelFormat.italicFont
+      worksheet.getCell('A' + (currentRowCount + 5)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'I' + (currentRowCount + 5) + ':M' + (currentRowCount + 5)
+      )
+      worksheet.getCell(
+         'I' + (currentRowCount + 5)
+      ).value = `(Ký và ghi rõ họ tên)`
+      worksheet.getCell('I' + (currentRowCount + 5)).font =
+         excelFormat.italicFont
+      worksheet.getCell('I' + (currentRowCount + 5)).alignment =
+         excelFormat.center
+
+      workbook.xlsx.writeBuffer().then(function(data) {
+         var blob = new Blob([data], {
+            type:
+               'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+         })
+         saveAs(blob, self.state.fileNameToExportDocument)
+      })
+   }
+
+   toggleExportDetailsDialog = () => {
+      const { showExportDetailsDialog } = this.state
+
+      this.setState({ showExportDetailsDialog: !showExportDetailsDialog })
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
@@ -112,7 +272,7 @@ class ForViewPage extends Component {
    }
 
    renderSectionHeaderRight = () => {
-      const { refresh, exportData, exportReport } = this
+      const { refresh, exportData, toggleExportDetailsDialog } = this
       const { data } = this.state
 
       return (
@@ -128,8 +288,8 @@ class ForViewPage extends Component {
             )}
 
             {data !== null && (
-               <span className="button" onClick={exportReport}>
-                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;In thông tin
+               <span className="button" onClick={toggleExportDetailsDialog}>
+                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
                </span>
             )}
          </Fragment>
@@ -209,18 +369,14 @@ class ForViewPage extends Component {
             const { values, propForItemText, propForItemValue } = field
 
             return (
-               <select
-                  className="form-input-disabled"
-                  value={data && data[propForValue]}
-                  disabled={true}
-               >
-                  {values.length > 0 &&
-                     values.map((record, index) => (
-                        <option key={index} value={record[propForItemValue]}>
-                           {record[propForItemText]}
-                        </option>
-                     ))}
-               </select>
+               <Select
+                  value={values.find(
+                     item => item.value === (data && data[propForValue])
+                  )}
+                  options={values}
+                  styles={customStyles}
+                  isDisabled={true}
+               />
             )
          }
 
@@ -252,8 +408,29 @@ class ForViewPage extends Component {
       )
    }
 
+   renderDialogs = () => {
+      const { toggleExportDetailsDialog, exportToPdf, exportToXlsx } = this
+      const { showExportDetailsDialog, data } = this.state
+      const { settings } = this.props
+      const { entity, api } = settings
+      const dialogSettings = {
+         isOpen: showExportDetailsDialog,
+         onClose: toggleExportDetailsDialog,
+         onExportToPdf: exportToPdf,
+         onExportToXlsx: exportToXlsx,
+         entity,
+         data
+      }
+
+      return (
+         <Fragment>
+            <ExportDetailsReportDialog settings={dialogSettings} />
+         </Fragment>
+      )
+   }
+
    renderComponent = () => {
-      const { renderHeader, renderBody } = this
+      const { renderHeader, renderBody, renderDialogs } = this
       const { data, loading } = this.state
       const { settings } = this.props
       const { entity, api, fields } = settings
@@ -268,6 +445,7 @@ class ForViewPage extends Component {
          <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
+            {renderDialogs()}
             <ForDetailsPrintPage settings={printSettings} />
          </LoadingIndicator>
       )

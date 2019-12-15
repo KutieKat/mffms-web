@@ -27,8 +27,8 @@ class KhachHangForView extends Component {
                propForValue: 'gioiTinh',
                type: 'select',
                values: GENDERS,
-               propForItemValue: 'text',
-               propForItemText: 'text'
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Ngày sinh',
