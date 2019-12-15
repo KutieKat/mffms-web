@@ -48,6 +48,26 @@ class CaiDatForUpdate extends Component {
                ]
             },
             {
+               label: 'Địa chỉ trên phiếu',
+               propForValue: 'diaChiTrenPhieu',
+               placeholder:
+                  'Nhập địa chỉ được sử dụng trên các phiếu và báo biểu',
+               type: 'textarea',
+               validators: [
+                  {
+                     rule: 'notEmpty',
+                     message:
+                        'Địa chỉ được sử dụng trên các phiếu và báo biểu là thông tin bắt buộc và không được để trống!'
+                  },
+                  {
+                     rule: 'minLength',
+                     length: 4,
+                     message:
+                        'Địa chỉ được sử dụng trên các phiếu và báo biểu phải có ít nhất 4 ký tự!'
+                  }
+               ]
+            },
+            {
                label: 'Số điện thoại',
                propForValue: 'soDienThoai',
                placeholder: 'Nhập số điện thoại của sân bóng',
