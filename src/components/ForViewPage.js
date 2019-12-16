@@ -7,10 +7,12 @@ import ForDetailsPrintPage from './ForDetailsPrintPage'
 import Select from 'react-select'
 import moment from 'moment'
 import exportFromJSON from 'export-from-json'
-import ExportDetailsReportDialog from './ExportDetailsReportDialog'
+import ExportReportDialog from './ExportReportDialog'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
 import { excelFormat } from '../utils'
+import { connect } from 'react-redux'
+import { showNotification } from '../redux/actions'
 
 const customStyles = {
    control: () => ({
@@ -30,7 +32,7 @@ class ForViewPage extends Component {
       this.state = {
          data: null,
          loading: true,
-         showExportDetailsDialog: false
+         showExportReportDialog: false
       }
    }
 
@@ -89,11 +91,14 @@ class ForViewPage extends Component {
    }
 
    exportToPdf = () => {
+      const { showSuccessNotification } = this
+
       print()
+      showSuccessNotification()
    }
 
    exportToXlsx = () => {
-      // const { getCellValue } = this
+      const { showSuccessNotification } = this
       const { data } = this.state
       const { settings } = this.props
       const { entity, fields } = settings
@@ -216,12 +221,14 @@ class ForViewPage extends Component {
          })
          saveAs(blob, self.state.fileNameToExportDocument)
       })
+
+      showSuccessNotification()
    }
 
-   toggleExportDetailsDialog = () => {
-      const { showExportDetailsDialog } = this.state
+   toggleExportReportDialog = () => {
+      const { showExportReportDialog } = this.state
 
-      this.setState({ showExportDetailsDialog: !showExportDetailsDialog })
+      this.setState({ showExportReportDialog: !showExportReportDialog })
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
@@ -244,6 +251,18 @@ class ForViewPage extends Component {
    }
 
    ///// METHODS FOR RENDERING UI /////
+
+   showSuccessNotification = () => {
+      const { showNotification } = this.props
+
+      showNotification('success', 'Xuất báo cáo thành công!')
+   }
+
+   showErrorNotification = () => {
+      const { showNotification } = this.props
+
+      showNotification('error', 'Xuất báo cáo thất bại!')
+   }
 
    renderHeader = () => {
       const { settings } = this.props
@@ -272,7 +291,7 @@ class ForViewPage extends Component {
    }
 
    renderSectionHeaderRight = () => {
-      const { refresh, exportData, toggleExportDetailsDialog } = this
+      const { refresh, exportData, toggleExportReportDialog } = this
       const { data } = this.state
 
       return (
@@ -288,7 +307,7 @@ class ForViewPage extends Component {
             )}
 
             {data !== null && (
-               <span className="button" onClick={toggleExportDetailsDialog}>
+               <span className="button" onClick={toggleExportReportDialog}>
                   <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
                </span>
             )}
@@ -409,13 +428,13 @@ class ForViewPage extends Component {
    }
 
    renderDialogs = () => {
-      const { toggleExportDetailsDialog, exportToPdf, exportToXlsx } = this
-      const { showExportDetailsDialog, data } = this.state
+      const { toggleExportReportDialog, exportToPdf, exportToXlsx } = this
+      const { showExportReportDialog, data } = this.state
       const { settings } = this.props
       const { entity, api } = settings
       const dialogSettings = {
-         isOpen: showExportDetailsDialog,
-         onClose: toggleExportDetailsDialog,
+         isOpen: showExportReportDialog,
+         onClose: toggleExportReportDialog,
          onExportToPdf: exportToPdf,
          onExportToXlsx: exportToXlsx,
          entity,
@@ -424,7 +443,7 @@ class ForViewPage extends Component {
 
       return (
          <Fragment>
-            <ExportDetailsReportDialog settings={dialogSettings} />
+            <ExportReportDialog settings={dialogSettings} />
          </Fragment>
       )
    }
@@ -436,7 +455,7 @@ class ForViewPage extends Component {
       const { entity, api, fields } = settings
       const printSettings = {
          entity,
-         api,
+         // api,
          fields,
          data
       }
@@ -446,6 +465,7 @@ class ForViewPage extends Component {
             {renderHeader()}
             {renderBody()}
             {renderDialogs()}
+
             <ForDetailsPrintPage settings={printSettings} />
          </LoadingIndicator>
       )
@@ -458,4 +478,4 @@ class ForViewPage extends Component {
    }
 }
 
-export default withRouter(ForViewPage)
+export default withRouter(connect(null, { showNotification })(ForViewPage))

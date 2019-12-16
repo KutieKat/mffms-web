@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Dialog from './Dialog'
 
-class ExportDetailsReportDialog extends Component {
+class ExportReportDialog extends Component {
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
@@ -46,4 +46,4 @@ class ExportDetailsReportDialog extends Component {
    }
 }
 
-export default ExportDetailsReportDialog
+export default ExportReportDialog
