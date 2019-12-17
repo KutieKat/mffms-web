@@ -17,11 +17,11 @@ class KhachHangForList extends Component {
                propForValue: 'maKhachHang',
                propForSorting: 'MaKhachHang',
                isBold: true,
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Mã khách hàng'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Họ và tên',
@@ -31,8 +31,7 @@ class KhachHangForList extends Component {
                search: {
                   type: 'input',
                   placeholder: 'Họ và tên'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Giới tính',
@@ -42,11 +41,10 @@ class KhachHangForList extends Component {
                search: {
                   type: 'select',
                   values: GENDERS_FOR_SEARCH,
-                  propForItemValue: 'value',
-                  propForItemText: 'label',
+                  // propForItemValue: 'value',
+                  // propForItemText: 'label',
                   placeholder: 'Giới tính'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Ngày sinh',
@@ -56,8 +54,7 @@ class KhachHangForList extends Component {
                search: {
                   type: 'date',
                   placeholder: 'Ngày sinh'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Số điện thoại',
@@ -67,8 +64,7 @@ class KhachHangForList extends Component {
                search: {
                   type: 'input',
                   placeholder: 'Số điện thoại'
-               },
-               displayType: 'listAndPrint'
+               }
             }
          ]
       }

@@ -1015,6 +1015,10 @@ input[type='file'] {
       -moz-appearance: none;
       appearance: none;
    }
+
+   .notification-container {
+      display: none !important;
+   }
 }
 
 .section-h5 {

@@ -2,7 +2,14 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import Section from './Section'
 import { PAGE_SIZES, SHORT_FETCHING_DATA_INTERVAL } from '../constants'
-import { formatDateString, scrollTop, numberWithCommas, apiGet } from '../utils'
+import {
+   formatDateString,
+   scrollTop,
+   numberWithCommas,
+   apiGet,
+   print,
+   getColumnsOrdinates
+} from '../utils'
 import axios from 'axios'
 import { debounce } from 'debounce'
 import LoadingIndicator from './LoadingIndicator'
@@ -12,6 +19,13 @@ import { DateRangePicker } from 'react-date-range'
 import Dialog from './Dialog'
 import moment from 'moment'
 import exportFromJSON from 'export-from-json'
+import ForListPrintPage from './ForListPrintPage'
+import ExportReportDialog from './ExportReportDialog'
+import { connect } from 'react-redux'
+import { showNotification } from '../redux/actions'
+import Excel from 'exceljs'
+import { saveAs } from 'file-saver'
+import { excelFormat } from '../utils'
 
 const Slider = require('rc-slider')
 const createSliderWithTooltip = Slider.createSliderWithTooltip
@@ -53,7 +67,8 @@ class ForListPage extends Component {
          showDeleteDialog: false,
          recordToDelete: '',
          showDateRangePicker: false,
-         activeDateRangePicker: ''
+         activeDateRangePicker: '',
+         showExportReportDialog: false
       }
 
       this.fetchData = debounce(this.fetchData, 50)
@@ -364,6 +379,190 @@ class ForListPage extends Component {
       refresh()
    }
 
+   toggleExportReportDialog = () => {
+      const { showExportReportDialog } = this.state
+
+      this.setState({ showExportReportDialog: !showExportReportDialog })
+   }
+
+   exportToXlsx = () => {
+      const { showSuccessNotification, getCellValue } = this
+      const { data } = this.state
+      const { settings } = this.props
+      const { entity, columns } = settings
+      const { name, slug } = entity
+      const fileName = `danh-sach-${slug}-${moment().format('DDMMYYYY')}`
+      let workbook = new Excel.Workbook()
+      let worksheet = workbook.addWorksheet(moment().format('DD-MM-YYYY'), {
+         pageSetup: { fitToPage: true, orientation: 'portrait' }
+      })
+      let currentRowCount = 7
+
+      workbook.Props = {
+         Title: fileName,
+         Subject: `Danh sách ${name} trong hệ thống`,
+         Author: 'MFFMS',
+         CreatedDate: moment()
+      }
+
+      worksheet.mergeCells('A1:G1')
+      worksheet.getCell('A1').value = 'SÂN BÓNG MINI NĂM NHỎ'
+      worksheet.getCell('A1').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A2:G2')
+      worksheet.getCell('A2').value =
+         'Địa chỉ: Đối diện Đại học thể dục, thể thao TP HCM'
+      worksheet.getCell('A2').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A3:G3')
+      worksheet.getCell('A3').value =
+         'Số điện thoại: 0902123456 - Fax: 0902123456'
+      worksheet.getCell('A3').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A5:P5')
+      worksheet.getCell(
+         'P5'
+      ).value = `DANH SÁCH ${name.toUpperCase()} TRONG HỆ THỐNG`
+      worksheet.getCell('P5').font = { ...excelFormat.boldFont, size: 18 }
+      worksheet.getCell('P5').alignment = excelFormat.center
+
+      worksheet.mergeCells('A7:B7')
+      worksheet.getCell('A7').value = 'STT'
+      worksheet.getCell('A7').font = excelFormat.boldFont
+      worksheet.getCell('A7').alignment = excelFormat.center
+      worksheet.getCell('A7').border = excelFormat.border
+
+      getColumnsOrdinates('C', 'P', columns.length, currentRowCount).forEach(
+         (columnOrdinate, index) => {
+            const { text } = columns[index]
+            const cellOrdinate = columnOrdinate.split(':')[0]
+
+            worksheet.mergeCells(columnOrdinate)
+            worksheet.getCell(cellOrdinate).value = text
+            worksheet.getCell(cellOrdinate).alignment = excelFormat.center
+            worksheet.getCell(cellOrdinate).font = excelFormat.boldFont
+            worksheet.getCell(cellOrdinate).border = excelFormat.border
+         }
+      )
+
+      currentRowCount += 1
+
+      data.forEach((record, index) => {
+         const columnOrdinates = getColumnsOrdinates(
+            'C',
+            'P',
+            columns.length,
+            currentRowCount
+         )
+
+         ;['', ...columns].forEach((column, index) => {
+            if (index === 0) {
+               worksheet.mergeCells(`A${currentRowCount}:B${currentRowCount}`)
+               worksheet.getCell(`A${currentRowCount}`).value = index + 1
+               worksheet.getCell(`A${currentRowCount}`).font =
+                  excelFormat.boldFont
+               worksheet.getCell(`A${currentRowCount}`).alignment =
+                  excelFormat.center
+               worksheet.getCell(`A${currentRowCount}`).border =
+                  excelFormat.border
+            } else {
+               const columnOrdinate = columnOrdinates[index - 1]
+               const cellOrdinate = columnOrdinate.split(':')[0]
+
+               worksheet.mergeCells(columnOrdinate)
+               worksheet.getCell(cellOrdinate).value = getCellValue(
+                  column,
+                  record
+               )
+               worksheet.getCell(cellOrdinate).alignment = excelFormat.center
+               worksheet.getCell(cellOrdinate).font = excelFormat.normalFont
+               worksheet.getCell(cellOrdinate).border = excelFormat.border
+            }
+
+            // currentRowCount += 1
+         })
+      })
+
+      worksheet.mergeCells(
+         'A' + (currentRowCount + 2) + ':G' + (currentRowCount + 2)
+      )
+      worksheet.getCell(
+         'A' + (currentRowCount + 2)
+      ).value = `Danh sách có tất cả ${data.length} kết quả`
+      worksheet.getCell('A' + (currentRowCount + 2)).font =
+         excelFormat.italicFont
+      worksheet.getCell('A' + (currentRowCount + 2)).alignment =
+         excelFormat.left
+
+      worksheet.mergeCells(
+         'J' + (currentRowCount + 2) + ':P' + (currentRowCount + 2)
+      )
+      worksheet.getCell(
+         'J' + (currentRowCount + 2)
+      ).value = `Thành phố Hồ Chí Minh, ngày ${moment().format(
+         'DD'
+      )} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}`
+      worksheet.getCell('J' + (currentRowCount + 2)).font =
+         excelFormat.italicFont
+      worksheet.getCell('J' + (currentRowCount + 2)).alignment =
+         excelFormat.right
+
+      worksheet.mergeCells(
+         'B' + (currentRowCount + 4) + ':D' + (currentRowCount + 4)
+      )
+      worksheet.getCell('B' + (currentRowCount + 4)).value = `NGƯỜI DUYỆT`
+      worksheet.getCell('B' + (currentRowCount + 4)).font = excelFormat.boldFont
+      worksheet.getCell('B' + (currentRowCount + 4)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'M' + (currentRowCount + 4) + ':O' + (currentRowCount + 4)
+      )
+      worksheet.getCell('M' + (currentRowCount + 4)).value = `NGƯỜI LẬP`
+      worksheet.getCell('M' + (currentRowCount + 4)).font = excelFormat.boldFont
+      worksheet.getCell('M' + (currentRowCount + 4)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'A' + (currentRowCount + 5) + ':E' + (currentRowCount + 5)
+      )
+      worksheet.getCell(
+         'A' + (currentRowCount + 5)
+      ).value = `(Ký và ghi rõ họ tên)`
+      worksheet.getCell('A' + (currentRowCount + 5)).font =
+         excelFormat.italicFont
+      worksheet.getCell('A' + (currentRowCount + 5)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'L' + (currentRowCount + 5) + ':P' + (currentRowCount + 5)
+      )
+      worksheet.getCell(
+         'L' + (currentRowCount + 5)
+      ).value = `(Ký và ghi rõ họ tên)`
+      worksheet.getCell('L' + (currentRowCount + 5)).font =
+         excelFormat.italicFont
+      worksheet.getCell('L' + (currentRowCount + 5)).alignment =
+         excelFormat.center
+
+      workbook.xlsx.writeBuffer().then(function(data) {
+         var blob = new Blob([data], {
+            type:
+               'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+         })
+         saveAs(blob, fileName)
+      })
+
+      showSuccessNotification()
+   }
+
+   exportToPdf = () => {
+      const { showSuccessNotification } = this
+
+      print()
+      showSuccessNotification()
+   }
+
    ///// METHODS FOR CHECKING VALUES /////
 
    isBeingSorted = columnName => {
@@ -411,6 +610,28 @@ class ForListPage extends Component {
 
       return searchData
    }
+
+   // getCellValue = (column, value) => {
+   //    const { type, propForValue } = column
+
+   //    if (value !== '' && value !== undefined) {
+   //       switch (type) {
+   //          case 'string': {
+   //             return value[propForValue]
+   //          }
+
+   //          case 'date': {
+   //             return formatDateString(value[propForValue])
+   //          }
+
+   //          default: {
+   //             return value[propForValue]
+   //          }
+   //       }
+   //    } else {
+   //       return '(Chưa có dữ liệu)'
+   //    }
+   // }
 
    getPageNumbers = () => {
       const { totalPages } = this.state
@@ -490,6 +711,18 @@ class ForListPage extends Component {
 
    ///// METHODS FOR RENDERING UI /////
 
+   showSuccessNotification = () => {
+      const { showNotification } = this.props
+
+      showNotification('success', 'Xuất báo cáo thành công!')
+   }
+
+   showErrorNotification = () => {
+      const { showNotification } = this.props
+
+      showNotification('error', 'Xuất báo cáo thất bại!')
+   }
+
    renderHeader = () => {
       const { settings } = this.props
       const { entity } = settings
@@ -513,7 +746,7 @@ class ForListPage extends Component {
    }
 
    renderSectionHeaderRight = () => {
-      const { refresh, importData, exportData, exportReport } = this
+      const { refresh, importData, exportData, toggleExportReportDialog } = this
       const { data } = this.state
       const { settings } = this.props
       const { entity } = settings
@@ -542,7 +775,7 @@ class ForListPage extends Component {
             </span> */}
 
             {data.length !== 0 && (
-               <span className="button" onClick={exportReport}>
+               <span className="button" onClick={toggleExportReportDialog}>
                   <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
                </span>
             )}
@@ -952,10 +1185,21 @@ class ForListPage extends Component {
    }
 
    renderDialogs = () => {
-      const { toggleShowDeleteDialog, deleteByIdOnSuccess } = this
-      const { showDeleteDialog, recordToDelete } = this.state
+      const {
+         toggleShowDeleteDialog,
+         deleteByIdOnSuccess,
+         toggleExportReportDialog,
+         exportToPdf,
+         exportToXlsx
+      } = this
+      const {
+         showDeleteDialog,
+         recordToDelete,
+         showExportReportDialog,
+         data
+      } = this.state
       const { settings } = this.props
-      const { entity, api } = settings
+      const { entity, api, columns } = settings
       const deleteDialogSettings = {
          isOpen: showDeleteDialog,
          onClose: toggleShowDeleteDialog,
@@ -964,10 +1208,20 @@ class ForListPage extends Component {
          id: recordToDelete,
          api
       }
+      const exportDialogSettings = {
+         isOpen: showExportReportDialog,
+         onClose: toggleExportReportDialog,
+         onExportToPdf: exportToPdf,
+         onExportToXlsx: exportToXlsx,
+         entity
+         // data,
+         // columns
+      }
 
       return (
          <Fragment>
             <DeleteDialog settings={deleteDialogSettings} />
+            <ExportReportDialog settings={exportDialogSettings} />
          </Fragment>
       )
    }
@@ -1002,7 +1256,14 @@ class ForListPage extends Component {
          renderDialogs,
          renderDateRangePickers
       } = this
-      const { loading, showDateRangePicker, activeDateRangePicker } = this.state
+      const { data, loading, activeDateRangePicker } = this.state
+      const { settings } = this.props
+      const { entity, columns } = settings
+      const printSettings = {
+         entity,
+         columns,
+         data
+      }
 
       return (
          <LoadingIndicator isLoading={loading}>
@@ -1010,6 +1271,8 @@ class ForListPage extends Component {
             {renderBody()}
             {renderDialogs()}
             {renderDateRangePickers(activeDateRangePicker)}
+
+            <ForListPrintPage settings={printSettings} />
          </LoadingIndicator>
       )
    }
@@ -1021,4 +1284,4 @@ class ForListPage extends Component {
    }
 }
 
-export default ForListPage
+export default connect(null, { showNotification })(ForListPage)

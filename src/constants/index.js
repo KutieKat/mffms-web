@@ -1,9 +1,9 @@
 const APP_SHORT_NAME = 'MFFMS'
 
-const APP_NAME = 'Mini Football Management System'
+const APP_NAME = 'Mini Football Field Management System'
 
 const APP_DESCRIPTION =
-   'Mini Football Management System - Hệ thống quản lý sân bóng đá mini'
+   'Mini Football Field Management System - Hệ thống quản lý sân bóng đá mini'
 
 const APP_ABOUT =
    'Đồ án môn học Phương pháp phát triển phần mềm hướng đối tượng (SE100.K16.PMCL)'
@@ -105,6 +105,35 @@ const SHORT_FETCHING_DATA_INTERVAL = 30000
 
 const LONG_FETCHING_DATA_INTERVAL = 60000
 
+const ALPHABETS = [
+   'A',
+   'B',
+   'C',
+   'D',
+   'E',
+   'F',
+   'G',
+   'H',
+   'I',
+   'J',
+   'K',
+   'L',
+   'M',
+   'N',
+   'O',
+   'P',
+   'Q',
+   'R',
+   'S',
+   'T',
+   'U',
+   'V',
+   'W',
+   'X',
+   'Y',
+   'Z'
+]
+
 export {
    APP_SHORT_NAME,
    APP_NAME,
@@ -118,5 +147,6 @@ export {
    PAYMENT_STATUSES,
    STATS_TABS,
    LONG_FETCHING_DATA_INTERVAL,
-   SHORT_FETCHING_DATA_INTERVAL
+   SHORT_FETCHING_DATA_INTERVAL,
+   ALPHABETS
 }

@@ -106,7 +106,6 @@ class ForCreatePage extends Component {
       const errors = validateFields()
 
       if (!errors) {
-         showErrorNotification()
          this.setState({ showAlert: false, loading: true }, createRecord)
       } else {
          showErrorNotification()

@@ -21,8 +21,8 @@ class NhanVienForList extends Component {
                search: {
                   type: 'input',
                   placeholder: 'Mã nhân viên'
-               },
-               displayType: 'listAndPrint'
+               }
+               // displayType: 'listAndPrint'
             },
             {
                text: 'Họ và tên',
@@ -32,8 +32,8 @@ class NhanVienForList extends Component {
                search: {
                   type: 'input',
                   placeholder: 'Họ và tên'
-               },
-               displayType: 'listAndPrint'
+               }
+               // displayType: 'listAndPrint'
             },
             {
                text: 'Giới tính',
@@ -45,8 +45,8 @@ class NhanVienForList extends Component {
                   values: GENDERS_FOR_SEARCH,
                   propForItemValue: 'value',
                   propForItemText: 'label'
-               },
-               displayType: 'listAndPrint'
+               }
+               // displayType: 'listAndPrint'
             },
             {
                text: 'Ngày sinh',
@@ -56,8 +56,8 @@ class NhanVienForList extends Component {
                search: {
                   type: 'date',
                   placeholder: 'Ngày sinh'
-               },
-               displayType: 'listAndPrint'
+               }
+               // displayType: 'listAndPrint'
             },
             {
                text: 'Số điện thoại',
@@ -67,8 +67,8 @@ class NhanVienForList extends Component {
                search: {
                   type: 'input',
                   placeholder: 'Số điện thoại'
-               },
-               displayType: 'listAndPrint'
+               }
+               // displayType: 'listAndPrint'
             },
             {
                text: 'Tiền lương (VNĐ)',
@@ -78,8 +78,8 @@ class NhanVienForList extends Component {
                search: {
                   type: 'slider',
                   placeholder: 'Mức lương'
-               },
-               displayType: 'listAndPrint'
+               }
+               // displayType: 'listAndPrint'
             }
          ]
       }

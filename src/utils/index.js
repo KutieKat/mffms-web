@@ -1,5 +1,7 @@
 import moment from 'moment'
 import axios from 'axios'
+import { ALPHABETS } from '../constants'
+
 axios.defaults.headers.common['Authorization'] = 'AUTH_TOKEN'
 
 export const isEmptyObj = obj => {
@@ -49,25 +51,16 @@ export const isValidEmail = email => {
 }
 
 export const isPhoneNumber = phone => {
-   let flag = false
    phone = phone.replace('(+84)', '0')
    phone = phone.replace('+84', '0')
    phone = phone.replace('0084', '0')
    phone = phone.replace(/ /g, '')
 
-   if (phone != '') {
-      let firstNumber = phone.substring(0, 2)
-      if ((firstNumber == '09' || firstNumber == '08') && phone.length == 10) {
-         if (phone.match(/^\d{10}/)) {
-            flag = true
-         }
-      } else if (firstNumber == '01' && phone.length == 11) {
-         if (phone.match(/^\d{11}/)) {
-            flag = true
-         }
-      }
+   if (phone !== '' && phone.match(/^\d/)) {
+      return true
    }
-   return flag
+
+   return false
 }
 
 export const isAfter = (date, dateToCheck) => dateToCheck.diff(date) >= 0
@@ -92,4 +85,38 @@ export const numberWithCommas = x => {
    var parts = x.toString().split('.')
    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
    return parts.join('.')
+}
+
+const chunkArray = (array, size) => {
+   let chunked_arr = []
+
+   for (let i = 0; i < array.length; i++) {
+      const last = chunked_arr[chunked_arr.length - 1]
+      if (!last || last.length === size) {
+         chunked_arr.push([array[i]])
+      } else {
+         last.push(array[i])
+      }
+   }
+
+   return chunked_arr
+}
+
+export const getColumnsOrdinates = (start, end, n, row) => {
+   const startIndex = ALPHABETS.findIndex(
+      letter => letter === start.toUpperCase()
+   )
+   const endIndex = ALPHABETS.findIndex(letter => letter === end.toUpperCase())
+   const columns = ALPHABETS.slice(startIndex, endIndex + 1)
+   const chunkSize = Math.ceil((endIndex - startIndex) / n)
+   const chunks = chunkArray(columns, chunkSize)
+   const columnsOrdinates = chunks.map(chunk => {
+      const startOrdinate = `${chunk[0]}${row}`
+      const endOrdinate = `${chunk[chunk.length - 1]}${row}`
+      const ordinate = `${startOrdinate}:${endOrdinate}`
+
+      return ordinate
+   })
+
+   return columnsOrdinates
 }

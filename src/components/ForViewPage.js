@@ -1,7 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import Section from './Section'
 import { Link, withRouter } from 'react-router-dom'
-import { apiGet, formatDateString, scrollTop, print } from '../utils'
+import {
+   apiGet,
+   formatDateString,
+   scrollTop,
+   print,
+   numberWithCommas
+} from '../utils'
 import LoadingIndicator from './LoadingIndicator'
 import ForDetailsPrintPage from './ForDetailsPrintPage'
 import Select from 'react-select'
@@ -102,17 +108,17 @@ class ForViewPage extends Component {
       const { data } = this.state
       const { settings } = this.props
       const { entity, fields } = settings
-      const { name } = entity
+      const { name, slug } = entity
+      const fileName = `thong-tin-${slug}-${moment().format('DDMMYYYY')}`
       let workbook = new Excel.Workbook()
       let worksheet = workbook.addWorksheet(moment().format('DD-MM-YYYY'), {
          pageSetup: { fitToPage: true, orientation: 'portrait' }
       })
       let currentRowCount = 7
-      let self = this
 
       workbook.Props = {
-         Title: 'Title',
-         Subject: 'Subject',
+         Title: fileName,
+         Subject: `Thông tin chi tiết về ${name}`,
          Author: 'MFFMS',
          CreatedDate: moment()
       }
@@ -134,7 +140,7 @@ class ForViewPage extends Component {
       worksheet.mergeCells('A5:M5')
       worksheet.getCell(
          'M5'
-      ).value = `THÔNG TIN CHI TIẾT VỀ  ${name.toUpperCase()}`
+      ).value = `THÔNG TIN CHI TIẾT VỀ ${name.toUpperCase()}`
       worksheet.getCell('M5').font = { ...excelFormat.boldFont, size: 18 }
       worksheet.getCell('M5').alignment = excelFormat.center
 
@@ -219,7 +225,7 @@ class ForViewPage extends Component {
             type:
                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
          })
-         saveAs(blob, self.state.fileNameToExportDocument)
+         saveAs(blob, fileName)
       })
 
       showSuccessNotification()
@@ -236,15 +242,22 @@ class ForViewPage extends Component {
    getFieldValue = (valueType, value) => {
       if (value !== '' && value !== undefined) {
          switch (valueType) {
-            case 'text': {
-               return value
-            }
-
             case 'date': {
                return formatDateString(value)
             }
+
+            case 'number': {
+               return numberWithCommas(value)
+            }
+
+            case 'string': {
+               return value
+            }
+
+            default: {
+               return value
+            }
          }
-         return value
       } else {
          return '(Chưa có dữ liệu)'
       }
