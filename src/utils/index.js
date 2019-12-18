@@ -120,3 +120,33 @@ export const getColumnsOrdinates = (start, end, n, row) => {
 
    return columnsOrdinates
 }
+
+export const deepGet = (variable, keys, defaultVal) => {
+   defaultVal = defaultVal || ''
+   let resultVal = defaultVal
+
+   try {
+      if (Array.isArray(keys)) {
+         let tempResult = variable
+         for (let i in keys) {
+            tempResult = tempResult[keys[i]]
+         }
+         resultVal = tempResult
+      } else {
+         keys = keys.split('.')
+         let tempResult = variable
+         for (let i in keys) {
+            tempResult = tempResult[keys[i]]
+         }
+         resultVal = tempResult
+      }
+   } catch (e) {
+      resultVal = defaultVal
+   }
+
+   if (resultVal === undefined) {
+      resultVal = defaultVal
+   }
+
+   return resultVal
+}

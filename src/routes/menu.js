@@ -103,8 +103,8 @@ const menu = [
       title: 'Hệ thống',
       items: [
          {
-            title: 'Quản lý người dùng',
-            path: '/he-thong/nguoi-dung',
+            title: 'Quản lý tài khoản',
+            path: '/he-thong/tai-khoan',
             icon: 'fas fa-users'
          },
          {

@@ -6,7 +6,8 @@ import {
    formatDateString,
    scrollTop,
    print,
-   numberWithCommas
+   numberWithCommas,
+   deepGet
 } from '../utils'
 import LoadingIndicator from './LoadingIndicator'
 import ForDetailsPrintPage from './ForDetailsPrintPage'
@@ -19,6 +20,7 @@ import { saveAs } from 'file-saver'
 import { excelFormat } from '../utils'
 import { connect } from 'react-redux'
 import { showNotification } from '../redux/actions'
+import apiRoutes from '../routes/apis'
 
 const customStyles = {
    control: () => ({
@@ -38,7 +40,14 @@ class ForViewPage extends Component {
       this.state = {
          data: null,
          loading: true,
-         showExportReportDialog: false
+         showExportReportDialog: false,
+         settingsData: {
+            tenSanBong: '',
+            diaChi: '',
+            diaChiTrenPhieu: '',
+            soDienThoai: '',
+            fax: ''
+         }
       }
    }
 
@@ -51,10 +60,34 @@ class ForViewPage extends Component {
    }
 
    componentDidMount() {
+      const { fetchSettingsData } = this
+
       scrollTop()
+      fetchSettingsData()
    }
 
    ///// METHODS FOR INTERACTING WITH API /////
+
+   fetchSettingsData = async () => {
+      const { caiDat } = apiRoutes
+      const url = caiDat.getAll
+
+      try {
+         const response = await apiGet(url)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({
+               settingsData: data
+            })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
 
    fetchData = async () => {
       const { settings, match } = this.props
@@ -105,7 +138,14 @@ class ForViewPage extends Component {
 
    exportToXlsx = () => {
       const { showSuccessNotification } = this
-      const { data } = this.state
+      const { data, settingsData } = this.state
+      const {
+         tenSanBong,
+         diaChi,
+         diaChiTrenPhieu,
+         soDienThoai,
+         fax
+      } = settingsData
       const { settings } = this.props
       const { entity, fields } = settings
       const { name, slug } = entity
@@ -124,17 +164,17 @@ class ForViewPage extends Component {
       }
 
       worksheet.mergeCells('A1:G1')
-      worksheet.getCell('A1').value = 'SÂN BÓNG MINI NĂM NHỎ'
+      worksheet.getCell('A1').value = tenSanBong
       worksheet.getCell('A1').font = excelFormat.boldFont
 
       worksheet.mergeCells('A2:G2')
-      worksheet.getCell('A2').value =
-         'Địa chỉ: Đối diện Đại học thể dục, thể thao TP HCM'
+      worksheet.getCell('A2').value = diaChi
       worksheet.getCell('A2').font = excelFormat.boldFont
 
       worksheet.mergeCells('A3:G3')
-      worksheet.getCell('A3').value =
-         'Số điện thoại: 0902123456 - Fax: 0902123456'
+      worksheet.getCell(
+         'A3'
+      ).value = `Số điện thoại: ${soDienThoai} - Fax: ${fax}`
       worksheet.getCell('A3').font = excelFormat.boldFont
 
       worksheet.mergeCells('A5:M5')
@@ -152,6 +192,7 @@ class ForViewPage extends Component {
 
          worksheet.getCell(`B${currentRowCount}`).value = label
          worksheet.getCell(`B${currentRowCount}`).font = excelFormat.boldFont
+         worksheet.getCell(`B${currentRowCount}`).alignment = excelFormat.left
 
          worksheet.getCell(`E${currentRowCount}`).value = (type => {
             switch (type) {
@@ -165,6 +206,7 @@ class ForViewPage extends Component {
             }
          })(type)
          worksheet.getCell(`E${currentRowCount}`).font = excelFormat.normalFont
+         worksheet.getCell(`E${currentRowCount}`).alignment = excelFormat.left
 
          currentRowCount += index !== fields.length - 1 ? 2 : 0
       })
@@ -174,7 +216,7 @@ class ForViewPage extends Component {
       )
       worksheet.getCell(
          'G' + (currentRowCount + 2)
-      ).value = `Thành phố Hồ Chí Minh, ngày ${moment().format(
+      ).value = `${diaChiTrenPhieu}, ngày ${moment().format(
          'DD'
       )} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}`
       worksheet.getCell('G' + (currentRowCount + 2)).font =
@@ -306,6 +348,8 @@ class ForViewPage extends Component {
    renderSectionHeaderRight = () => {
       const { refresh, exportData, toggleExportReportDialog } = this
       const { data } = this.state
+      const { settings } = this.props
+      const { exportable = true } = settings
 
       return (
          <Fragment>
@@ -313,13 +357,13 @@ class ForViewPage extends Component {
                <i className="fas fa-redo"></i>&nbsp;&nbsp;Tải lại
             </span>
 
-            {data !== null && (
+            {/* {data !== null && (
                <span className="button" onClick={exportData}>
                   <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất dữ liệu
                </span>
-            )}
+            )} */}
 
-            {data !== null && (
+            {exportable && data !== null && (
                <span className="button" onClick={toggleExportReportDialog}>
                   <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
                </span>
@@ -403,7 +447,7 @@ class ForViewPage extends Component {
             return (
                <Select
                   value={values.find(
-                     item => item.value === (data && data[propForValue])
+                     item => item.value === deepGet(data, propForValue)
                   )}
                   options={values}
                   styles={customStyles}

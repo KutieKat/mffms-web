@@ -8,7 +8,8 @@ import {
    numberWithCommas,
    apiGet,
    print,
-   getColumnsOrdinates
+   getColumnsOrdinates,
+   deepGet
 } from '../utils'
 import axios from 'axios'
 import { debounce } from 'debounce'
@@ -26,6 +27,7 @@ import { showNotification } from '../redux/actions'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
 import { excelFormat } from '../utils'
+import apiRoutes from '../routes/apis'
 
 const Slider = require('rc-slider')
 const createSliderWithTooltip = Slider.createSliderWithTooltip
@@ -68,7 +70,14 @@ class ForListPage extends Component {
          recordToDelete: '',
          showDateRangePicker: false,
          activeDateRangePicker: '',
-         showExportReportDialog: false
+         showExportReportDialog: false,
+         settingsData: {
+            tenSanBong: '',
+            diaChi: '',
+            diaChiTrenPhieu: '',
+            soDienThoai: '',
+            fax: ''
+         }
       }
 
       this.fetchData = debounce(this.fetchData, 50)
@@ -84,10 +93,11 @@ class ForListPage extends Component {
    }
 
    componentDidMount() {
-      const { fetchData } = this
+      const { fetchData, fetchSettingsData } = this
 
       scrollTop()
       fetchData()
+      fetchSettingsData()
    }
 
    componentWillUnmount() {
@@ -97,6 +107,27 @@ class ForListPage extends Component {
    }
 
    ///// METHODS FOR INTERACTING WITH API /////
+
+   fetchSettingsData = async () => {
+      const caiDat = { apiRoutes }
+      const url = caiDat.getAll
+
+      try {
+         const response = await apiGet(url)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({
+               settingsData: data
+            })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
 
    formRequestParams = () => {
       const { searchData } = this.state
@@ -387,7 +418,14 @@ class ForListPage extends Component {
 
    exportToXlsx = () => {
       const { showSuccessNotification, getCellValue } = this
-      const { data } = this.state
+      const { data, settingsData } = this.state
+      const {
+         tenSanBong,
+         diaChi,
+         soDienThoai,
+         diaChiTrenPhieu,
+         fax
+      } = settingsData
       const { settings } = this.props
       const { entity, columns } = settings
       const { name, slug } = entity
@@ -406,17 +444,17 @@ class ForListPage extends Component {
       }
 
       worksheet.mergeCells('A1:G1')
-      worksheet.getCell('A1').value = 'SÂN BÓNG MINI NĂM NHỎ'
+      worksheet.getCell('A1').value = tenSanBong
       worksheet.getCell('A1').font = excelFormat.boldFont
 
       worksheet.mergeCells('A2:G2')
-      worksheet.getCell('A2').value =
-         'Địa chỉ: Đối diện Đại học thể dục, thể thao TP HCM'
+      worksheet.getCell('A2').value = diaChi
       worksheet.getCell('A2').font = excelFormat.boldFont
 
       worksheet.mergeCells('A3:G3')
-      worksheet.getCell('A3').value =
-         'Số điện thoại: 0902123456 - Fax: 0902123456'
+      worksheet.getCell(
+         'A3'
+      ).value = `Số điện thoại: ${soDienThoai} - Fax: ${fax}`
       worksheet.getCell('A3').font = excelFormat.boldFont
 
       worksheet.mergeCells('A5:P5')
@@ -426,13 +464,13 @@ class ForListPage extends Component {
       worksheet.getCell('P5').font = { ...excelFormat.boldFont, size: 18 }
       worksheet.getCell('P5').alignment = excelFormat.center
 
-      worksheet.mergeCells('A7:B7')
+      worksheet.mergeCells('A7:A7')
       worksheet.getCell('A7').value = 'STT'
       worksheet.getCell('A7').font = excelFormat.boldFont
       worksheet.getCell('A7').alignment = excelFormat.center
       worksheet.getCell('A7').border = excelFormat.border
 
-      getColumnsOrdinates('C', 'P', columns.length, currentRowCount).forEach(
+      getColumnsOrdinates('B', 'P', columns.length, currentRowCount).forEach(
          (columnOrdinate, index) => {
             const { text } = columns[index]
             const cellOrdinate = columnOrdinate.split(':')[0]
@@ -447,9 +485,9 @@ class ForListPage extends Component {
 
       currentRowCount += 1
 
-      data.forEach((record, index) => {
+      data.forEach((record, recordIndex) => {
          const columnOrdinates = getColumnsOrdinates(
-            'C',
+            'B',
             'P',
             columns.length,
             currentRowCount
@@ -457,8 +495,8 @@ class ForListPage extends Component {
 
          ;['', ...columns].forEach((column, index) => {
             if (index === 0) {
-               worksheet.mergeCells(`A${currentRowCount}:B${currentRowCount}`)
-               worksheet.getCell(`A${currentRowCount}`).value = index + 1
+               worksheet.mergeCells(`A${currentRowCount}:A${currentRowCount}`)
+               worksheet.getCell(`A${currentRowCount}`).value = recordIndex + 1
                worksheet.getCell(`A${currentRowCount}`).font =
                   excelFormat.boldFont
                worksheet.getCell(`A${currentRowCount}`).alignment =
@@ -468,7 +506,6 @@ class ForListPage extends Component {
             } else {
                const columnOrdinate = columnOrdinates[index - 1]
                const cellOrdinate = columnOrdinate.split(':')[0]
-
                worksheet.mergeCells(columnOrdinate)
                worksheet.getCell(cellOrdinate).value = getCellValue(
                   column,
@@ -478,9 +515,9 @@ class ForListPage extends Component {
                worksheet.getCell(cellOrdinate).font = excelFormat.normalFont
                worksheet.getCell(cellOrdinate).border = excelFormat.border
             }
-
-            // currentRowCount += 1
          })
+
+         currentRowCount += 1
       })
 
       worksheet.mergeCells(
@@ -499,7 +536,7 @@ class ForListPage extends Component {
       )
       worksheet.getCell(
          'J' + (currentRowCount + 2)
-      ).value = `Thành phố Hồ Chí Minh, ngày ${moment().format(
+      ).value = `${diaChiTrenPhieu}, ngày ${moment().format(
          'DD'
       )} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}`
       worksheet.getCell('J' + (currentRowCount + 2)).font =
@@ -580,7 +617,7 @@ class ForListPage extends Component {
 
       columns.forEach(field => {
          const { search, propForValue } = field
-         const { type } = search
+         const { type, min, max } = search
 
          switch (type) {
             case 'input': {
@@ -596,13 +633,14 @@ class ForListPage extends Component {
 
             case 'select': {
                const { values, propForItemValue } = search
-               searchData[propForValue] = values[0][propForItemValue]
+               searchData[propForValue] =
+                  values[0] && values[0][propForItemValue]
                break
             }
 
             case 'slider': {
-               searchData['range_' + propForValue + 'BatDau'] = 0
-               searchData['range_' + propForValue + 'KetThuc'] = 1000000000
+               searchData['range_' + propForValue + 'BatDau'] = min
+               searchData['range_' + propForValue + 'KetThuc'] = max
                break
             }
          }
@@ -688,7 +726,7 @@ class ForListPage extends Component {
 
    getCellValue = (column, record) => {
       const { type, propForValue } = column
-      const value = record[propForValue]
+      const value = deepGet(record, propForValue)
 
       switch (type) {
          case 'date': {
@@ -749,7 +787,7 @@ class ForListPage extends Component {
       const { refresh, importData, exportData, toggleExportReportDialog } = this
       const { data } = this.state
       const { settings } = this.props
-      const { entity } = settings
+      const { entity, exportable = true } = settings
       const { slug } = entity
 
       return (
@@ -764,17 +802,17 @@ class ForListPage extends Component {
                </Link>
             </span>
 
-            {data.length !== 0 && (
+            {/* {data.length !== 0 && (
                <span className="button" onClick={exportData}>
                   <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất dữ liệu
                </span>
-            )}
+            )} */}
 
             {/* <span className="button" onClick={importData}>
                <i className="fas fa-file-import"></i>&nbsp;&nbsp;Nhập dữ liệu
             </span> */}
 
-            {data.length !== 0 && (
+            {exportable && data.length !== 0 && (
                <span className="button" onClick={toggleExportReportDialog}>
                   <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
                </span>
@@ -930,7 +968,7 @@ class ForListPage extends Component {
       } = this
       const { searchData } = this.state
       const { search, propForValue } = column
-      const { type, placeholder } = search
+      const { type, min, max, step, placeholder } = search
 
       switch (type) {
          case 'input': {
@@ -979,9 +1017,9 @@ class ForListPage extends Component {
             return (
                <div className="slider-wrapper">
                   <Range
-                     min={0}
-                     max={100000000}
-                     step={1000000}
+                     min={min}
+                     max={max}
+                     step={step}
                      value={[
                         searchData['range_' + propForValue + 'BatDau'],
                         searchData['range_' + propForValue + 'KetThuc']

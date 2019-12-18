@@ -55,7 +55,7 @@ class KhachHangForCreate extends Component {
                      rule: 'isAfter',
                      date: moment.utc().startOf('day'),
                      message:
-                        'Ngày sinh của khách hàng phải lớn hơn hoặc bằng ngày hiện tại!'
+                        'Ngày sinh của khách hàng phải nhỏ hơn hoặc bằng ngày hiện tại!'
                   }
                ]
             },

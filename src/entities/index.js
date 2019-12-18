@@ -33,6 +33,11 @@ const taiSanThietBi = {
    slug: 'tai-san-thiet-bi'
 }
 
+const taiKhoan = {
+   name: 'tài khoản',
+   slug: 'tai-khoan'
+}
+
 export {
    khachHang,
    nhanVien,
@@ -40,5 +45,6 @@ export {
    sanBong,
    dichVu,
    taiSanThietBi,
+   taiKhoan,
    caiDat
 }

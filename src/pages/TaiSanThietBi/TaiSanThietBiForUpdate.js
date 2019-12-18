@@ -49,10 +49,26 @@ class TaiSanThietBiForUpdate extends Component {
       }
    }
 
+   ///// METHODS FOR COMPUTING VALUES /////
+
+   getAllProviders = () => {
+      const { providers } = this.state
+      let allProviders = []
+
+      providers.forEach(provider => {
+         allProviders.push({
+            value: provider['maNhaCungCap'],
+            label: provider['tenNhaCungCap']
+         })
+      })
+
+      return allProviders
+   }
+
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
-      const { providers } = this.state
+      const { getAllProviders } = this
 
       const settings = {
          entity: taiSanThietBi,
@@ -84,11 +100,11 @@ class TaiSanThietBiForUpdate extends Component {
             },
             {
                label: 'Nhà cung cấp',
-               propForValue: 'nhaCungCap',
+               propForValue: 'maNhaCungCap',
                type: 'select',
-               values: providers,
-               propForItemValue: 'maNhaCungCap',
-               propForItemText: 'tenNhaCungCap'
+               values: getAllProviders(),
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Thông tin bảo hành',
@@ -104,12 +120,12 @@ class TaiSanThietBiForUpdate extends Component {
                ]
             },
             {
-               label: 'Trạng thái',
-               propForValue: 'trangThai',
+               label: 'Tình trạng',
+               propForValue: 'tinhTrang',
                type: 'select',
                values: ASSET_STATUSES,
-               propForItemValue: 'text',
-               propForItemText: 'text'
+               propForItemValue: 'value',
+               propForItemText: 'label'
             }
          ]
       }

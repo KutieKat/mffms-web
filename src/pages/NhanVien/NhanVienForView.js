@@ -27,8 +27,8 @@ class NhanVienForView extends Component {
                propForValue: 'gioiTinh',
                type: 'select',
                values: GENDERS,
-               propForItemValue: 'text',
-               propForItemText: 'text'
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Ngày sinh',
@@ -40,8 +40,8 @@ class NhanVienForView extends Component {
                propForValue: 'chucVu',
                type: 'select',
                values: POSITIONS,
-               propForItemValue: 'text',
-               propForItemText: 'text'
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Số điện thoại',

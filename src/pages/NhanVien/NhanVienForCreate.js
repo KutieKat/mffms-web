@@ -36,8 +36,8 @@ class NhanVienForCreate extends Component {
                propForValue: 'gioiTinh',
                type: 'select',
                values: GENDERS,
-               propForItemValue: 'text',
-               propForItemText: 'text'
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Ngày sinh',
@@ -54,7 +54,7 @@ class NhanVienForCreate extends Component {
                      rule: 'isAfter',
                      date: moment.utc().startOf('day'),
                      message:
-                        'Ngày sinh của nhân viên phải lớn hơn hoặc bằng ngày hiện tại!'
+                        'Ngày sinh của nhân viên phải nhỏ hơn hoặc bằng ngày hiện tại!'
                   }
                ]
             },
@@ -63,8 +63,8 @@ class NhanVienForCreate extends Component {
                propForValue: 'chucVu',
                type: 'select',
                values: POSITIONS,
-               propForItemValue: 'text',
-               propForItemText: 'text'
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Số điện thoại',

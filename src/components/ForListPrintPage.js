@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import moment from 'moment'
-import { formatDateString, print } from '../utils'
+import { formatDateString, apiGet, deepGet } from '../utils'
 import apiRoutes from '../routes/apis'
 
 class ForListPrintPage extends Component {
@@ -29,36 +29,30 @@ class ForListPrintPage extends Component {
    ///// METHODS FOR INTERACTING WITH API /////
 
    fetchData = () => {
-      const { fetchSettings } = this
+      const { fetchSettingsData } = this
 
-      fetchSettings()
+      fetchSettingsData()
    }
 
-   fetchSettings = async () => {
-      // const url = apiRoutes.caiDat.getAll
-      // try {
-      //    const response = await axios.get(url)
-      //    if (response && response.data.status === 'SUCCESS') {
-      //       const { data } = response.data.result
-      //       this.setState({
-      //          settings: data
-      //       })
-      //    } else {
-      //       throw new Error(response.errors)
-      //    }
-      // } catch (error) {
-      //    console.error(error)
-      // }
+   fetchSettingsData = async () => {
+      const { caiDat } = apiRoutes
+      const url = caiDat.getAll
 
-      this.setState({
-         settingsData: {
-            tenSanBong: 'Sân bóng mini Năm Nhỏ',
-            diaChi: 'Đối diện Đại học thể dục, thể thao TP HCM',
-            diaChiTrenPhieu: 'Thành phố Hồ Chí Minh',
-            soDienThoai: '0902123456',
-            fax: '0902123456'
+      try {
+         const response = await apiGet(url)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({
+               settingsData: data
+            })
+         } else {
+            throw new Error(response.errors)
          }
-      })
+      } catch (error) {
+         console.error(error)
+      }
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
@@ -69,15 +63,15 @@ class ForListPrintPage extends Component {
       if (value !== '' && value !== undefined) {
          switch (type) {
             case 'string': {
-               return value[propForValue]
+               return deepGet(value, propForValue)
             }
 
             case 'date': {
-               return formatDateString(value[propForValue])
+               return formatDateString(deepGet(value, propForValue))
             }
 
             default: {
-               return value[propForValue]
+               return deepGet(value, propForValue)
             }
          }
       } else {

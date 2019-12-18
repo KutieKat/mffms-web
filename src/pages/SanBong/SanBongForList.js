@@ -16,61 +16,70 @@ class SanBongForList extends Component {
                propForValue: 'maSanBong',
                propForSorting: 'MaSanBong',
                isBold: true,
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo mã'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Tên sân bóng',
                propForValue: 'tenSanBong',
                propForSorting: 'TenSanBong',
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo tên'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Chiều dài (m)',
                propForValue: 'chieuDai',
                propForSorting: 'ChieuDai',
+               type: 'number',
                search: {
-                  type: 'input',
+                  type: 'slider',
+                  min: 0,
+                  max: 100,
+                  step: 10,
                   placeholder: 'Tìm theo chiều dài'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Chiều rộng (m)',
                propForValue: 'chieuRong',
                propForSorting: 'ChieuRong',
+               type: 'number',
                search: {
-                  type: 'input',
+                  type: 'slider',
+                  min: 0,
+                  max: 100,
+                  step: 10,
                   placeholder: 'Tìm theo chiều rộng'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Diện tích (m2)',
                propForValue: 'dienTich',
                propForSorting: 'dienTich',
+               type: 'number',
                search: {
-                  type: 'input',
+                  type: 'slider',
+                  min: 0,
+                  max: 100,
+                  step: 10,
                   placeholder: 'Tìm theo diện tích'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Ghi chú',
                propForValue: 'ghiChu',
                propForSorting: 'GhiChu',
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo ghi chú'
-               },
-               displayType: 'listAndPrint'
+               }
             }
          ]
       }

@@ -48,12 +48,12 @@ class ForUpdatePage extends Component {
       this.setState({ editingData })
    }
 
-   componentWillReceiveProps(nextProps) {
-      const { initializeEditingData } = this
-      const editingData = initializeEditingData(nextProps)
+   // componentWillReceiveProps(nextProps) {
+   //    const { initializeEditingData } = this
+   //    const editingData = initializeEditingData(nextProps)
 
-      this.setState({ editingData })
-   }
+   //    this.setState({ editingData })
+   // }
 
    componentDidMount() {
       const { fetchData } = this

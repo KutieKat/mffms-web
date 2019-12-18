@@ -6,6 +6,7 @@ const baseSanBongApi = baseApi + '/SanBong'
 const baseDichVuApi = baseApi + '/DichVu'
 const baseTaiSanThietBiApi = baseApi + '/TaiSanThietBi'
 const baseCaiDatApi = baseApi + '/CaiDat'
+const baseTaiKhoanApi = baseApi + '/TaiKhoan'
 
 export default {
    khachHang: {
@@ -56,6 +57,16 @@ export default {
       createMultiple: baseTaiSanThietBiApi + '/CreateMultiple',
       updateById: baseTaiSanThietBiApi + '/UpdateById',
       deleteById: baseTaiSanThietBiApi + '/PermanentlyDeleteById'
+   },
+   taiKhoan: {
+      getAll: baseTaiKhoanApi + '/GetAll',
+      getById: baseTaiKhoanApi + '/GetById',
+      create: baseTaiKhoanApi + '/Register',
+      register: baseTaiKhoanApi + '/Register',
+      login: baseTaiKhoanApi + '/Login',
+      updateById: baseTaiSanThietBiApi + '/UpdateById',
+      changePassword: baseTaiKhoanApi + '/ChangePassword',
+      deleteById: baseTaiKhoanApi + '/PermanentlyDeleteById'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',

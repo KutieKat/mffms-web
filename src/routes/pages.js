@@ -40,6 +40,11 @@ import TaiSanThietBiForCreate from '../pages/TaiSanThietBi/TaiSanThietBiForCreat
 import TaiSanThietBiForUpdate from '../pages/TaiSanThietBi/TaiSanThietBiForUpdate'
 import TaiSanThietBiForStats from '../pages/TaiSanThietBi/TaiSanThietBiForStats'
 
+///// TaiKhoan /////
+import TaiKhoanForList from '../pages/TaiKhoan/TaiKhoanForList'
+import TaiKhoanForView from '../pages/TaiKhoan/TaiKhoanForView'
+import TaiKhoanForCreate from '../pages/TaiKhoan/TaiKhoanForCreate'
+
 ///// CaiDat /////
 import CaiDatForUpdate from '../pages/CaiDat/CaiDatForUpdate'
 
@@ -180,6 +185,21 @@ export default [
    {
       path: '/thong-ke/dich-vu',
       component: DichVuForStats
+   },
+
+   ///// TaiKhoan /////
+   {
+      path: '/he-thong/tai-khoan',
+      component: TaiKhoanForList,
+      exact: true
+   },
+   {
+      path: '/he-thong/tai-khoan/xem-thong-tin/:id',
+      component: TaiKhoanForView
+   },
+   {
+      path: '/he-thong/tai-khoan/them-moi',
+      component: TaiKhoanForCreate
    },
 
    ///// CaiDat /////

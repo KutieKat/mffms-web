@@ -22,7 +22,6 @@ class NhanVienForList extends Component {
                   type: 'input',
                   placeholder: 'Mã nhân viên'
                }
-               // displayType: 'listAndPrint'
             },
             {
                text: 'Họ và tên',
@@ -33,7 +32,6 @@ class NhanVienForList extends Component {
                   type: 'input',
                   placeholder: 'Họ và tên'
                }
-               // displayType: 'listAndPrint'
             },
             {
                text: 'Giới tính',
@@ -46,7 +44,6 @@ class NhanVienForList extends Component {
                   propForItemValue: 'value',
                   propForItemText: 'label'
                }
-               // displayType: 'listAndPrint'
             },
             {
                text: 'Ngày sinh',
@@ -57,7 +54,6 @@ class NhanVienForList extends Component {
                   type: 'date',
                   placeholder: 'Ngày sinh'
                }
-               // displayType: 'listAndPrint'
             },
             {
                text: 'Số điện thoại',
@@ -68,7 +64,6 @@ class NhanVienForList extends Component {
                   type: 'input',
                   placeholder: 'Số điện thoại'
                }
-               // displayType: 'listAndPrint'
             },
             {
                text: 'Tiền lương (VNĐ)',
@@ -77,9 +72,11 @@ class NhanVienForList extends Component {
                type: 'number',
                search: {
                   type: 'slider',
+                  min: 0,
+                  max: 100000000,
+                  step: 1000000,
                   placeholder: 'Mức lương'
                }
-               // displayType: 'listAndPrint'
             }
          ]
       }

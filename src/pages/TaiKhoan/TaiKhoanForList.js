@@ -1,31 +1,42 @@
 import React, { Component } from 'react'
 import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
-import { khachHang } from '../../entities'
-import { GENDERS_FOR_SEARCH } from '../../constants'
+import { taiKhoan } from '../../entities'
+import { GENDERS_FOR_SEARCH, ROLES_FOR_SEARCH } from '../../constants'
 
-class KhachHangForList extends Component {
+class TaiKhoanForList extends Component {
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
       const settings = {
-         entity: khachHang,
-         api: apiRoutes.khachHang,
+         entity: taiKhoan,
+         api: apiRoutes.taiKhoan,
+         exportable: false,
          columns: [
             {
-               text: 'Mã khách hàng',
-               propForValue: 'maKhachHang',
-               propForSorting: 'MaKhachHang',
+               text: 'Mã tài khoản',
+               propForValue: 'maTaiKhoan',
+               propForSorting: 'MaTaiKhoan',
                isBold: true,
                type: 'string',
                search: {
                   type: 'input',
-                  placeholder: 'Mã khách hàng'
+                  placeholder: 'Mã tài khoản'
+               }
+            },
+            {
+               text: 'Tên đăng nhập',
+               propForValue: 'tenDangNhap',
+               propForSorting: 'HoVaTen',
+               type: 'string',
+               search: {
+                  type: 'input',
+                  placeholder: 'Họ và tên'
                }
             },
             {
                text: 'Họ và tên',
-               propForValue: 'tenKhachHang',
+               propForValue: 'tenTaiKhoan',
                propForSorting: 'HoVaTen',
                type: 'string',
                search: {
@@ -47,13 +58,16 @@ class KhachHangForList extends Component {
                }
             },
             {
-               text: 'Ngày sinh',
-               propForValue: 'ngaySinh',
-               propForSorting: 'NgaySinh',
-               type: 'date',
+               text: 'Phân quyền',
+               propForValue: 'phanQuyen',
+               propForSorting: 'PhanQuyen',
+               type: 'string',
                search: {
-                  type: 'date',
-                  placeholder: 'Ngày sinh'
+                  type: 'select',
+                  values: ROLES_FOR_SEARCH,
+                  propForItemValue: 'value',
+                  propForItemText: 'label',
+                  placeholder: 'Phân quyền'
                }
             },
             {
@@ -79,4 +93,4 @@ class KhachHangForList extends Component {
    }
 }
 
-export default KhachHangForList
+export default TaiKhoanForList

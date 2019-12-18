@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import { APP_NAME, APP_SHORT_NAME } from '../constants'
 import { apiGet, formatDateString } from '../utils'
 import apiRoutes from '../routes/apis'
 import moment from 'moment'
@@ -12,6 +11,7 @@ class ForDetailsPrintPage extends Component {
          settingsData: {
             tenSanBong: '',
             diaChi: '',
+            diaChiTrenPhieu: '',
             soDienThoai: '',
             fax: ''
          }
@@ -29,34 +29,24 @@ class ForDetailsPrintPage extends Component {
    ///// METHODS FOR INTERACTING WITH API /////
 
    fetchSettingsData = async () => {
-      // const caiDat = { apiRoutes }
-      // const url = caiDat.getAll
+      const { caiDat } = apiRoutes
+      const url = caiDat.getAll
 
-      // try {
-      //    const response = await apiGet(url)
+      try {
+         const response = await apiGet(url)
 
-      //    if (response && response.settingsData.status === 'SUCCESS') {
-      //       const { settingsData } = response.settingsData.result
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
 
-      //       this.setState({
-      //          settings: settingsData
-      //       })
-      //    } else {
-      //       throw new Error(response.errors)
-      //    }
-      // } catch (error) {
-      //    console.error(error)
-      // }
-
-      this.setState({
-         settingsData: {
-            tenSanBong: 'Sân bóng mini Năm Nhỏ',
-            diaChi: 'Đối diện Đại học thể dục, thể thao TP HCM',
-            diaChiTrenPhieu: 'Thành phố Hồ Chí Minh',
-            soDienThoai: '0902123456',
-            fax: '0902123456'
+            this.setState({
+               settingsData: data
+            })
+         } else {
+            throw new Error(response.errors)
          }
-      })
+      } catch (error) {
+         console.error(error)
+      }
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
@@ -114,7 +104,6 @@ class ForDetailsPrintPage extends Component {
                Điện thoại: {soDienThoai}{' '}
                {fax !== '' && <Fragment>- Fax: {fax}</Fragment>}
             </p>
-            {/* <div className="print-page__splitter"></div> */}
          </div>
       )
    }
@@ -131,10 +120,6 @@ class ForDetailsPrintPage extends Component {
             <h1 className="printing-page-title">
                THÔNG TIN CHI TIẾT VỀ {name.toUpperCase()}
             </h1>
-
-            {/* <h2 className="printing-page-subtitle">
-               {APP_NAME} ({APP_SHORT_NAME})
-            </h2> */}
          </div>
       )
    }
@@ -276,8 +261,6 @@ class ForDetailsPrintPage extends Component {
                <p className="printing-page__job-title">NGƯỜI DUYỆT</p>
                <p className="printing-page__signature">(Ký và ghi rõ họ tên)</p>
             </div>
-
-            {/* <div className="printing-page__footer-main-center"></div> */}
 
             <div className="printing-page__footer-main-right">
                <p className="printing-page__job-title">NGƯỜI LẬP</p>

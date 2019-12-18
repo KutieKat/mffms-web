@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
 import { taiSanThietBi } from '../../entities'
-import { ASSET_STATUSES } from '../../constants'
+import { ASSET_STATUSES_FOR_SEARCH } from '../../constants'
 import { apiGet } from '../../utils'
 
 class TaiSanThietBiForList extends Component {
@@ -49,10 +49,26 @@ class TaiSanThietBiForList extends Component {
       }
    }
 
+   ///// METHODS FOR COMPUTING VALUES /////
+
+   getAllProviders = () => {
+      const { providers } = this.state
+      let allProviders = [{ value: '', label: 'Tất cả' }]
+
+      providers.forEach(provider => {
+         allProviders.push({
+            value: provider['maNhaCungCap'],
+            label: provider['tenNhaCungCap']
+         })
+      })
+
+      return allProviders
+   }
+
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
-      const { providers } = this.state
+      const { getAllProviders } = this
 
       const settings = {
          entity: taiSanThietBi,
@@ -60,57 +76,59 @@ class TaiSanThietBiForList extends Component {
          columns: [
             {
                text: 'Mã tài sản thiết bị',
-               propForValue: 'maTaiSanThietBi',
+               propForValue: 'maTSTB',
                propForSorting: 'MaTSTB',
                isBold: true,
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo mã'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Tên tài sản thiết bị',
                propForValue: 'tenTSTB',
                propForSorting: 'TenTSTB',
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo tên'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Nhà cung cấp',
-               propForValue: 'nhaCungCap',
-               propForSorting: 'NhaCungCap',
+               propForValue: 'nhaCungCap.tenNhaCungCap',
+               propForSorting: 'MaNhaCungCap',
+               type: 'string',
+               // reference: 'nhaCungCap.tenNhaCungCap',
                search: {
                   type: 'select',
-                  values: providers,
-                  propForItemValue: 'maNhaCungCap',
-                  propForItemText: 'tenNhaCungCap'
+                  values: getAllProviders(),
+                  propForItemValue: 'value',
+                  propForItemText: 'label'
                }
             },
             {
                text: 'Thông tin bảo hành',
                propForValue: 'thongTinBaoHanh',
                propForSorting: 'ThongTinBaoHanh',
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo thông tin bảo hành'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Trạng thái',
                propForValue: 'tinhTrang',
                propForSorting: 'TinhTrang',
+               type: 'string',
                search: {
                   type: 'select',
-                  values: ASSET_STATUSES,
-                  propForItemValue: 'text',
-                  propForItemText: 'text'
-               },
-               displayType: 'listAndPrint'
+                  values: ASSET_STATUSES_FOR_SEARCH,
+                  propForItemValue: 'value',
+                  propForItemText: 'label'
+               }
             }
          ]
       }

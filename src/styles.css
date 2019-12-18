@@ -1213,6 +1213,10 @@ span.form-input-outline {
    cursor: pointer;
 }
 
+textarea.form-input-disabled {
+   resize: none;
+}
+
 .loading-indicator {
    display: flex;
    flex-direction: column;

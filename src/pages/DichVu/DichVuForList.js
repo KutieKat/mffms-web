@@ -16,51 +16,54 @@ class DichVuForList extends Component {
                propForValue: 'maDichVu',
                propForSorting: 'MaDichVu',
                isBold: true,
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo mã'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Tên dịch vụ',
                propForValue: 'tenDichVu',
                propForSorting: 'TenDichVu',
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo tên'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Đơn giá',
                propForValue: 'donGia',
                propForSorting: 'DonGia',
+               type: 'number',
                search: {
-                  type: 'input',
+                  type: 'slider',
+                  min: 0,
+                  max: 100000000,
+                  step: 1000000,
                   placeholder: 'Tìm theo đơn giá'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Đơn vị tính',
                propForValue: 'dvt',
                propForSorting: 'DVT',
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo đơn vị tính'
-               },
-               displayType: 'listAndPrint'
+               }
             },
             {
                text: 'Ghi chú',
                propForValue: 'ghiChu',
                propForSorting: 'GhiChu',
+               type: 'string',
                search: {
                   type: 'input',
                   placeholder: 'Tìm theo ghi chú'
-               },
-               displayType: 'listAndPrint'
+               }
             }
          ]
       }

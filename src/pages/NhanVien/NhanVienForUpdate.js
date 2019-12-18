@@ -60,7 +60,7 @@ class NhanVienForUpdate extends Component {
                      rule: 'isAfter',
                      date: moment.utc().startOf('day'),
                      message:
-                        'Ngày sinh của nhân viên phải lớn hơn hoặc bằng ngày hiện tại!'
+                        'Ngày sinh của nhân viên phải nhỏ hơn hoặc bằng ngày hiện tại!'
                   }
                ]
             },

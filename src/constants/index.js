@@ -23,35 +23,62 @@ const GENDERS = [
 
 const POSITIONS = [
    {
-      value: 'CHU_SAN',
-      text: 'Chủ sân'
+      value: 'Chủ sân',
+      label: 'Chủ sân'
    },
    {
-      value: 'NGUOI_QUAN_LY',
-      text: 'Người quản lý'
+      value: 'Người quản lý',
+      label: 'Người quản lý'
    },
    {
-      value: 'NHAN_VIEN',
-      text: 'Nhân viên'
+      value: 'Nhân viên',
+      label: 'Nhân viên'
+   }
+]
+
+const ASSET_STATUSES_FOR_SEARCH = [
+   {
+      value: '',
+      label: 'Tất cả'
+   },
+   {
+      value: 'Hoạt động tốt',
+      label: 'Hoạt động tốt'
+   },
+   {
+      value: 'Đang sửa chữa',
+      label: 'Đang sửa chữa'
+   },
+   {
+      value: 'Đang bảo hành',
+      label: 'Đang bảo hành'
+   },
+   {
+      value: 'Đã qua sử dụng',
+      label: 'Đã qua sử dụng'
    }
 ]
 
 const ASSET_STATUSES = [
    {
-      value: 0,
-      text: 'Hoạt động tốt'
+      value: 'Đang sử dụng',
+      label: 'Đang sử dụng'
    },
    {
-      value: 1,
-      text: 'Đang sửa chữa'
+      value: 'Đang sửa chữa',
+      label: 'Đang sửa chữa'
    },
    {
-      value: 2,
-      text: 'Đang bảo hành'
+      value: 'Đang bảo hành',
+      label: 'Đang bảo hành'
    },
    {
-      value: 3,
-      text: 'Đã qua sử dụng'
+      value: 'Đã qua sử dụng',
+      label: 'Đã qua sử dụng'
+   },
+   {
+      value: 'Đã hư hỏng',
+      label: 'Đã hư hỏng'
    }
 ]
 
@@ -134,6 +161,25 @@ const ALPHABETS = [
    'Z'
 ]
 
+const ROLES_FOR_SEARCH = [
+   {
+      value: '',
+      label: 'Tất cả'
+   },
+   {
+      value: 'Chủ sân',
+      label: 'Chủ sân'
+   },
+   {
+      value: 'Người quản lý',
+      label: 'Người quản lý'
+   },
+   {
+      value: 'Nhân viên',
+      label: 'Nhân viên'
+   }
+]
+
 export {
    APP_SHORT_NAME,
    APP_NAME,
@@ -148,5 +194,7 @@ export {
    STATS_TABS,
    LONG_FETCHING_DATA_INTERVAL,
    SHORT_FETCHING_DATA_INTERVAL,
-   ALPHABETS
+   ALPHABETS,
+   ASSET_STATUSES_FOR_SEARCH,
+   ROLES_FOR_SEARCH
 }
