@@ -104,7 +104,7 @@ const menu = [
       items: [
          {
             title: 'Quản lý tài khoản',
-            path: '/he-thong/tai-khoan',
+            path: '/quan-ly/tai-khoan',
             icon: 'fas fa-users'
          },
          {

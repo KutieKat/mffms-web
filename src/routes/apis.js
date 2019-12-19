@@ -64,9 +64,11 @@ export default {
       create: baseTaiKhoanApi + '/Register',
       register: baseTaiKhoanApi + '/Register',
       login: baseTaiKhoanApi + '/Login',
-      updateById: baseTaiSanThietBiApi + '/UpdateById',
+      updateById: baseTaiKhoanApi + '/UpdateById',
       changePassword: baseTaiKhoanApi + '/ChangePassword',
-      deleteById: baseTaiKhoanApi + '/PermanentlyDeleteById'
+      deleteById: baseTaiKhoanApi + '/PermanentlyDeleteById',
+      resetPasswordById: baseTaiKhoanApi + '/ResetPassword',
+      validateHash: baseTaiKhoanApi + '/ValidateHash'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',

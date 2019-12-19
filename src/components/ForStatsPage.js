@@ -1,13 +1,21 @@
 import React, { Component, Fragment } from 'react'
 import Section from './Section'
 import { Link } from 'react-router-dom'
-import { scrollTop, print, apiGet, formatDateString } from '../utils'
+import { scrollTop, print, apiGet, formatDateString, deepGet } from '../utils'
 import LoadingIndicator from '../components/LoadingIndicator'
 import { STATS_TABS, LONG_FETCHING_DATA_INTERVAL } from '../constants'
 import CountUp from 'react-countup'
 import moment from 'moment'
 import { DateRangePicker } from 'react-date-range'
 import Dialog from './Dialog'
+import ForStatsPrintPage from './ForStatsPrintPage'
+import { connect } from 'react-redux'
+import { showNotification } from '../redux/actions'
+import Excel from 'exceljs'
+import { saveAs } from 'file-saver'
+import { excelFormat } from '../utils'
+import apiRoutes from '../routes/apis'
+import ExportReportDialog from './ExportReportDialog'
 
 class ForStatsPage extends Component {
    constructor(props) {
@@ -21,16 +29,25 @@ class ForStatsPage extends Component {
          endDate: undefined,
          showDateRangePicker: false,
          date_startDate: new Date(),
-         date_endDate: new Date()
+         date_endDate: new Date(),
+         showExportReportDialog: false,
+         settingsData: {
+            tenSanBong: '',
+            diaChi: '',
+            diaChiTrenPhieu: '',
+            soDienThoai: '',
+            fax: ''
+         }
       }
    }
 
    ///// METHODS FOR REACT LIFECYCLES /////
 
    componentWillMount() {
-      const { fetchData } = this
+      const { fetchData, fetchSettingsData } = this
 
       fetchData()
+      fetchSettingsData()
    }
 
    componentDidMount() {
@@ -74,6 +91,27 @@ class ForStatsPage extends Component {
          if (response && response.data.status === 'SUCCESS') {
             const { data } = response.data.result
             this.setState({ data, loading: false })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   fetchSettingsData = async () => {
+      const { caiDat } = apiRoutes
+      const url = caiDat.getAll
+
+      try {
+         const response = await apiGet(url)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({
+               settingsData: data
+            })
          } else {
             throw new Error(response.errors)
          }
@@ -236,7 +274,160 @@ class ForStatsPage extends Component {
       this.setState({ ...state }, fetchData)
    }
 
+   exportToPdf = () => {
+      const { showSuccessNotification } = this
+
+      print()
+      showSuccessNotification()
+   }
+
+   exportToXlsx = () => {
+      const { showSuccessNotification } = this
+      const { data, settingsData } = this.state
+      const {
+         tenSanBong,
+         diaChi,
+         diaChiTrenPhieu,
+         soDienThoai,
+         fax
+      } = settingsData
+      const { settings } = this.props
+      const { entity, cards } = settings
+      const { name, slug } = entity
+      const fileName = `thong-ke-${slug}-${moment().format('DDMMYYYY')}`
+      let workbook = new Excel.Workbook()
+      let worksheet = workbook.addWorksheet(moment().format('DD-MM-YYYY'), {
+         pageSetup: { fitToPage: true, orientation: 'portrait' }
+      })
+      let currentRowCount = 7
+
+      workbook.Props = {
+         Title: fileName,
+         Subject: `Thống kê ${name}`,
+         Author: 'MFFMS',
+         CreatedDate: moment()
+      }
+
+      worksheet.mergeCells('A1:G1')
+      worksheet.getCell('A1').value = tenSanBong
+      worksheet.getCell('A1').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A2:G2')
+      worksheet.getCell('A2').value = diaChi
+      worksheet.getCell('A2').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A3:G3')
+      worksheet.getCell(
+         'A3'
+      ).value = `Số điện thoại: ${soDienThoai} - Fax: ${fax}`
+      worksheet.getCell('A3').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A5:M5')
+      worksheet.getCell('M5').value = `THỐNG KÊ ${name.toUpperCase()}`
+      worksheet.getCell('M5').font = { ...excelFormat.boldFont, size: 18 }
+      worksheet.getCell('M5').alignment = excelFormat.center
+
+      cards.forEach((card, index) => {
+         const { label, propForValue, unit } = card
+
+         worksheet.mergeCells(`B${currentRowCount}:D${currentRowCount}`)
+         worksheet.mergeCells(`E${currentRowCount}:L${currentRowCount}`)
+
+         worksheet.getCell(`B${currentRowCount}`).value = `${label} (${unit})`
+         worksheet.getCell(`B${currentRowCount}`).font = excelFormat.boldFont
+         worksheet.getCell(`B${currentRowCount}`).alignment = excelFormat.left
+
+         worksheet.getCell(`E${currentRowCount}`).value = deepGet(
+            data,
+            propForValue
+         )
+         worksheet.getCell(`E${currentRowCount}`).font = excelFormat.normalFont
+         worksheet.getCell(`E${currentRowCount}`).alignment = excelFormat.left
+
+         currentRowCount += index !== cards.length - 1 ? 2 : 0
+      })
+
+      worksheet.mergeCells(
+         'G' + (currentRowCount + 2) + ':M' + (currentRowCount + 2)
+      )
+      worksheet.getCell(
+         'G' + (currentRowCount + 2)
+      ).value = `${diaChiTrenPhieu}, ngày ${moment().format(
+         'DD'
+      )} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}`
+      worksheet.getCell('G' + (currentRowCount + 2)).font =
+         excelFormat.italicFont
+      worksheet.getCell('G' + (currentRowCount + 2)).alignment =
+         excelFormat.right
+
+      worksheet.mergeCells(
+         'B' + (currentRowCount + 4) + ':D' + (currentRowCount + 4)
+      )
+      worksheet.getCell('B' + (currentRowCount + 4)).value = `NGƯỜI DUYỆT`
+      worksheet.getCell('B' + (currentRowCount + 4)).font = excelFormat.boldFont
+      worksheet.getCell('B' + (currentRowCount + 4)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'J' + (currentRowCount + 4) + ':L' + (currentRowCount + 4)
+      )
+      worksheet.getCell('J' + (currentRowCount + 4)).value = `NGƯỜI LẬP`
+      worksheet.getCell('J' + (currentRowCount + 4)).font = excelFormat.boldFont
+      worksheet.getCell('J' + (currentRowCount + 4)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'A' + (currentRowCount + 5) + ':E' + (currentRowCount + 5)
+      )
+      worksheet.getCell(
+         'A' + (currentRowCount + 5)
+      ).value = `(Ký và ghi rõ họ tên)`
+      worksheet.getCell('A' + (currentRowCount + 5)).font =
+         excelFormat.italicFont
+      worksheet.getCell('A' + (currentRowCount + 5)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'I' + (currentRowCount + 5) + ':M' + (currentRowCount + 5)
+      )
+      worksheet.getCell(
+         'I' + (currentRowCount + 5)
+      ).value = `(Ký và ghi rõ họ tên)`
+      worksheet.getCell('I' + (currentRowCount + 5)).font =
+         excelFormat.italicFont
+      worksheet.getCell('I' + (currentRowCount + 5)).alignment =
+         excelFormat.center
+
+      workbook.xlsx.writeBuffer().then(function(data) {
+         var blob = new Blob([data], {
+            type:
+               'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+         })
+         saveAs(blob, fileName)
+      })
+
+      showSuccessNotification()
+   }
+
+   toggleExportReportDialog = () => {
+      const { showExportReportDialog } = this.state
+
+      this.setState({ showExportReportDialog: !showExportReportDialog })
+   }
+
    ///// METHODS FOR RENDERING UI /////
+
+   showSuccessNotification = () => {
+      const { showNotification } = this.props
+
+      showNotification('success', 'Xuất báo cáo thành công!')
+   }
+
+   showErrorNotification = () => {
+      const { showNotification } = this.props
+
+      showNotification('error', 'Xuất báo cáo thất bại!')
+   }
 
    renderHeader = () => {
       const { settings } = this.props
@@ -412,22 +603,45 @@ class ForStatsPage extends Component {
       )
    }
 
+   renderDialogs = () => {
+      const { toggleExportReportDialog, exportToPdf, exportToXlsx } = this
+      const { showExportReportDialog, data } = this.state
+      const { settings } = this.props
+      const { entity } = settings
+      const dialogSettings = {
+         isOpen: showExportReportDialog,
+         onClose: toggleExportReportDialog,
+         onExportToPdf: exportToPdf,
+         onExportToXlsx: exportToXlsx,
+         entity,
+         data
+      }
+
+      return (
+         <Fragment>
+            <ExportReportDialog settings={dialogSettings} />
+         </Fragment>
+      )
+   }
+
    renderComponent = () => {
-      const { renderHeader, renderBody } = this
+      const { renderHeader, renderBody, renderDialogs } = this
       const { data, loading } = this.state
       const { settings } = this.props
-      const { entity, api, fields } = settings
-      //   const printSettings = {
-      //      entity,
-      //      api,
-      //      fields,
-      //      data
-      //   }
+      const { entity, cards } = settings
+      const printSettings = {
+         entity,
+         cards,
+         data
+      }
 
       return (
          <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
+            {renderDialogs()}
+
+            <ForStatsPrintPage settings={printSettings} />
          </LoadingIndicator>
       )
    }
@@ -439,4 +653,4 @@ class ForStatsPage extends Component {
    }
 }
 
-export default ForStatsPage
+export default connect(null, { showNotification })(ForStatsPage)

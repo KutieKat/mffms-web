@@ -197,11 +197,11 @@ class ForViewPage extends Component {
          worksheet.getCell(`E${currentRowCount}`).value = (type => {
             switch (type) {
                case 'date': {
-                  return formatDateString(data[propForValue])
+                  return formatDateString(deepGet(data, propForValue))
                }
 
                default: {
-                  return data[propForValue]
+                  return deepGet(data, propForValue)
                }
             }
          })(type)
@@ -430,6 +430,28 @@ class ForViewPage extends Component {
             )
          }
 
+         case 'password': {
+            return (
+               <input
+                  className="form-input-disabled"
+                  type="password"
+                  value={getFieldValue('text', data && data[propForValue])}
+                  disabled={true}
+               />
+            )
+         }
+
+         case 'email': {
+            return (
+               <input
+                  className="form-input-disabled"
+                  type="email"
+                  value={getFieldValue('text', data && data[propForValue])}
+                  disabled={true}
+               />
+            )
+         }
+
          case 'date': {
             return (
                <input
@@ -488,7 +510,7 @@ class ForViewPage extends Component {
       const { toggleExportReportDialog, exportToPdf, exportToXlsx } = this
       const { showExportReportDialog, data } = this.state
       const { settings } = this.props
-      const { entity, api } = settings
+      const { entity } = settings
       const dialogSettings = {
          isOpen: showExportReportDialog,
          onClose: toggleExportReportDialog,
@@ -509,10 +531,9 @@ class ForViewPage extends Component {
       const { renderHeader, renderBody, renderDialogs } = this
       const { data, loading } = this.state
       const { settings } = this.props
-      const { entity, api, fields } = settings
+      const { entity, fields } = settings
       const printSettings = {
          entity,
-         // api,
          fields,
          data
       }

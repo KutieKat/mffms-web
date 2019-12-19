@@ -44,6 +44,8 @@ import TaiSanThietBiForStats from '../pages/TaiSanThietBi/TaiSanThietBiForStats'
 import TaiKhoanForList from '../pages/TaiKhoan/TaiKhoanForList'
 import TaiKhoanForView from '../pages/TaiKhoan/TaiKhoanForView'
 import TaiKhoanForCreate from '../pages/TaiKhoan/TaiKhoanForCreate'
+import TaiKhoanForUpdate from '../pages/TaiKhoan/TaiKhoanForUpdate'
+import TaiKhoanForUpdatePassword from '../pages/TaiKhoan/TaiKhoanForUpdatePassword'
 
 ///// CaiDat /////
 import CaiDatForUpdate from '../pages/CaiDat/CaiDatForUpdate'
@@ -189,17 +191,25 @@ export default [
 
    ///// TaiKhoan /////
    {
-      path: '/he-thong/tai-khoan',
+      path: '/quan-ly/tai-khoan',
       component: TaiKhoanForList,
       exact: true
    },
    {
-      path: '/he-thong/tai-khoan/xem-thong-tin/:id',
+      path: '/quan-ly/tai-khoan/xem-thong-tin/:id',
       component: TaiKhoanForView
    },
    {
-      path: '/he-thong/tai-khoan/them-moi',
+      path: '/quan-ly/tai-khoan/them-moi',
       component: TaiKhoanForCreate
+   },
+   {
+      path: '/quan-ly/tai-khoan/cap-nhat/:id',
+      component: TaiKhoanForUpdate
+   },
+   {
+      path: '/quan-ly/tai-khoan/thay-doi-mat-khau/:id',
+      component: TaiKhoanForUpdatePassword
    },
 
    ///// CaiDat /////

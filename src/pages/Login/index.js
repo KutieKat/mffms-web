@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { showNotification } from '../../redux/actions'
+import { showNotification, logIn } from '../../redux/actions'
 import apiRoutes from '../../routes/apis'
 import { apiPost, isEmptyObj } from '../../utils'
 import { APP_SHORT_NAME, APP_DESCRIPTION, APP_ABOUT } from '../../constants'
 import LoadingIndicator from '../../components/LoadingIndicator'
+import { withRouter } from 'react-router-dom'
 
 class Login extends Component {
    constructor(props) {
@@ -32,22 +33,38 @@ class Login extends Component {
 
    login = async () => {
       const { reset, showSuccessNotification, showErrorNotification } = this
+      console.log('This is called')
 
       try {
          const { reset } = this
          const { userData } = this.state
-         const { logIn } = this.props
-         const url = apiRoutes.taiKhoan.logIn
+         const { history, logIn } = this.props
+         const { taiKhoan } = apiRoutes
+         const url = taiKhoan.login
          const response = await apiPost(url, userData)
 
-         if (response && response.status == 200) {
-            // Show home page
+         if (response && response.status === 200) {
+            const { data } = response.data.result
+            const { tenDangNhap, hash } = data
+            const localUser = {
+               tenDangNhap,
+               hash
+            }
+
+            showSuccessNotification()
+            this.setState({ loading: false }, () => {
+               logIn(data)
+               localStorage.setItem('MFFMS_USER', JSON.stringify(localUser))
+               history.push('/')
+            })
          } else {
             showErrorNotification()
+            this.setState({ loading: false })
             reset()
          }
       } catch (error) {
          showErrorNotification()
+         this.setState({ loading: false })
          reset()
       }
    }
@@ -63,16 +80,10 @@ class Login extends Component {
 
    submit = e => {
       e.preventDefault()
-      const {
-         validateFields,
-         login,
-         showSuccessNotification,
-         showErrorNotification
-      } = this
+      const { validateFields, login, showErrorNotification } = this
       const errors = validateFields()
 
       if (!errors) {
-         showSuccessNotification()
          this.setState({ showAlert: false, loading: true }, login)
       } else {
          showErrorNotification()
@@ -109,17 +120,23 @@ class Login extends Component {
          matKhauErrors.push('Mật khẩu phải có ít nhất 6 ký tự!')
       }
 
-      errors['tenDangNhap'] = {
-         name: 'Tên đăng nhập',
-         errors: tenDangNhapErrors
+      if (tenDangNhapErrors.length > 0) {
+         errors['tenDangNhap'] = {
+            name: 'Tên đăng nhập',
+            errors: tenDangNhapErrors
+         }
       }
 
-      errors['matKhau'] = {
-         name: 'Mật khẩu',
-         errors: matKhauErrors
+      if (matKhauErrors.length > 0) {
+         errors['matKhau'] = {
+            name: 'Mật khẩu',
+            errors: matKhauErrors
+         }
       }
 
-      return !isEmptyObj(errors) ? errors : null
+      return tenDangNhapErrors.length > 0 || matKhauErrors.length > 0
+         ? errors
+         : null
    }
 
    isValidField = fieldName => {
@@ -138,13 +155,13 @@ class Login extends Component {
    showSuccessNotification = () => {
       const { showNotification } = this.props
 
-      showNotification('success', 'Đăng nhập thành công!')
+      showNotification('success', 'Đăng nhập hệ thống thành công!')
    }
 
    showErrorNotification = () => {
       const { showNotification } = this.props
 
-      showNotification('error', 'Đăng nhập thất bại!')
+      showNotification('error', 'Đăng nhập hệ thống thất bại!')
    }
 
    renderFormHeader = () => {
@@ -277,4 +294,4 @@ class Login extends Component {
    }
 }
 
-export default connect(null, { showNotification })(Login)
+export default withRouter(connect(null, { showNotification, logIn })(Login))

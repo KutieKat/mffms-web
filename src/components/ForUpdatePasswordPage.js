@@ -6,7 +6,8 @@ import { isEmpty, isLength, isNumeric } from 'validator'
 import {
    isEmptyObj,
    isPhoneNumber,
-   apiPost,
+   apiGet,
+   apiPut,
    scrollTop,
    isAfter,
    isValidEmail
@@ -26,7 +27,7 @@ const customStyles = {
    })
 }
 
-class ForCreatePage extends Component {
+class ForUpdatePasswordPage extends Component {
    constructor(props) {
       super(props)
 
@@ -52,24 +53,18 @@ class ForCreatePage extends Component {
       scrollTop()
    }
 
-   componentWillReceiveProps(nextProps) {
-      const { initializeEditingData } = this
-      const editingData = initializeEditingData(nextProps)
-
-      this.setState({ editingData })
-   }
-
    ///// METHODS FOR INTERACTING WITH API /////
 
-   createRecord = () => {
+   updateRecord = () => {
       const { showErrorNotification, showSuccessNotification } = this
       const { editingData } = this.state
-      const { settings, history } = this.props
+      const { settings, match, history } = this.props
       const { api, entity } = settings
+      const { id } = match.params
       const { slug } = entity
-      const url = api.create
+      const url = `${api.changePassword}/${id}`
 
-      return apiPost(url, editingData)
+      return apiPut(url, editingData)
          .then(response => {
             showSuccessNotification()
             this.setState({ loading: false })
@@ -85,8 +80,9 @@ class ForCreatePage extends Component {
 
    ///// METHODS FOR HANDLING UI EVENTS /////
 
-   changeEditingData = (value, fieldName) => {
+   changeEditingData = (e, fieldName) => {
       const { editingData } = this.state
+      const value = e.target.value
 
       if (typeof value === 'number') {
          value = parseInt(value)
@@ -103,11 +99,11 @@ class ForCreatePage extends Component {
 
    submit = () => {
       const { showErrorNotification } = this
-      const { validateFields, createRecord } = this
+      const { validateFields, updateRecord } = this
       const errors = validateFields()
 
       if (!errors) {
-         this.setState({ showAlert: false, loading: true }, createRecord)
+         this.setState({ showAlert: false, loading: true }, updateRecord)
       } else {
          showErrorNotification()
          this.setState({ errors, showAlert: true })
@@ -197,7 +193,7 @@ class ForCreatePage extends Component {
 
          switch (rule) {
             case 'notEmpty': {
-               if (isEmpty(data)) {
+               if (isEmpty(data.toString(10))) {
                   errors.push(message)
                }
 
@@ -225,7 +221,7 @@ class ForCreatePage extends Component {
             }
 
             case 'isNumeric': {
-               if (!isNumeric(data)) {
+               if (!isNumeric(data.toString())) {
                   errors.push(message)
                }
 
@@ -284,7 +280,7 @@ class ForCreatePage extends Component {
       const { entity } = settings
       const { name } = entity
 
-      showNotification('success', `Thêm ${name} mới thành công!`)
+      showNotification('success', `Cập nhật thông tin ${name} thành công!`)
    }
 
    showErrorNotification = () => {
@@ -292,7 +288,7 @@ class ForCreatePage extends Component {
       const { entity } = settings
       const { name } = entity
 
-      showNotification('error', `Thêm ${name} mới thất bại!`)
+      showNotification('error', `Cập nhật thông tin ${name} thất bại!`)
    }
 
    renderHeader = () => {
@@ -315,7 +311,7 @@ class ForCreatePage extends Component {
                <i className="fas fa-chevron-right"></i>
             </span>
             <span className="breadcrumb-active">
-               <Link to="#">Thêm {name} mới</Link>
+               <Link to="#">Cập nhật thông tin {name}</Link>
             </span>
          </span>
       )
@@ -327,8 +323,8 @@ class ForCreatePage extends Component {
       const { entity } = settings
       const { name } = entity
       const section = {
-         title: `Thêm ${name} mới`,
-         subtitle: `Thêm ${name} mới vào hệ thống`,
+         title: `Cập nhật thông tin ${name}`,
+         subtitle: `Cập nhật lại thông tin ${name} trên hệ thống`,
          footerRight: renderFormFooter()
       }
 
@@ -399,16 +395,16 @@ class ForCreatePage extends Component {
             return (
                <input
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
                   type="text"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
+                  onChange={e => changeEditingData(e, propForValue)}
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -419,16 +415,16 @@ class ForCreatePage extends Component {
             return (
                <input
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
                   type="password"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
+                  onChange={e => changeEditingData(e, propForValue)}
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -439,16 +435,16 @@ class ForCreatePage extends Component {
             return (
                <input
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
                   type="email"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
+                  onChange={e => changeEditingData(e, propForValue)}
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -465,10 +461,8 @@ class ForCreatePage extends Component {
                   }
                   type="date"
                   placeholder={placeholder}
-                  value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
+                  value={moment(editingData[propForValue]).format('YYYY-MM-DD')}
+                  onChange={e => changeEditingData(e, propForValue)}
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -504,9 +498,7 @@ class ForCreatePage extends Component {
                   }
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
+                  onChange={e => changeEditingData(e, propForValue)}
                   onFocus={hideAlert}
                   disabled={disabled}
                ></textarea>
@@ -555,4 +547,6 @@ class ForCreatePage extends Component {
    }
 }
 
-export default withRouter(connect(null, { showNotification })(ForCreatePage))
+export default withRouter(
+   connect(null, { showNotification })(ForUpdatePasswordPage)
+)

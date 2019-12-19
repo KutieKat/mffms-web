@@ -180,6 +180,40 @@ const ROLES_FOR_SEARCH = [
    }
 ]
 
+const ROLES = [
+   {
+      value: 'Chủ sân',
+      label: 'Chủ sân'
+   },
+   {
+      value: 'Người quản lý',
+      label: 'Người quản lý'
+   },
+   {
+      value: 'Nhân viên',
+      label: 'Nhân viên'
+   }
+]
+
+const SECTIONS_FOR_ROLES = [
+   {
+      role: 'Chủ sân',
+      sections: ['Thống kê', 'Nghiệp vụ', 'Hệ thống']
+   },
+   {
+      role: 'Quản lý',
+      sections: ['Nghiệp vụ']
+   },
+   {
+      role: 'Quản trị viên',
+      sections: ['Hệ thống']
+   },
+   {
+      role: 'Nhân viên',
+      sections: ['Nghiệp vụ']
+   }
+]
+
 export {
    APP_SHORT_NAME,
    APP_NAME,
@@ -196,5 +230,7 @@ export {
    SHORT_FETCHING_DATA_INTERVAL,
    ALPHABETS,
    ASSET_STATUSES_FOR_SEARCH,
-   ROLES_FOR_SEARCH
+   ROLES_FOR_SEARCH,
+   ROLES,
+   SECTIONS_FOR_ROLES
 }

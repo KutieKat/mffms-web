@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ForListPage from '../../components/ForListPage'
+import ForListPage from '../../components/ForAccountListPage'
 import apiRoutes from '../../routes/apis'
 import { taiKhoan } from '../../entities'
 import { GENDERS_FOR_SEARCH, ROLES_FOR_SEARCH } from '../../constants'
@@ -36,7 +36,7 @@ class TaiKhoanForList extends Component {
             },
             {
                text: 'Họ và tên',
-               propForValue: 'tenTaiKhoan',
+               propForValue: 'hoVaTen',
                propForSorting: 'HoVaTen',
                type: 'string',
                search: {

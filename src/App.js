@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react'
 import { Route, Switch, NavLink, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import * as actions from './redux/actions'
+import { logIn, logOut } from './redux/actions'
 import menu from './routes/menu'
 import pageRoutes from './routes/pages'
 import NotFound from './pages/NotFound'
-import { APP_NAME, APP_SHORT_NAME } from './constants'
+import { APP_NAME, APP_SHORT_NAME, SECTIONS_FOR_ROLES } from './constants'
 import Login from './pages/Login'
-import Notification from './components/Notification'
+import { isEmptyObj, apiPost, deepGet } from './utils'
+import apiRoutes from './routes/apis'
 import './styles.css'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
@@ -19,30 +20,81 @@ class App extends Component {
       super(props)
 
       this.state = {
-         pathTitle: ''
+         pathTitle: '',
+         showLoginPage: false
       }
    }
 
    ///// METHODS FOR REACT LIFECYCLES /////
 
+   componentWillMount() {
+      const { user } = this.props
+      const localUser = JSON.parse(localStorage.getItem('MFFMS_USER')) || {}
+
+      if (isEmptyObj(user) || isEmptyObj(localUser)) {
+         this.setState({ showLoginPage: true })
+      } else {
+         this.setState({ showLoginPage: false })
+      }
+   }
+
+   componentWillReceiveProps(nextProps) {
+      const { user } = nextProps
+      const localUser = JSON.parse(localStorage.getItem('MFFMS_USER')) || {}
+
+      if (isEmptyObj(user) || isEmptyObj(localUser)) {
+         this.setState({ showLoginPage: true })
+      } else {
+         this.setState({ showLoginPage: false })
+      }
+   }
+
    componentDidMount() {
-      const { getPathTitle } = this
+      const { getPathTitle, autoLogin } = this
       const pathTitle = getPathTitle()
 
-      this.setState({ pathTitle })
+      this.setState({ pathTitle }, autoLogin)
+   }
+
+   ///// METHODS FOR INTERACTING WITH API /////
+
+   autoLogin = async () => {
+      const { location, history, logIn } = this.props
+      const { pathname } = location
+      const localUser = JSON.parse(localStorage.getItem('MFFMS_USER')) || {}
+
+      if (!isEmptyObj(localUser)) {
+         const { tenDangNhap, hash } = localUser
+         const { taiKhoan } = apiRoutes
+         const { validateHash } = taiKhoan
+         const url = validateHash
+         const response = await apiPost(url, { tenDangNhap, hash })
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({ showLoginPage: false }, () => {
+               logIn(data)
+
+               if (pathname === '/dang-nhap') {
+                  history.push('/')
+               }
+            })
+         } else {
+            this.setState({ showLoginPage: true })
+         }
+      } else {
+         this.setState({ showLoginPage: true })
+      }
    }
 
    ///// METHODS FOR HANDLING UI EVENTS /////
 
-   logOut = () => {
-      const { logOut } = this
-
-      if (
-         window.confirm('Bạn có chắc chắn muốn đăng xuất khỏi MFFMS hay không?')
-      ) {
-         logOut()
-         localStorage.removeItem('MFFMS_USER')
-      }
+   onLogOut = () => {
+      const { history, logOut } = this.props
+      localStorage.removeItem('MFFMS_USER')
+      logOut()
+      history.push('/dang-nhap')
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
@@ -119,13 +171,16 @@ class App extends Component {
    }
 
    renderProfileInfo = () => {
+      const { user } = this.props
+      const { hoVaTen, tenDangNhap, phanQuyen } = user
       return (
          <Fragment>
-            {/* <span className="main-header__profile-avatar">TD</span> */}
             <div>
-               <div className="main-header__profile-name">Nguyễn Tiến Dũng</div>
+               <div className="main-header__profile-name">
+                  {hoVaTen || tenDangNhap}
+               </div>
                <div className="main-header__profile-role">
-                  <i className="fas fa-user-circle"></i> Chủ sân
+                  <i className="fas fa-user-circle"></i> {phanQuyen}
                </div>
             </div>
          </Fragment>
@@ -133,6 +188,8 @@ class App extends Component {
    }
 
    renderProfileDropdownMenu = () => {
+      const { onLogOut } = this
+
       return (
          <div className="main-header__dropdown-menu">
             <ul className="main-nav__list">
@@ -149,7 +206,7 @@ class App extends Component {
                   </NavLink>
                </li>
                <li className="main-nav__list-item">
-                  <NavLink to="#">
+                  <NavLink to="#" onClick={onLogOut}>
                      <i className="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Đăng
                      xuất
                   </NavLink>
@@ -179,17 +236,29 @@ class App extends Component {
    }
 
    renderMenu = () => {
-      const { logOut } = this
+      const { user } = this.props
+      const { phanQuyen } = user
+      const sectionsForUser = SECTIONS_FOR_ROLES.find(
+         item => item.role === phanQuyen
+      )
+      const filteredMenu =
+         sectionsForUser &&
+         sectionsForUser.sections.map(section =>
+            menu.find(menuItem => menuItem.title === section)
+         )
 
-      return menu.map((item, index) => {
-         const { title, items } = item
+      console.log(filteredMenu)
 
-         return (
-            <Fragment key={index}>
-               <div className="main-nav__title">{title}</div>
-               <ul className="main-nav__list">
-                  {items.map((menuItem, index) =>
-                     menuItem.path !== '/dang-xuat' ? (
+      return (
+         filteredMenu &&
+         filteredMenu.map((item, index) => {
+            const { title, items } = item
+
+            return (
+               <Fragment key={index}>
+                  <div className="main-nav__title">{title}</div>
+                  <ul className="main-nav__list">
+                     {items.map((menuItem, index) => (
                         <li className="main-nav__list-item" key={index}>
                            <NavLink
                               to={menuItem.path}
@@ -203,19 +272,12 @@ class App extends Component {
                               {menuItem.title}
                            </NavLink>
                         </li>
-                     ) : (
-                        <li className="main-nav__list-item" key={index}>
-                           <NavLink to="#" onClick={logOut}>
-                              <i className={menuItem.icon}></i>&nbsp;&nbsp;
-                              {menuItem.title}
-                           </NavLink>
-                        </li>
-                     )
-                  )}
-               </ul>
-            </Fragment>
-         )
-      })
+                     ))}
+                  </ul>
+               </Fragment>
+            )
+         })
+      )
    }
 
    renderMainRight = () => {
@@ -242,21 +304,25 @@ class App extends Component {
       ))
    }
 
-   renderNotification = () => {
-      return <Notification />
-   }
+   // renderNotification = () => {
+   //    return <Notification />
+   // }
 
    renderComponent = () => {
-      const { renderHeader, renderMain, renderNotification } = this
+      const { renderHeader, renderMain } = this
+      const { showLoginPage } = this.state
 
-      return (
-         <Fragment>
-            {/* <Login /> */}
-            {renderHeader()}
-            {renderMain()}
-            {renderNotification()}
-         </Fragment>
-      )
+      if (showLoginPage) {
+         return <Login />
+      } else {
+         return (
+            <Fragment>
+               {renderHeader()}
+               {renderMain()}
+               {/* {renderNotification()} */}
+            </Fragment>
+         )
+      }
    }
 
    render() {
@@ -270,4 +336,4 @@ const mapStateToProps = state => ({
    user: state.user
 })
 
-export default withRouter(connect(mapStateToProps, actions)(App))
+export default withRouter(connect(mapStateToProps, { logIn, logOut })(App))

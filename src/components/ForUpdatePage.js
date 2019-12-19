@@ -9,7 +9,8 @@ import {
    apiGet,
    apiPut,
    scrollTop,
-   isAfter
+   isAfter,
+   isValidEmail
 } from '../utils'
 import { connect } from 'react-redux'
 import { showNotification } from '../redux/actions'
@@ -156,6 +157,16 @@ class ForUpdatePage extends Component {
                break
             }
 
+            case 'password': {
+               editingData[propForValue] = ''
+               break
+            }
+
+            case 'email': {
+               editingData[propForValue] = ''
+               break
+            }
+
             case 'date': {
                editingData[propForValue] = moment().format('YYYY-MM-DD')
                break
@@ -205,6 +216,7 @@ class ForUpdatePage extends Component {
    }
 
    validateField = (validators, data) => {
+      const { editingData } = this.state
       let errors = []
 
       validators.forEach(validator => {
@@ -249,6 +261,25 @@ class ForUpdatePage extends Component {
 
             case 'isPhoneNumber': {
                if (!isPhoneNumber(data)) {
+                  errors.push(message)
+               }
+
+               break
+            }
+
+            case 'isEmail': {
+               if (!isValidEmail(data)) {
+                  errors.push(message)
+               }
+
+               break
+            }
+
+            case 'isEqual': {
+               const { propForComparedValue } = validator
+               const valueToCompare = editingData[propForComparedValue]
+
+               if (valueToCompare !== data) {
                   errors.push(message)
                }
 
@@ -402,6 +433,46 @@ class ForUpdatePage extends Component {
                         : 'form-input-outline'
                   }
                   type="text"
+                  placeholder={placeholder}
+                  value={editingData[propForValue]}
+                  onChange={e => changeEditingData(e, propForValue)}
+                  onFocus={hideAlert}
+                  disabled={disabled}
+               />
+            )
+         }
+
+         case 'password': {
+            return (
+               <input
+                  className={
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
+                        ? 'form-input-alert'
+                        : 'form-input-outline'
+                  }
+                  type="password"
+                  placeholder={placeholder}
+                  value={editingData[propForValue]}
+                  onChange={e => changeEditingData(e, propForValue)}
+                  onFocus={hideAlert}
+                  disabled={disabled}
+               />
+            )
+         }
+
+         case 'email': {
+            return (
+               <input
+                  className={
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
+                        ? 'form-input-alert'
+                        : 'form-input-outline'
+                  }
+                  type="email"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
                   onChange={e => changeEditingData(e, propForValue)}
