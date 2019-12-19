@@ -1017,6 +1017,15 @@ input[type='file'] {
       appearance: none;
    }
 
+   .printing-page .stats-card__label {
+      text-align: center;
+      color: #111;
+   }
+
+   .printing-page .stats-card__body {
+      padding: 0;
+   }
+
    .notification-container {
       display: none !important;
    }

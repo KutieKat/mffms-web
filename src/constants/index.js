@@ -198,10 +198,10 @@ const ROLES = [
 const SECTIONS_FOR_ROLES = [
    {
       role: 'Chủ sân',
-      sections: ['Thống kê', 'Nghiệp vụ', 'Hệ thống']
+      sections: ['Nghiệp vụ', 'Thống kê', 'Hệ thống']
    },
    {
-      role: 'Quản lý',
+      role: 'Người quản lý',
       sections: ['Nghiệp vụ']
    },
    {

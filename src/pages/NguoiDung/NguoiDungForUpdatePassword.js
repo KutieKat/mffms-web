@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import ForUpdatePage from '../../components/ForUpdatePasswordPage'
+import ForUpdatePage from '../../components/ForUpdateProfilePasswordPage'
 import { taiKhoan } from '../../entities'
 import apiRoutes from '../../routes/apis'
 
-class TaiKhoanForUpdatePassword extends Component {
+class NguoiDungForUpdatePassword extends Component {
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
@@ -86,4 +86,4 @@ class TaiKhoanForUpdatePassword extends Component {
    }
 }
 
-export default TaiKhoanForUpdatePassword
+export default NguoiDungForUpdatePassword

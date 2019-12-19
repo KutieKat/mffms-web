@@ -33,24 +33,6 @@ class TaiKhoanForUpdate extends Component {
                ],
                disabled: true
             },
-            // {
-            //    label: 'Mật khẩu',
-            //    propForValue: 'matKhau',
-            //    placeholder: 'Nhập mật khẩu của tài khoản',
-            //    type: 'password',
-            //    validators: [
-            //       {
-            //          rule: 'notEmpty',
-            //          message:
-            //             'Mật khẩu của tài khoản là thông tin bắt buộc và không được để trống!'
-            //       },
-            //       {
-            //          rule: 'minLength',
-            //          length: 6,
-            //          message: 'Mật khẩu của tài khoản phải có ít nhất 6 ký tự!'
-            //       }
-            //    ]
-            // },
             {
                label: 'Họ và tên',
                propForValue: 'hoVaTen',

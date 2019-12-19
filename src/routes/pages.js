@@ -47,6 +47,10 @@ import TaiKhoanForCreate from '../pages/TaiKhoan/TaiKhoanForCreate'
 import TaiKhoanForUpdate from '../pages/TaiKhoan/TaiKhoanForUpdate'
 import TaiKhoanForUpdatePassword from '../pages/TaiKhoan/TaiKhoanForUpdatePassword'
 
+///// NguoiDung /////
+import NguoiDungForUpdate from '../pages/NguoiDung/NguoiDungForUpdate'
+import NguoiDungForUpdatePassword from '../pages/NguoiDung/NguoiDungForUpdatePassword'
+
 ///// CaiDat /////
 import CaiDatForUpdate from '../pages/CaiDat/CaiDatForUpdate'
 
@@ -210,6 +214,16 @@ export default [
    {
       path: '/quan-ly/tai-khoan/thay-doi-mat-khau/:id',
       component: TaiKhoanForUpdatePassword
+   },
+
+   ///// NguoiDung /////
+   {
+      path: '/tai-khoan/cap-nhat/:id',
+      component: NguoiDungForUpdate
+   },
+   {
+      path: '/tai-khoan/thay-doi-mat-khau/:id',
+      component: NguoiDungForUpdatePassword
    },
 
    ///// CaiDat /////

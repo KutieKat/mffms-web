@@ -7,7 +7,7 @@ import pageRoutes from './routes/pages'
 import NotFound from './pages/NotFound'
 import { APP_NAME, APP_SHORT_NAME, SECTIONS_FOR_ROLES } from './constants'
 import Login from './pages/Login'
-import { isEmptyObj, apiPost, deepGet } from './utils'
+import { isEmptyObj, apiPost, deepGet, scrollTop } from './utils'
 import apiRoutes from './routes/apis'
 import './styles.css'
 import 'react-date-range/dist/styles.css'
@@ -21,7 +21,8 @@ class App extends Component {
 
       this.state = {
          pathTitle: '',
-         showLoginPage: false
+         showLoginPage: false,
+         autoLoginEnabled: false
       }
    }
 
@@ -39,13 +40,19 @@ class App extends Component {
    }
 
    componentWillReceiveProps(nextProps) {
+      const { autoLogin } = this
+      const { autoLoginEnabled } = this.state
       const { user } = nextProps
       const localUser = JSON.parse(localStorage.getItem('MFFMS_USER')) || {}
 
       if (isEmptyObj(user) || isEmptyObj(localUser)) {
          this.setState({ showLoginPage: true })
       } else {
-         this.setState({ showLoginPage: false })
+         this.setState({ showLoginPage: false, autoLoginEnabled: true }, () => {
+            if (autoLoginEnabled) {
+               autoLogin()
+            }
+         })
       }
    }
 
@@ -53,6 +60,7 @@ class App extends Component {
       const { getPathTitle, autoLogin } = this
       const pathTitle = getPathTitle()
 
+      scrollTop()
       this.setState({ pathTitle }, autoLogin)
    }
 
@@ -73,18 +81,21 @@ class App extends Component {
          if (response && response.data.status === 'SUCCESS') {
             const { data } = response.data.result
 
-            this.setState({ showLoginPage: false }, () => {
-               logIn(data)
+            this.setState(
+               { showLoginPage: false, autoLoginEnabled: false },
+               () => {
+                  logIn(data)
 
-               if (pathname === '/dang-nhap') {
-                  history.push('/')
+                  if (pathname === '/dang-nhap') {
+                     history.push('/')
+                  }
                }
-            })
+            )
          } else {
-            this.setState({ showLoginPage: true })
+            this.setState({ showLoginPage: true, autoLoginEnabled: false })
          }
       } else {
-         this.setState({ showLoginPage: true })
+         this.setState({ showLoginPage: true, autoLoginEnabled: false })
       }
    }
 
@@ -189,18 +200,20 @@ class App extends Component {
 
    renderProfileDropdownMenu = () => {
       const { onLogOut } = this
+      const { user } = this.props
+      const { maTaiKhoan } = user
 
       return (
          <div className="main-header__dropdown-menu">
             <ul className="main-nav__list">
                <li className="main-nav__list-item">
-                  <NavLink to="#">
+                  <NavLink to={`/tai-khoan/cap-nhat/${maTaiKhoan}`}>
                      <i className="fas fa-address-card"></i>&nbsp;&nbsp;Cập nhật
                      thông tin
                   </NavLink>
                </li>
                <li className="main-nav__list-item">
-                  <NavLink to="/ho-so/thay-doi-mat-khau">
+                  <NavLink to={`/tai-khoan/thay-doi-mat-khau/${maTaiKhoan}`}>
                      <i className="fas fa-lock"></i>&nbsp;&nbsp;Thay đổi mật
                      khẩu
                   </NavLink>

@@ -9,11 +9,25 @@ import {
    apiGet,
    apiPut,
    scrollTop,
-   isAfter
+   isAfter,
+   isValidEmail
 } from '../utils'
+import { connect } from 'react-redux'
+import { showNotification, logIn } from '../redux/actions'
 import LoadingIndicator from './LoadingIndicator'
+import Select from 'react-select'
 
-class ForUpdateSettingsPage extends Component {
+const customStyles = {
+   control: () => ({
+      border: '2px solid #edf0f5',
+      display: 'flex',
+      fontWeight: 'normal',
+      paddingTop: '3px',
+      paddingBottom: '2px'
+   })
+}
+
+class ForUpdateProfilePage extends Component {
    constructor(props) {
       super(props)
 
@@ -35,6 +49,13 @@ class ForUpdateSettingsPage extends Component {
       this.setState({ editingData })
    }
 
+   // componentWillReceiveProps(nextProps) {
+   //    const { initializeEditingData } = this
+   //    const editingData = initializeEditingData(nextProps)
+
+   //    this.setState({ editingData })
+   // }
+
    componentDidMount() {
       const { fetchData } = this
 
@@ -47,7 +68,8 @@ class ForUpdateSettingsPage extends Component {
    fetchData = async () => {
       const { settings, match } = this.props
       const { api } = settings
-      const url = api.getAll
+      const { id } = match.params
+      const url = `${api.getById}/${id}`
 
       try {
          const response = await apiGet(url)
@@ -64,36 +86,34 @@ class ForUpdateSettingsPage extends Component {
       }
    }
 
-   restoreSettings = () => {
-      const { fetchData } = this
-      const { settings } = this.props
-      const { api } = settings
-      const url = api.restore
-
-      return apiPut(url)
-         .then(response => {
-            this.setState({ loading: false }, fetchData)
-         })
-         .catch(error => {
-            this.setState({ loading: false })
-            // const { errors } = error.response.data.result
-            // this.setState({ showAlert: true })
-         })
-   }
-
    updateRecord = () => {
+      const { showErrorNotification, showSuccessNotification } = this
       const { editingData } = this.state
       const { settings, match, history } = this.props
       const { api, entity } = settings
-      const id = editingData && editingData.maCaiDat
+      const { id } = match.params
+
+      const { slug } = entity
       const url = `${api.updateById}/${id}`
 
       return apiPut(url, editingData)
          .then(response => {
-            this.setState({ loading: false })
-            // history.push(`/quan-ly/${slug}`)
+            const { data } = response.data.result
+            const { tenDangNhap, hash } = data
+            const localUser = {
+               tenDangNhap,
+               hash
+            }
+
+            showSuccessNotification()
+            this.setState({ loading: false }, () => {
+               logIn(data)
+               localStorage.setItem('MFFMS_USER', JSON.stringify(localUser))
+               history.push('/')
+            })
          })
          .catch(error => {
+            showErrorNotification()
             this.setState({ loading: false })
             // const { errors } = error.response.data.result
             // this.setState({ showAlert: true })
@@ -118,27 +138,23 @@ class ForUpdateSettingsPage extends Component {
       this.setState({ showAlert: false, errors: null })
    }
 
-   restore = () => {
-      const { restoreSettings } = this
-
-      this.setState({ showAlert: false, loading: true }, restoreSettings)
-   }
-
    submit = () => {
+      const { showErrorNotification } = this
       const { validateFields, updateRecord } = this
       const errors = validateFields()
 
       if (!errors) {
          this.setState({ showAlert: false, loading: true }, updateRecord)
       } else {
+         showErrorNotification()
          this.setState({ errors, showAlert: true })
       }
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
 
-   initializeEditingData = () => {
-      const { settings } = this.props
+   initializeEditingData = (props = this.props) => {
+      const { settings } = props
       const { fields } = settings
       let editingData = {}
 
@@ -151,6 +167,16 @@ class ForUpdateSettingsPage extends Component {
                break
             }
 
+            case 'password': {
+               editingData[propForValue] = ''
+               break
+            }
+
+            case 'email': {
+               editingData[propForValue] = ''
+               break
+            }
+
             case 'date': {
                editingData[propForValue] = moment().format('YYYY-MM-DD')
                break
@@ -159,7 +185,8 @@ class ForUpdateSettingsPage extends Component {
             case 'select': {
                const { values, propForItemValue } = field
 
-               editingData[propForValue] = values[0][propForItemValue]
+               editingData[propForValue] =
+                  values[0] && values[0][propForItemValue]
                break
             }
 
@@ -199,6 +226,7 @@ class ForUpdateSettingsPage extends Component {
    }
 
    validateField = (validators, data) => {
+      const { editingData } = this.state
       let errors = []
 
       validators.forEach(validator => {
@@ -248,6 +276,25 @@ class ForUpdateSettingsPage extends Component {
 
                break
             }
+
+            case 'isEmail': {
+               if (!isValidEmail(data)) {
+                  errors.push(message)
+               }
+
+               break
+            }
+
+            case 'isEqual': {
+               const { propForComparedValue } = validator
+               const valueToCompare = editingData[propForComparedValue]
+
+               if (valueToCompare !== data) {
+                  errors.push(message)
+               }
+
+               break
+            }
          }
       })
 
@@ -269,25 +316,39 @@ class ForUpdateSettingsPage extends Component {
 
    ///// METHODS FOR RENDERING UI /////
 
+   showSuccessNotification = () => {
+      const { showNotification, settings } = this.props
+      const { entity } = settings
+      const { name } = entity
+
+      showNotification('success', `Cập nhật thông tin ${name} thành công!`)
+   }
+
+   showErrorNotification = () => {
+      const { showNotification, settings } = this.props
+      const { entity } = settings
+      const { name } = entity
+
+      showNotification('error', `Cập nhật thông tin ${name} thất bại!`)
+   }
+
    renderHeader = () => {
       const { settings } = this.props
       const { entity } = settings
       const { name, slug } = entity
 
       return (
-         <section className="breadcrumbs">
+         <span className="breadcrumbs">
             <span className="breadcrumb-home">
-               <Link to="/">Mini Football Field Management System (GTMS)</Link>
+               <Link to="/">Mini Football Field Management System (MFFMS)</Link>
             </span>
-
             <span className="breadcrumb-separator">
                <i className="fas fa-chevron-right"></i>
             </span>
-
             <span className="breadcrumb-active">
-               <Link to="#">Quản lý {name}</Link>
+               <Link to="#">Cập nhật thông tin {name}</Link>
             </span>
-         </section>
+         </span>
       )
    }
 
@@ -297,8 +358,8 @@ class ForUpdateSettingsPage extends Component {
       const { entity } = settings
       const { name } = entity
       const section = {
-         title: `Quản lý ${name}`,
-         subtitle: `Quản lý thông tin ${name} trên hệ thống`,
+         title: `Cập nhật thông tin ${name}`,
+         subtitle: `Cập nhật lại thông tin ${name} trên hệ thống`,
          footerRight: renderFormFooter()
       }
 
@@ -387,6 +448,50 @@ class ForUpdateSettingsPage extends Component {
             )
          }
 
+         case 'password': {
+            return (
+               <input
+                  className={
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
+                        ? 'form-input-alert'
+                        : 'form-input-outline'
+                  }
+                  type="password"
+                  placeholder={placeholder}
+                  value={editingData[propForValue]}
+                  onChange={e =>
+                     changeEditingData(e.target.value, propForValue)
+                  }
+                  onFocus={hideAlert}
+                  disabled={disabled}
+               />
+            )
+         }
+
+         case 'email': {
+            return (
+               <input
+                  className={
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
+                        ? 'form-input-alert'
+                        : 'form-input-outline'
+                  }
+                  type="email"
+                  placeholder={placeholder}
+                  value={editingData[propForValue]}
+                  onChange={e =>
+                     changeEditingData(e.target.value, propForValue)
+                  }
+                  onFocus={hideAlert}
+                  disabled={disabled}
+               />
+            )
+         }
+
          case 'date': {
             return (
                <input
@@ -411,25 +516,18 @@ class ForUpdateSettingsPage extends Component {
             const { values, propForItemText, propForItemValue } = field
 
             return (
-               <select
-                  className={
-                     isValidField(propForValue)
-                        ? 'form-input-alert'
-                        : 'form-input-outline'
+               <Select
+                  value={values.find(
+                     item => item.value === editingData[propForValue]
+                  )}
+                  onChange={option =>
+                     changeEditingData(option.value, propForValue)
                   }
-                  value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
+                  options={values}
+                  placeholder={placeholder}
+                  styles={customStyles}
                   onFocus={hideAlert}
-               >
-                  {values.length > 0 &&
-                     values.map((record, index) => (
-                        <option key={index} value={record[propForItemValue]}>
-                           {record[propForItemText]}
-                        </option>
-                     ))}
-               </select>
+               />
             )
          }
 
@@ -443,9 +541,7 @@ class ForUpdateSettingsPage extends Component {
                   }
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
+                  onChange={e => changeEditingData(e, propForValue)}
                   onFocus={hideAlert}
                   disabled={disabled}
                ></textarea>
@@ -455,19 +551,20 @@ class ForUpdateSettingsPage extends Component {
    }
 
    renderFormFooter = () => {
-      const { submit, restore } = this
+      const { submit } = this
       const { settings } = this.props
       const { entity } = settings
       const { slug } = entity
 
       return (
          <Fragment>
-            <span className="button" onClick={restore}>
-               <i className="fas fa-redo"></i>&nbsp;&nbsp;Khôi phục giá trị mặc
-               định
+            <span className="button">
+               <Link to={`/quan-ly/${slug}`}>
+                  <i className="fas fa-arrow-left"></i>&nbsp;&nbsp;Trở về
+               </Link>
             </span>
 
-            <span className="button" onClick={submit}>
+            <span className="button button-primary" onClick={submit}>
                <i className="fas fa-save"></i>&nbsp;&nbsp;Lưu lại
             </span>
          </Fragment>
@@ -493,4 +590,6 @@ class ForUpdateSettingsPage extends Component {
    }
 }
 
-export default withRouter(ForUpdateSettingsPage)
+export default withRouter(
+   connect(null, { showNotification, logIn })(ForUpdateProfilePage)
+)

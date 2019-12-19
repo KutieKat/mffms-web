@@ -450,7 +450,7 @@ class ForStatsPage extends Component {
    }
 
    renderSectionHeaderRight = () => {
-      const { refresh, exportReport } = this
+      const { refresh, toggleExportReportDialog } = this
       const { data } = this.state
 
       return (
@@ -460,8 +460,8 @@ class ForStatsPage extends Component {
             </span>
 
             {data !== null && (
-               <span className="button" onClick={exportReport}>
-                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;In thông tin
+               <span className="button" onClick={toggleExportReportDialog}>
+                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
                </span>
             )}
          </Fragment>

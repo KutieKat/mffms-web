@@ -80,9 +80,8 @@ class ForUpdatePasswordPage extends Component {
 
    ///// METHODS FOR HANDLING UI EVENTS /////
 
-   changeEditingData = (e, fieldName) => {
+   changeEditingData = (value, fieldName) => {
       const { editingData } = this.state
-      const value = e.target.value
 
       if (typeof value === 'number') {
          value = parseInt(value)
@@ -404,7 +403,9 @@ class ForUpdatePasswordPage extends Component {
                   type="text"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e => changeEditingData(e, propForValue)}
+                  onChange={e =>
+                     changeEditingData(e.target.value, propForValue)
+                  }
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -424,7 +425,9 @@ class ForUpdatePasswordPage extends Component {
                   type="password"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e => changeEditingData(e, propForValue)}
+                  onChange={e =>
+                     changeEditingData(e.target.value, propForValue)
+                  }
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -444,7 +447,9 @@ class ForUpdatePasswordPage extends Component {
                   type="email"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e => changeEditingData(e, propForValue)}
+                  onChange={e =>
+                     changeEditingData(e.target.value, propForValue)
+                  }
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -462,7 +467,9 @@ class ForUpdatePasswordPage extends Component {
                   type="date"
                   placeholder={placeholder}
                   value={moment(editingData[propForValue]).format('YYYY-MM-DD')}
-                  onChange={e => changeEditingData(e, propForValue)}
+                  onChange={e =>
+                     changeEditingData(e.target.value, propForValue)
+                  }
                   onFocus={hideAlert}
                   disabled={disabled}
                />
