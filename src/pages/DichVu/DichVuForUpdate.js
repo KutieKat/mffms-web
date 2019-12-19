@@ -33,7 +33,7 @@ class DichVuForUpdate extends Component {
                   {
                      rule: 'isNumeric',
                      message:
-                        'Số điện thoại của nhà cung cấp chỉ được bao gồm các chữ số (0-9)!'
+                        'Đơn giá của dịch vụ chỉ được bao gồm các chữ số (0-9)!'
                   },
                   {
                      rule: 'notEmpty',

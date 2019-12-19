@@ -38,6 +38,16 @@ const taiKhoan = {
    slug: 'tai-khoan'
 }
 
+const donNhapHang = {
+   name: 'đơn nhập hàng',
+   slug: 'don-nhap-hang'
+}
+
+const chiTietDonNhapHang = {
+   name: 'chi tiết đơn nhập hàng',
+   slug: 'chi-tiet-don-nhap-hang'
+}
+
 export {
    khachHang,
    nhanVien,
@@ -46,5 +56,7 @@ export {
    dichVu,
    taiSanThietBi,
    taiKhoan,
+   donNhapHang,
+   chiTietDonNhapHang,
    caiDat
 }

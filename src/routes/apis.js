@@ -6,6 +6,7 @@ const baseSanBongApi = baseApi + '/SanBong'
 const baseDichVuApi = baseApi + '/DichVu'
 const baseTaiSanThietBiApi = baseApi + '/TaiSanThietBi'
 const baseCaiDatApi = baseApi + '/CaiDat'
+const baseDonNhapHangApi = baseApi + '/DonNhapHang'
 const baseTaiKhoanApi = baseApi + '/TaiKhoan'
 
 export default {
@@ -69,6 +70,9 @@ export default {
       deleteById: baseTaiKhoanApi + '/PermanentlyDeleteById',
       resetPasswordById: baseTaiKhoanApi + '/ResetPassword',
       validateHash: baseTaiKhoanApi + '/ValidateHash'
+   },
+   donNhapHang: {
+      create: baseDonNhapHangApi + '/Create'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',

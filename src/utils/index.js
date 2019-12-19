@@ -65,7 +65,7 @@ export const isPhoneNumber = phone => {
 
 export const isAfter = (date, dateToCheck) => dateToCheck.diff(date) >= 0
 
-export const apiGet = (url, data) => axios.get(url, data)
+export const apiGet = (url, data) => axios.get(url, { params: data })
 
 export const apiPost = (url, data) => axios.post(url, data)
 

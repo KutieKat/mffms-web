@@ -51,6 +51,9 @@ import TaiKhoanForUpdatePassword from '../pages/TaiKhoan/TaiKhoanForUpdatePasswo
 import NguoiDungForUpdate from '../pages/NguoiDung/NguoiDungForUpdate'
 import NguoiDungForUpdatePassword from '../pages/NguoiDung/NguoiDungForUpdatePassword'
 
+///// DonNhapHang /////
+import DonNhapHangForCreate from '../pages/DonNhapHang/DonNhapHangForCreate'
+
 ///// CaiDat /////
 import CaiDatForUpdate from '../pages/CaiDat/CaiDatForUpdate'
 
@@ -224,6 +227,12 @@ export default [
    {
       path: '/tai-khoan/thay-doi-mat-khau/:id',
       component: NguoiDungForUpdatePassword
+   },
+
+   ///// DonNhapHang /////
+   {
+      path: '/quan-ly/don-nhap-hang/them-moi',
+      component: DonNhapHangForCreate
    },
 
    ///// CaiDat /////
