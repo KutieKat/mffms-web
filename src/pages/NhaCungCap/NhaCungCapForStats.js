@@ -14,7 +14,7 @@ class NhaCungCapForStats extends Component {
             {
                label: 'Tổng số nhà cung cấp',
                propForValue: 'total',
-               icon: 'fas fa-users',
+               icon: 'fas fa-hands-helping',
                unit: 'Nhà cung cấp'
             }
          ]

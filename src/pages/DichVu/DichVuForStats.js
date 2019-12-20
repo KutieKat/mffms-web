@@ -14,8 +14,20 @@ class DichVuForStats extends Component {
             {
                label: 'Tổng số dịch vụ',
                propForValue: 'total',
-               icon: 'fas fa-users',
+               icon: 'fas fa-concierge-bell',
                unit: 'Dịch vụ'
+            },
+            {
+               label: 'Dịch vụ rẻ nhất',
+               propForValue: 'cheapestService',
+               icon: 'fas fa-dollar-sign',
+               unit: 'VNĐ'
+            },
+            {
+               label: 'Dịch vụ đắt nhất',
+               propForValue: 'mostExpensiveService',
+               icon: 'fas fa-dollar-sign',
+               unit: 'VNĐ'
             }
          ]
       }

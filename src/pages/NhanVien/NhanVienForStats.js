@@ -13,91 +13,73 @@ class NhanVienForStats extends Component {
          cards: [
             {
                label: 'Tổng số nhân viên nói chung',
-               propForValue: 'employees',
+               propForValue: 'totalQuantity',
                icon: 'fas fa-users',
                unit: 'Người'
             },
             {
-               label: 'Tổng số nam nhân viên nói chung',
-               propForValue: 'maleEmployees',
-               icon: 'fas fa-users',
-               unit: 'Người'
-            },
-            {
-               label: 'Tống số nữ nhân viên nói chung',
-               propForValue: 'femaleEmployees',
-               icon: 'fas fa-users',
-               unit: 'Người'
+               label: 'Tổng lương nhân viên',
+               propForValue: 'totalAllSalary',
+               icon: 'fas fa-dollar-sign',
+               unit: 'VNĐ'
             },
             {
                label: 'Tổng số nhân viên quản lý',
-               propForValue: 'managers',
+               propForValue: 'totalManageQuantity',
                icon: 'fas fa-users',
                unit: 'Người'
             },
             {
-               label: 'Tổng số nam quản lý',
-               propForValue: 'maleManagers',
-               icon: 'fas fa-users',
-               unit: 'Người'
-            },
-            {
-               label: 'Tống số nữ quản lý',
-               propForValue: 'femaleManagers',
-               icon: 'fas fa-users',
-               unit: 'Người'
-            },
-            {
-               label: 'Tống số nhân viên phục vụ',
-               propForValue: 'servers',
-               icon: 'fas fa-users',
-               unit: 'Người'
-            },
-            {
-               label: 'Tổng số nam phục vụ',
-               propForValue: 'waiters',
-               icon: 'fas fa-users',
-               unit: 'Người'
-            },
-            {
-               label: 'Tống số nữ phục vụ',
-               propForValue: 'waitresses',
-               icon: 'fas fa-users',
-               unit: 'Người'
-            },
-            {
-               label: 'Mức lương thấp nhất nói chung',
-               propForValue: 'lowestSalary',
+               label: 'Tổng lương cho nhân viên quản lý',
+               propForValue: 'totalManageSalary',
                icon: 'fas fa-dollar-sign',
                unit: 'VNĐ'
             },
             {
-               label: 'Mức lương cao nhất nói chung',
-               propForValue: 'highestSalary',
+               label: 'Lương trung bình cho nhân viên quản lý',
+               propForValue: 'avgManageSalary',
                icon: 'fas fa-dollar-sign',
                unit: 'VNĐ'
             },
             {
-               label: 'Mức lương thấp nhất của quản lý',
-               propForValue: 'lowestManagerSalary',
+               label: 'Lương thấp nhất cho nhân viên quản lý',
+               propForValue: 'minManageSalary',
                icon: 'fas fa-dollar-sign',
                unit: 'VNĐ'
             },
             {
-               label: 'Mức lương cao nhất của quản lý',
-               propForValue: 'highestManagerSalary',
+               label: 'Lương cao nhất cho nhân viên quản lý',
+               propForValue: 'maxManageSalary',
                icon: 'fas fa-dollar-sign',
                unit: 'VNĐ'
             },
             {
-               label: 'Mức lương thấp nhất của phục vụ',
-               propForValue: 'lowestStaffSalary',
+               label: 'Tổng số lượng nhân viên phục vụ',
+               propForValue: 'totalServiceQuantity',
+               icon: 'fas fa-users',
+               unit: 'Người'
+            },
+            {
+               label: 'Tổng lương cho nhân viên phục vụ',
+               propForValue: 'totalServiceSalary',
+               icon: 'fas fa-users',
+               unit: 'Người'
+            },
+            {
+               label: 'Lương trung bình cho nhân viên phục vụ',
+               propForValue: 'avgServiceSalary',
                icon: 'fas fa-dollar-sign',
                unit: 'VNĐ'
             },
             {
-               label: 'Mức lương cao nhất của phục vụ',
-               propForValue: 'highestStaffSalary',
+               label: 'Lương thấp nhất cho nhân viên phục vụ',
+               propForValue: 'minServiceSalary',
+               icon: 'fas fa-dollar-sign',
+               unit: 'VNĐ'
+            },
+            {
+               label: 'Lương cao nhất cho nhân viên phục vụ',
+               propForValue: 'maxServiceSalary',
                icon: 'fas fa-dollar-sign',
                unit: 'VNĐ'
             }

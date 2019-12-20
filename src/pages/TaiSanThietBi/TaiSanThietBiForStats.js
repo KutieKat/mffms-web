@@ -14,7 +14,31 @@ class TaiSanThietBiForStats extends Component {
             {
                label: 'Tổng số tài sản thiết bị',
                propForValue: 'total',
-               icon: 'fas fa-users',
+               icon: 'fas fa-cog',
+               unit: 'Cái'
+            },
+            {
+               label: 'Tài sản thiết bị đang hoạt động tốt',
+               propForValue: 'hoatDongTot',
+               icon: 'fas fa-cog',
+               unit: 'Cái'
+            },
+            {
+               label: 'Tài sản thiết bị đang sửa chữa',
+               propForValue: 'dangSuaChua',
+               icon: 'fas fa-cog',
+               unit: 'Cái'
+            },
+            {
+               label: 'Tài sản thiết bị đang bảo hàng',
+               propForValue: 'dangBaoHanh',
+               icon: 'fas fa-cog',
+               unit: 'Cái'
+            },
+            {
+               label: 'Tài sản thiết bị đã qua sử dụng',
+               propForValue: 'daQuaSuDung',
+               icon: 'fas fa-cog',
                unit: 'Cái'
             }
          ]
