@@ -154,7 +154,10 @@ class ForCreateWithListPage extends Component {
          const { affectedProps } = column
 
          columns
-            .filter(col => affectedProps.indexOf(col.propForValue) > -1)
+            .filter(
+               col =>
+                  affectedProps && affectedProps.indexOf(col.propForValue) > -1
+            )
             .forEach(prop => {
                const { type, propForValue } = prop
 
@@ -1124,6 +1127,7 @@ class ForCreateWithListPage extends Component {
    }
 
    render() {
+      console.log('STATE: ', this.state)
       const { renderComponent } = this
 
       return renderComponent()

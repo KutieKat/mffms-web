@@ -6,8 +6,9 @@ const baseSanBongApi = baseApi + '/SanBong'
 const baseDichVuApi = baseApi + '/DichVu'
 const baseTaiSanThietBiApi = baseApi + '/TaiSanThietBi'
 const baseCaiDatApi = baseApi + '/CaiDat'
-const baseDonNhapHangApi = baseApi + '/DonNhapHang'
 const baseTaiKhoanApi = baseApi + '/TaiKhoan'
+const baseDonNhapHangApi = baseApi + '/DonNhapHang'
+const baseChiTietDonNhapHangApi = baseApi + '/ChiTietDonNhapHang'
 const baseHoaDonDichVuApi = baseApi + '/HoaDonDichVu'
 const baseChiTietHoaDonDichVu = baseApi + '/ChiTietHDDV'
 
@@ -74,7 +75,14 @@ export default {
       validateHash: baseTaiKhoanApi + '/ValidateHash'
    },
    donNhapHang: {
-      create: baseDonNhapHangApi + '/Create'
+      getAll: baseDonNhapHangApi + '/GetAll',
+      create: baseDonNhapHangApi + '/Create',
+      getById: baseDonNhapHangApi + '/GetById',
+      create: baseDonNhapHangApi + '/Create',
+      deleteById: baseDonNhapHangApi + '/PermanentlyDeleteById'
+   },
+   chiTietDonNhapHang: {
+      create: baseChiTietDonNhapHangApi + '/CreateMultiple'
    },
    hoaDonDichVu: {
       getAll: baseHoaDonDichVuApi + '/GetAll',

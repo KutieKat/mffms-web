@@ -10,7 +10,8 @@ class DonNhapHangForCreate extends Component {
 
       this.state = {
          providers: [],
-         employees: []
+         employees: [],
+         assets: []
       }
    }
 
@@ -25,10 +26,11 @@ class DonNhapHangForCreate extends Component {
    ///// METHODS FOR INTERACTING WITH API /////
 
    fetchData = () => {
-      const { fetchProviders, fetchEmployees } = this
+      const { fetchProviders, fetchEmployees, fetchAssets } = this
 
       fetchProviders()
       fetchEmployees()
+      fetchAssets()
    }
 
    fetchProviders = async () => {
@@ -69,6 +71,25 @@ class DonNhapHangForCreate extends Component {
       }
    }
 
+   fetchAssets = async () => {
+      const url = apiRoutes.taiSanThietBi.getAll
+      const queries = { pageSize: 1000 }
+
+      try {
+         const response = await apiGet(url, queries)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({ assets: data })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
    ///// METHODS FOR COMPUTING VALUES /////
 
    getAllProviders = () => {
@@ -99,10 +120,24 @@ class DonNhapHangForCreate extends Component {
       return allEmployees
    }
 
+   getAllAssets = () => {
+      const { assets } = this.state
+      let allAssets = []
+
+      assets.forEach(asset => {
+         allAssets.push({
+            value: asset['maTSTB'],
+            label: asset['tenTSTB']
+         })
+      })
+
+      return allAssets
+   }
+
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
-      const { getAllProviders, getAllEmployees } = this
+      const { getAllProviders, getAllEmployees, getAllAssets } = this
 
       const settings = {
          entity: donNhapHang,
@@ -136,6 +171,43 @@ class DonNhapHangForCreate extends Component {
                         'Ngày giao hàng là thông tin bắt buộc và không được để trống!'
                   }
                ]
+            },
+            {
+               label: 'Ngày lập đơn',
+               propForValue: 'ngayLap',
+               placeholder: 'Nhập ngày lập đơn',
+               type: 'date',
+               validators: [
+                  {
+                     rule: 'notEmpty',
+                     message:
+                        'Ngày lập đơn là thông tin bắt buộc và không được để trống!'
+                  }
+               ]
+            },
+            {
+               label: 'Ghi chú',
+               propForValue: 'ghiChu',
+               placeholder: 'Nhập ghi chú về nhân viên (nếu có)',
+               type: 'textarea'
+            },
+            {
+               label: 'Số tiền đã thanh toán (VNĐ)',
+               propForValue: 'daThanhToan',
+               placeholder: 'Nhập số tiền đã thanh toán',
+               type: 'input',
+               validators: [
+                  {
+                     rule: 'isNumeric',
+                     message:
+                        'Số tiền đã thanh toán chỉ được bao gồm các chữ số (0-9)!'
+                  },
+                  {
+                     rule: 'notEmpty',
+                     message:
+                        'Số tiền đã thanh toán là thông tin bắt buộc và không được để trống!'
+                  }
+               ]
             }
          ],
          details: {
@@ -144,11 +216,12 @@ class DonNhapHangForCreate extends Component {
             columns: [
                {
                   label: 'Tài sản thiết bị',
-                  propForValue: 'maNhaCungCap',
+                  propForValue: 'maTSTB',
                   type: 'select',
-                  values: getAllProviders(),
+                  values: getAllAssets(),
                   propForItemValue: 'value',
-                  propForItemText: 'label'
+                  propForItemText: 'label',
+                  affectedProps: ['donGia', 'thanhTien']
                },
                {
                   label: 'Đơn giá',
@@ -166,7 +239,8 @@ class DonNhapHangForCreate extends Component {
                         message:
                            'Đơn giá của tài sản thiết bị là thông tin bắt buộc và không được để trống!'
                      }
-                  ]
+                  ],
+                  affectedProps: ['thanhTien']
                },
                {
                   label: 'Đơn vị tính',
@@ -192,7 +266,8 @@ class DonNhapHangForCreate extends Component {
                         message:
                            'Số lượng tài sản thiết bị chỉ được bao gồm các chữ số (0-9)!'
                      }
-                  ]
+                  ],
+                  affectedProps: ['thanhTien']
                },
                {
                   label: 'Thành tiền',

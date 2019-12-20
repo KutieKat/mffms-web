@@ -40,12 +40,14 @@ const taiKhoan = {
 
 const donNhapHang = {
    name: 'đơn nhập hàng',
-   slug: 'don-nhap-hang'
+   slug: 'don-nhap-hang',
+   propName: 'donNhapHang'
 }
 
 const chiTietDonNhapHang = {
    name: 'chi tiết đơn nhập hàng',
-   slug: 'chi-tiet-don-nhap-hang'
+   slug: 'chi-tiet-don-nhap-hang',
+   propName: 'chiTietDonNhapHang'
 }
 
 const hoaDonDichVu = {

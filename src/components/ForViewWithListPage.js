@@ -738,19 +738,15 @@ class ForViewWithListPage extends Component {
    ///// METHODS FOR RENDERING UI /////
 
    showSuccessNotification = () => {
-      const { showNotification, settings } = this.props
-      const { entity } = settings
-      const { name } = entity
+      const { showNotification } = this.props
 
-      showNotification('success', `Thêm ${name} mới thành công!`)
+      showNotification('success', 'Xuất báo cáo thành công!')
    }
 
    showErrorNotification = () => {
-      const { showNotification, settings } = this.props
-      const { entity } = settings
-      const { name } = entity
+      const { showNotification } = this.props
 
-      showNotification('error', `Thêm ${name} mới thất bại!`)
+      showNotification('error', 'Xuất báo cáo thất bại!')
    }
 
    renderHeader = () => {
@@ -1183,7 +1179,7 @@ class ForViewWithListPage extends Component {
                </thead>
 
                <tbody>
-                  {stateDetails.length > 0 ? (
+                  {stateDetails && stateDetails.length > 0 ? (
                      stateDetails.map((detail, detailIndex) => (
                         <tr key={detailIndex}>
                            <td>{detailIndex + 1}</td>

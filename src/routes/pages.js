@@ -53,6 +53,8 @@ import NguoiDungForUpdatePassword from '../pages/NguoiDung/NguoiDungForUpdatePas
 
 ///// DonNhapHang /////
 import DonNhapHangForCreate from '../pages/DonNhapHang/DonNhapHangForCreate'
+import DonNhapHangForList from '../pages/DonNhapHang/DonNhapHangForList'
+import DonNhapHangForView from '../pages/DonNhapHang/DonNhapHangForView'
 
 ///// HoaDonDichVu /////
 import HoaDonDichVuForCreate from '../pages/HoaDonDichVu/HoaDonDichVuForCreate'
@@ -236,8 +238,17 @@ export default [
 
    ///// DonNhapHang /////
    {
+      path: '/quan-ly/don-nhap-hang',
+      component: DonNhapHangForList,
+      exact: true
+   },
+   {
       path: '/quan-ly/don-nhap-hang/them-moi',
       component: DonNhapHangForCreate
+   },
+   {
+      path: '/quan-ly/don-nhap-hang/xem-thong-tin/:id',
+      component: DonNhapHangForView
    },
 
    ///// HoaDonDichVu /////
