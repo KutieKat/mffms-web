@@ -607,7 +607,7 @@ class ForStatsPage extends Component {
       return (
          <div className="chart-section">
             <h4>{getLabelForPropName(propName)}</h4>
-            <Bar data={data} width="70%" height="20vh" />
+            <Bar data={data} width="50%" height="20vh" />
          </div>
       )
    }

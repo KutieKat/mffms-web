@@ -16,6 +16,18 @@ class DonNhapHangForStats extends Component {
                propForValue: 'total',
                icon: 'fas fa-file-invoice',
                unit: 'Hóa đơn'
+            },
+            {
+               label: 'Giá trị đơn nhập hàng thấp nhất',
+               propForValue: 'cheapest',
+               icon: 'fas fa-dollar-sign',
+               unit: 'VNĐ'
+            },
+            {
+               label: 'Giá trị đơn nhập hàng cao nhất',
+               propForValue: 'mostExpensive',
+               icon: 'fas fa-dollar-sign',
+               unit: 'VNĐ'
             }
          ]
       }

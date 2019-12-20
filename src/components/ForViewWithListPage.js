@@ -1294,12 +1294,15 @@ class ForViewWithListPage extends Component {
       const { renderHeader, renderBody, renderDialogs } = this
       const { editingData, loading } = this.state
       const data = editingData
+      const stateDetails = this.state.details
       const { settings } = this.props
-      const { entity, fields } = settings
+      const { entity, fields, details } = settings
       const printSettings = {
          entity,
          fields,
-         data
+         data,
+         details,
+         stateDetails
       }
 
       return (

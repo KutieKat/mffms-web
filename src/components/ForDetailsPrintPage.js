@@ -2,6 +2,20 @@ import React, { Component, Fragment } from 'react'
 import { apiGet, formatDateString, numberWithCommas, deepGet } from '../utils'
 import apiRoutes from '../routes/apis'
 import moment from 'moment'
+import Select from 'react-select'
+
+const customStyles = {
+   control: () => ({
+      display: 'flex',
+      fontWeight: 'normal',
+      paddingTop: '3px',
+      paddingBottom: '2px',
+      width: '100px'
+   }),
+   dropdownIndicator: () => ({
+      display: 'none'
+   })
+}
 
 class ForDetailsPrintPage extends Component {
    constructor(props) {
@@ -225,6 +239,290 @@ class ForDetailsPrintPage extends Component {
       }
    }
 
+   renderDetails = () => {
+      const { renderColumn } = this
+      const { settings } = this.props
+      const { details, entity, stateDetails } = settings
+      const { columns } = details
+      const { name } = entity
+
+      return (
+         <div>
+            <h4>Chi tiết {name}</h4>
+
+            <table className="table">
+               <thead>
+                  <tr>
+                     <th>STT</th>
+                     {columns.map((column, index) => (
+                        <th key={index}>{column.label}</th>
+                     ))}
+                  </tr>
+               </thead>
+
+               <tbody>
+                  {stateDetails.map((detail, detailIndex) => (
+                     <tr key={detailIndex}>
+                        <td>{detailIndex + 1}</td>
+                        {columns.map((column, index) => (
+                           <td key={index}>
+                              {renderColumn(column, detailIndex)}
+                           </td>
+                        ))}
+                     </tr>
+                  ))}
+               </tbody>
+            </table>
+         </div>
+      )
+   }
+
+   renderColumn = (column, index) => {
+      const {
+         isValidColumn,
+         hideAlert,
+         changeDetailsData,
+         calculate,
+         getPrefetchedValue
+      } = this
+      // const { details } = this.state
+      const { settings } = this.props
+      const { stateDetails } = settings
+      const details = stateDetails
+      const { type, disabled, propForValue, placeholder } = column
+
+      switch (type) {
+         case 'input': {
+            return (
+               <input
+                  className="form-input-disabled"
+                  type="text"
+                  value={deepGet(details[index], propForValue)}
+                  disabled={true}
+               />
+            )
+         }
+
+         case 'number': {
+            return (
+               <input
+                  className="form-input-disabled"
+                  type="text"
+                  value={numberWithCommas(
+                     deepGet(details[index], propForValue)
+                  )}
+                  disabled={true}
+               />
+            )
+         }
+
+         case 'time': {
+            return (
+               <input
+                  className="form-input-disabled"
+                  type="text"
+                  value={deepGet(details[index], propForValue)}
+                  disabled={true}
+               />
+            )
+         }
+
+         case 'date': {
+            return (
+               <input
+                  className="form-input-disabled"
+                  type="text"
+                  value={formatDateString(
+                     deepGet(details[index], propForValue)
+                  )}
+                  disabled={true}
+               />
+            )
+         }
+
+         // case 'input': {
+         //    return (
+         //       <input
+         //          className={
+         //             disabled
+         //                ? 'form-input-disabled'
+         //                : isValidColumn(propForValue, index)
+         //                ? 'form-input-alert'
+         //                : 'form-input-outline'
+         //          }
+         //          type="text"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onChange={e =>
+         //             changeDetailsData(
+         //                e.target.value,
+         //                propForValue,
+         //                index,
+         //                column
+         //             )
+         //          }
+         //          onFocus={hideAlert}
+         //          disabled={disabled}
+         //       />
+         //    )
+         // }
+
+         // case 'calculation': {
+         //    return (
+         //       <input
+         //          className="form-input-disabled"
+         //          type="text"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onFocus={hideAlert}
+         //          disabled={disabled}
+         //       />
+         //    )
+         // }
+
+         // case 'number': {
+         //    return (
+         //       <input
+         //          className={
+         //             disabled
+         //                ? 'form-input-disabled'
+         //                : isValidColumn(propForValue, index)
+         //                ? 'form-input-alert'
+         //                : 'form-input-outline'
+         //          }
+         //          type="number"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onChange={e =>
+         //             changeDetailsData(
+         //                e.target.value,
+         //                propForValue,
+         //                index,
+         //                column
+         //             )
+         //          }
+         //          onFocus={hideAlert}
+         //          disabled={disabled}
+         //       />
+         //    )
+         // }
+
+         // case 'password': {
+         //    return (
+         //       <input
+         //          className={
+         //             disabled
+         //                ? 'form-input-disabled'
+         //                : isValidColumn(propForValue, index)
+         //                ? 'form-input-alert'
+         //                : 'form-input-outline'
+         //          }
+         //          type="password"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onChange={e =>
+         //             changeDetailsData(e.target.value, propForValue, index)
+         //          }
+         //          onFocus={hideAlert}
+         //          disabled={disabled}
+         //       />
+         //    )
+         // }
+
+         // case 'email': {
+         //    return (
+         //       <input
+         //          className={
+         //             disabled
+         //                ? 'form-input-disabled'
+         //                : isValidColumn(propForValue, index)
+         //                ? 'form-input-alert'
+         //                : 'form-input-outline'
+         //          }
+         //          type="email"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onChange={e =>
+         //             changeDetailsData(e.target.value, propForValue, index)
+         //          }
+         //          onFocus={hideAlert}
+         //          disabled={disabled}
+         //       />
+         //    )
+         // }
+
+         // case 'date': {
+         //    return (
+         //       <input
+         //          className={
+         //             disabled
+         //                ? 'form-input-disabled'
+         //                : isValidColumn(propForValue, index)
+         //                ? 'form-input-alert'
+         //                : 'form-input-outline'
+         //          }
+         //          type="date"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onChange={e =>
+         //             changeDetailsData(e.target.value, propForValue, index)
+         //          }
+         //          onFocus={hideAlert}
+         //          disabled={disabled}
+         //       />
+         //    )
+         // }
+
+         case 'select': {
+            const { values, propForItemText, propForItemValue } = column
+
+            return (
+               <Select
+                  value={values.find(
+                     item =>
+                        item.value === deepGet(details[index], propForValue)
+                  )}
+                  options={values}
+                  styles={customStyles}
+                  isDisabled={true}
+               />
+            )
+         }
+
+         // case 'textarea': {
+         //    return (
+         //       <textarea
+         //          className={
+         //             disabled
+         //                ? 'form-input-disabled'
+         //                : isValidColumn(propForValue, index)
+         //                ? 'form-input-alert'
+         //                : 'form-input-outline'
+         //          }
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onChange={e =>
+         //             changeDetailsData(e.target.value, propForValue, index)
+         //          }
+         //          onFocus={hideAlert}
+         //          disabled={disabled}
+         //       ></textarea>
+         //    )
+         // }
+
+         // case 'time': {
+         //    return (
+         //       <TimePicker
+         //          onChange={time =>
+         //             changeDetailsData(time, propForValue, index)
+         //          }
+         //          value={deepGet(details[index], propForValue)}
+         //       />
+         //    )
+         // }
+      }
+   }
+
    renderFooter = () => {
       const { renderTopFooter, renderMainFooter } = this
 
@@ -288,12 +586,19 @@ class ForDetailsPrintPage extends Component {
    }
 
    renderComponent = () => {
-      const { renderHeader, renderBody, renderFooter, renderInternalCss } = this
+      const {
+         renderHeader,
+         renderBody,
+         renderDetails,
+         renderFooter,
+         renderInternalCss
+      } = this
 
       return (
          <div className="printing-page">
             {renderHeader()}
             {renderBody()}
+            {renderDetails()}
             {renderFooter()}
             {renderInternalCss()}
          </div>

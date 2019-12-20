@@ -55,16 +55,19 @@ import NguoiDungForUpdatePassword from '../pages/NguoiDung/NguoiDungForUpdatePas
 import DonNhapHangForCreate from '../pages/DonNhapHang/DonNhapHangForCreate'
 import DonNhapHangForList from '../pages/DonNhapHang/DonNhapHangForList'
 import DonNhapHangForView from '../pages/DonNhapHang/DonNhapHangForView'
+import DonNhapHangForStats from '../pages/DonNhapHang/DonNhapHangForStats'
 
 ///// HoaDonDichVu /////
 import HoaDonDichVuForCreate from '../pages/HoaDonDichVu/HoaDonDichVuForCreate'
 import HoaDonDichVuForList from '../pages/HoaDonDichVu/HoaDonDichVuForList'
 import HoaDonDichVuForView from '../pages/HoaDonDichVu/HoaDonDichVuForView'
+import HoaDonDichVuForStats from '../pages/HoaDonDichVu/HoaDonDichVuForStats'
 
 ///// PhieuDatSan /////
 import PhieuDatSanForCreate from '../pages/PhieuDatSan/PhieuDatSanForCreate'
 import PhieuDatSanForList from '../pages/PhieuDatSan/PhieuDatSanForList'
 import PhieuDatSanForView from '../pages/PhieuDatSan/PhieuDatSanForView'
+import PhieuDatSanForStats from '../pages/PhieuDatSan/PhieuDatSanForStats'
 
 ///// CaiDat /////
 import CaiDatForUpdate from '../pages/CaiDat/CaiDatForUpdate'
@@ -261,6 +264,10 @@ export default [
       path: '/quan-ly/don-nhap-hang/xem-thong-tin/:id',
       component: DonNhapHangForView
    },
+   {
+      path: '/thong-ke/don-nhap-hang',
+      component: DonNhapHangForStats
+   },
 
    ///// HoaDonDichVu /////
    {
@@ -276,6 +283,10 @@ export default [
       path: '/quan-ly/hoa-don-dich-vu/xem-thong-tin/:id',
       component: HoaDonDichVuForView
    },
+   {
+      path: '/thong-ke/hoa-don-dich-vu',
+      component: HoaDonDichVuForStats
+   },
 
    ///// PhieuDatSan /////
    {
@@ -290,6 +301,10 @@ export default [
    {
       path: '/quan-ly/phieu-dat-san/xem-thong-tin/:id',
       component: PhieuDatSanForView
+   },
+   {
+      path: '/thong-ke/phieu-dat-san',
+      component: PhieuDatSanForStats
    },
 
    ///// CaiDat /////

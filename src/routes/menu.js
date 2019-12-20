@@ -1,5 +1,16 @@
 const menu = [
    {
+      title: 'Tổng quan',
+      items: [
+         {
+            title: 'Biểu đồ tổng quan',
+            path: '/',
+            icon: 'fas fa-chart-pie',
+            exact: true
+         }
+      ]
+   },
+   {
       title: 'Nghiệp vụ',
       items: [
          {
@@ -52,11 +63,6 @@ const menu = [
    {
       title: 'Thống kê',
       items: [
-         {
-            title: 'Biểu đồ tổng quan',
-            path: '/',
-            icon: 'fas fa-chart-pie'
-         },
          {
             title: 'Thống kê khách hàng',
             path: '/thong-ke/khach-hang',

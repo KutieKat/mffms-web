@@ -26,6 +26,7 @@ export default {
       deleteById: baseKhachHangApi + '/PermanentlyDeleteById'
    },
    nhanVien: {
+      getGeneralStats: baseNhanVienApi + '/GetGeneralStatistics',
       getAll: baseNhanVienApi + '/GetAll',
       getById: baseNhanVienApi + '/GetById',
       create: baseNhanVienApi + '/Create',
@@ -34,6 +35,7 @@ export default {
       deleteById: baseNhanVienApi + '/PermanentlyDeleteById'
    },
    nhaCungCap: {
+      getGeneralStats: baseNhaCungCapApi + '/GetGeneralStatistics',
       getAll: baseNhaCungCapApi + '/GetAll',
       getById: baseNhaCungCapApi + '/GetById',
       create: baseNhaCungCapApi + '/Create',
@@ -42,6 +44,7 @@ export default {
       deleteById: baseNhaCungCapApi + '/PermanentlyDeleteById'
    },
    sanBong: {
+      getGeneralStats: baseSanBongApi + '/GetGeneralStatistics',
       getAll: baseSanBongApi + '/GetAll',
       getById: baseSanBongApi + '/GetById',
       create: baseSanBongApi + '/Create',
@@ -50,6 +53,7 @@ export default {
       deleteById: baseSanBongApi + '/PermanentlyDeleteById'
    },
    dichVu: {
+      getGeneralStats: baseDichVuApi + '/GetGeneralStatistics',
       getAll: baseDichVuApi + '/GetAll',
       getById: baseDichVuApi + '/GetById',
       create: baseDichVuApi + '/Create',
@@ -58,6 +62,7 @@ export default {
       deleteById: baseDichVuApi + '/PermanentlyDeleteById'
    },
    taiSanThietBi: {
+      getGeneralStats: baseTaiSanThietBiApi + '/GetGeneralStatistics',
       getAll: baseTaiSanThietBiApi + '/GetAll',
       getById: baseTaiSanThietBiApi + '/GetById',
       create: baseTaiSanThietBiApi + '/Create',
@@ -88,6 +93,7 @@ export default {
       create: baseChiTietDonNhapHangApi + '/CreateMultiple'
    },
    hoaDonDichVu: {
+      getGeneralStats: baseHoaDonDichVuApi + '/GetGeneralStatistics',
       getAll: baseHoaDonDichVuApi + '/GetAll',
       getById: baseHoaDonDichVuApi + '/GetById',
       create: baseHoaDonDichVuApi + '/Create',
@@ -97,6 +103,7 @@ export default {
       create: baseChiTietHoaDonDichVuApi + '/CreateMultiple'
    },
    phieuDatSan: {
+      getGeneralStats: basePhieuDatSanApi + '/GetGeneralStatistics',
       getAll: basePhieuDatSanApi + '/GetAll',
       create: basePhieuDatSanApi + '/Create',
       getById: basePhieuDatSanApi + '/GetById',
