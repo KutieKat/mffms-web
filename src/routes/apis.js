@@ -8,6 +8,8 @@ const baseTaiSanThietBiApi = baseApi + '/TaiSanThietBi'
 const baseCaiDatApi = baseApi + '/CaiDat'
 const baseDonNhapHangApi = baseApi + '/DonNhapHang'
 const baseTaiKhoanApi = baseApi + '/TaiKhoan'
+const baseHoaDonDichVuApi = baseApi + '/HoaDonDichVu'
+const baseChiTietHoaDonDichVu = baseApi + '/ChiTietHDDV'
 
 export default {
    khachHang: {
@@ -73,6 +75,15 @@ export default {
    },
    donNhapHang: {
       create: baseDonNhapHangApi + '/Create'
+   },
+   hoaDonDichVu: {
+      getAll: baseHoaDonDichVuApi + '/GetAll',
+      getById: baseHoaDonDichVuApi + '/GetById',
+      create: baseHoaDonDichVuApi + '/Create',
+      deleteById: baseHoaDonDichVuApi + '/PermanentlyDeleteById'
+   },
+   chiTietHoaDonDichVu: {
+      create: baseChiTietHoaDonDichVu + '/Create'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',

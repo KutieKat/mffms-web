@@ -176,7 +176,7 @@ class ForListPage extends Component {
       const params = formRequestParams()
 
       try {
-         const response = await apiGet(url, { params })
+         const response = await apiGet(url, params)
 
          if (response && response.data.status === 'SUCCESS') {
             const {

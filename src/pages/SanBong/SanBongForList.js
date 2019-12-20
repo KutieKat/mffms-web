@@ -11,17 +11,17 @@ class SanBongForList extends Component {
          entity: sanBong,
          api: apiRoutes.sanBong,
          columns: [
-            {
-               text: 'Mã sân bóng',
-               propForValue: 'maSanBong',
-               propForSorting: 'MaSanBong',
-               isBold: true,
-               type: 'string',
-               search: {
-                  type: 'input',
-                  placeholder: 'Tìm theo mã'
-               }
-            },
+            // {
+            //    text: 'Mã sân bóng',
+            //    propForValue: 'maSanBong',
+            //    propForSorting: 'MaSanBong',
+            //    isBold: true,
+            //    type: 'string',
+            //    search: {
+            //       type: 'input',
+            //       placeholder: 'Tìm theo mã'
+            //    }
+            // },
             {
                text: 'Tên sân bóng',
                propForValue: 'tenSanBong',

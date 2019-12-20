@@ -121,16 +121,61 @@ class ForCreateWithListPage extends Component {
       this.setState({ editingData })
    }
 
-   changeDetailsData = (value, fieldName, index) => {
-      const { details } = this.state
+   changeDetailsData = (value, fieldName, index, column = undefined) => {
+      const { calculate } = this
+      const { editingData } = this.state
+      const stateDetails = this.state.details
+      const { settings } = this.props
+      const { details } = settings
+      const { columns } = details
 
       if (typeof value === 'number') {
          value = parseInt(value)
       }
 
-      details[index][fieldName] = value
+      stateDetails[index][fieldName] = value
 
-      this.setState({ details })
+      // Update affected props
+      if (column !== undefined) {
+         const { affectedProps } = column
+
+         columns
+            .filter(col => affectedProps.indexOf(col.propForValue) > -1)
+            .forEach(prop => {
+               const { type, propForValue } = prop
+
+               switch (type) {
+                  case 'calculation': {
+                     const result = calculate(prop, index)
+                     stateDetails[index][propForValue] = '' + result
+                     break
+                  }
+
+                  case 'input': {
+                     const { prefetch } = prop
+
+                     if (prefetch !== undefined) {
+                        const { values, reference } = prefetch
+                        const prefetchPropForValue = prefetch.propForValue
+
+                        stateDetails[index][prefetchPropForValue] =
+                           values.find(val => val[reference] === value)[
+                              prefetchPropForValue
+                           ] + ''
+                     }
+
+                     break
+                  }
+               }
+            })
+      }
+
+      // Re-calculate sumprice
+      let sumprice = 0
+      stateDetails.forEach(detail => (sumprice += Number(detail['thanhTien'])))
+      editingData['thanhTien'] = '' + sumprice
+
+      this.setState({ details: stateDetails, editingData })
    }
 
    deleteDetail = index => {
@@ -171,29 +216,69 @@ class ForCreateWithListPage extends Component {
    }
 
    submit = () => {
-      const { showErrorNotification } = this
-      const { validateFields, validateDetails, createRecord } = this
-      const generalErrors = validateFields()
-      const detailsErrors = validateDetails()
+      const {
+         showErrorNotification,
+         validateFields,
+         validateDetails,
+         createRecord
+      } = this
+      const stateDetails = this.state.details
+      const { settings } = this.props
+      const { details } = settings
+      const { entity } = details
+      const { name } = entity
 
-      if (!generalErrors && !detailsErrors) {
-         this.setState({ showAlert: false }, createRecord)
-      } else {
+      if (stateDetails.length === 0) {
+         const errors = {
+            chiTiet: {
+               name,
+               errors: [`Không được bỏ trống ${name}!`]
+            }
+         }
+
          showErrorNotification()
          this.setState({
-            errors: generalErrors,
-            detailsErrors,
+            errors,
             showAlert: true
          })
+      } else {
+         const generalErrors = validateFields()
+         const detailsErrors = validateDetails()
+
+         if (
+            !generalErrors &&
+            (!detailsErrors || detailsErrors.join('') === '')
+         ) {
+            this.setState({ showAlert: false }, createRecord)
+         } else {
+            showErrorNotification()
+            this.setState({
+               errors: generalErrors,
+               detailsErrors,
+               showAlert: true
+            })
+         }
       }
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
 
+   getPrefetchedValue = (column, index) => {
+      const { details } = this.state
+      const detail = details[index]
+      const { prefetch } = column
+      const { values, reference, propForValue } = prefetch
+      const result = values.find(
+         value => value[reference] === detail[reference]
+      )
+
+      return result[propForValue]
+   }
+
    initializeEditingData = (props = this.props) => {
       const { settings } = props
       const { fields } = settings
-      let editingData = {}
+      let editingData = { thanhTien: '0' }
 
       fields.forEach(field => {
          const { type, propForValue } = field
@@ -288,7 +373,11 @@ class ForCreateWithListPage extends Component {
                }
             })
 
-         errors.push(error)
+         if (isEmptyObj(error)) {
+            errors.push('')
+         } else {
+            errors.push(error)
+         }
       })
 
       return errors.length > 0 ? errors : null
@@ -449,6 +538,7 @@ class ForCreateWithListPage extends Component {
          renderForm,
          renderDetailedList,
          renderFormFooter
+         // renderFooter
       } = this
       const { settings } = this.props
       const { entity } = settings
@@ -464,6 +554,7 @@ class ForCreateWithListPage extends Component {
             {renderErrors()}
             {renderForm()}
             {renderDetailedList()}
+            {/* {renderFooter()} */}
          </Section>
       )
    }
@@ -560,7 +651,9 @@ class ForCreateWithListPage extends Component {
             return (
                <input
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -580,7 +673,9 @@ class ForCreateWithListPage extends Component {
             return (
                <input
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -600,7 +695,9 @@ class ForCreateWithListPage extends Component {
             return (
                <input
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -620,7 +717,9 @@ class ForCreateWithListPage extends Component {
             return (
                <input
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -659,7 +758,9 @@ class ForCreateWithListPage extends Component {
             return (
                <textarea
                   className={
-                     isValidField(propForValue)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidField(propForValue)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -677,7 +778,13 @@ class ForCreateWithListPage extends Component {
    }
 
    renderColumn = (column, index) => {
-      const { isValidColumn, hideAlert, changeDetailsData, calculate } = this
+      const {
+         isValidColumn,
+         hideAlert,
+         changeDetailsData,
+         calculate,
+         getPrefetchedValue
+      } = this
       const { details } = this.state
       const { type, disabled, propForValue, placeholder } = column
 
@@ -686,7 +793,9 @@ class ForCreateWithListPage extends Component {
             return (
                <input
                   className={
-                     isValidColumn(propForValue, index)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidColumn(propForValue, index)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -694,7 +803,12 @@ class ForCreateWithListPage extends Component {
                   placeholder={placeholder}
                   value={deepGet(details[index], propForValue)}
                   onChange={e =>
-                     changeDetailsData(e.target.value, propForValue, index)
+                     changeDetailsData(
+                        e.target.value,
+                        propForValue,
+                        index,
+                        column
+                     )
                   }
                   onFocus={hideAlert}
                   disabled={disabled}
@@ -708,7 +822,7 @@ class ForCreateWithListPage extends Component {
                   className="form-input-disabled"
                   type="text"
                   placeholder={placeholder}
-                  value={numberWithCommas(calculate(column, index))}
+                  value={deepGet(details[index], propForValue)}
                   onFocus={hideAlert}
                   disabled={disabled}
                />
@@ -719,7 +833,9 @@ class ForCreateWithListPage extends Component {
             return (
                <input
                   className={
-                     isValidColumn(propForValue, index)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidColumn(propForValue, index)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -727,7 +843,12 @@ class ForCreateWithListPage extends Component {
                   placeholder={placeholder}
                   value={deepGet(details[index], propForValue)}
                   onChange={e =>
-                     changeDetailsData(e.target.value, propForValue, index)
+                     changeDetailsData(
+                        e.target.value,
+                        propForValue,
+                        index,
+                        column
+                     )
                   }
                   onFocus={hideAlert}
                   disabled={disabled}
@@ -739,7 +860,9 @@ class ForCreateWithListPage extends Component {
             return (
                <input
                   className={
-                     isValidColumn(propForValue, index)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidColumn(propForValue, index)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -759,7 +882,9 @@ class ForCreateWithListPage extends Component {
             return (
                <input
                   className={
-                     isValidColumn(propForValue, index)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidColumn(propForValue, index)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -779,7 +904,9 @@ class ForCreateWithListPage extends Component {
             return (
                <input
                   className={
-                     isValidColumn(propForValue, index)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidColumn(propForValue, index)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -805,7 +932,12 @@ class ForCreateWithListPage extends Component {
                         item.value === deepGet(details[index], propForValue)
                   )}
                   onChange={option =>
-                     changeDetailsData(option.value, propForValue, index)
+                     changeDetailsData(
+                        option.value,
+                        propForValue,
+                        index,
+                        column
+                     )
                   }
                   options={values}
                   placeholder={placeholder}
@@ -819,7 +951,9 @@ class ForCreateWithListPage extends Component {
             return (
                <textarea
                   className={
-                     isValidColumn(propForValue, index)
+                     disabled
+                        ? 'form-input-disabled'
+                        : isValidColumn(propForValue, index)
                         ? 'form-input-alert'
                         : 'form-input-outline'
                   }
@@ -902,7 +1036,18 @@ class ForCreateWithListPage extends Component {
 
          switch (type) {
             case 'input': {
-               detail[propForValue] = ''
+               const { prefetch } = column
+
+               if (prefetch !== undefined) {
+                  const { prefetch } = column
+                  const { values } = prefetch
+
+                  detail[propForValue] =
+                     '' + deepGet(values[0], prefetch.propForValue)
+               } else {
+                  detail[propForValue] = ''
+               }
+
                break
             }
 
@@ -961,7 +1106,7 @@ class ForCreateWithListPage extends Component {
    }
 
    render() {
-      console.log('DEBUG: ', this.state.detailsErrors)
+      console.log('STATE: ', this.state)
       const { renderComponent } = this
 
       return renderComponent()

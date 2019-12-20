@@ -52,11 +52,7 @@ class DonNhapHangForCreate extends Component {
 
    fetchEmployees = async () => {
       const url = apiRoutes.nhanVien.getAll
-      const queries = {
-         pageSize: 1000,
-         luongBatDau: 0,
-         luongKetThuc: 1000000000
-      }
+      const queries = { pageSize: 1000 }
 
       try {
          const response = await apiGet(url, queries)
@@ -99,8 +95,6 @@ class DonNhapHangForCreate extends Component {
             label: employee['tenNhanVien']
          })
       })
-
-      console.log(employees)
 
       return allEmployees
    }

@@ -45,16 +45,16 @@ class NhanVienForList extends Component {
                   propForItemText: 'label'
                }
             },
-            {
-               text: 'Ngày sinh',
-               propForValue: 'ngaySinh',
-               propForSorting: 'NgaySinh',
-               type: 'date',
-               search: {
-                  type: 'date',
-                  placeholder: 'Ngày sinh'
-               }
-            },
+            // {
+            //    text: 'Ngày sinh',
+            //    propForValue: 'ngaySinh',
+            //    propForSorting: 'NgaySinh',
+            //    type: 'date',
+            //    search: {
+            //       type: 'date',
+            //       placeholder: 'Ngày sinh'
+            //    }
+            // },
             {
                text: 'Số điện thoại',
                propForValue: 'soDienThoai',
