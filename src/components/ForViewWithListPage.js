@@ -12,13 +12,20 @@ import {
    isAfter,
    isValidEmail,
    deepGet,
-   numberWithCommas
+   numberWithCommas,
+   formatDateString,
+   print
 } from '../utils'
 import { connect } from 'react-redux'
 import { showNotification } from '../redux/actions'
 import LoadingIndicator from './LoadingIndicator'
 import Select from 'react-select'
 import apiRoutes from '../routes/apis'
+import ExportReportDialog from './ExportReportDialog'
+import Excel from 'exceljs'
+import { saveAs } from 'file-saver'
+import { excelFormat } from '../utils'
+import ForDetailsPrintPage from './ForDetailsPrintPage'
 
 const customStyles = {
    control: () => ({
@@ -27,7 +34,11 @@ const customStyles = {
       fontWeight: 'normal',
       paddingTop: '3px',
       paddingBottom: '2px',
-      backgroundColor: '#edf0f5'
+      backgroundColor: '#edf0f5',
+      width: '300px'
+   }),
+   dropdownIndicator: () => ({
+      display: 'none'
    })
 }
 
@@ -50,7 +61,8 @@ class ForViewWithListPage extends Component {
             diaChiTrenPhieu: '',
             soDienThoai: '',
             fax: ''
-         }
+         },
+         showExportReportDialog: false
       }
    }
 
@@ -152,6 +164,7 @@ class ForViewWithListPage extends Component {
    }
 
    fetchData = async () => {
+      const { getDetails } = this
       const { settings, match } = this.props
       const { api } = settings
       const { id } = match.params
@@ -162,8 +175,9 @@ class ForViewWithListPage extends Component {
 
          if (response && response.data.status === 'SUCCESS') {
             const { data } = response.data.result
+            const details = getDetails(data)
 
-            this.setState({ editingData: data, loading: false })
+            this.setState({ editingData: data, details, loading: false })
          } else {
             throw new Error(response.errors)
          }
@@ -172,7 +186,24 @@ class ForViewWithListPage extends Component {
       }
    }
 
+   getDetails = data => {
+      const { settings } = this.props
+      const { entity, details } = settings
+      const { propName } = entity
+      const detailsEntity = details.entity
+      const detailsEntityPropName = detailsEntity.propName
+      const { nhanVien } = data
+
+      return deepGet(nhanVien, `${propName}.0.${detailsEntityPropName}`)
+   }
+
    ///// METHODS FOR HANDLING UI EVENTS /////
+
+   refresh = () => {
+      const { fetchData } = this
+
+      this.setState({ loading: true }, fetchData)
+   }
 
    changeEditingData = (value, fieldName) => {
       const { editingData } = this.state
@@ -324,6 +355,157 @@ class ForViewWithListPage extends Component {
             })
          }
       }
+   }
+
+   exportToPdf = () => {
+      const { showSuccessNotification } = this
+
+      print()
+      showSuccessNotification()
+   }
+
+   exportToXlsx = () => {
+      const { showSuccessNotification } = this
+      const { editingData, settingsData } = this.state
+      const data = editingData
+      const {
+         tenSanBong,
+         diaChi,
+         diaChiTrenPhieu,
+         soDienThoai,
+         fax
+      } = settingsData
+      const { settings } = this.props
+      const { entity, fields } = settings
+      const { name, slug } = entity
+      const fileName = `thong-tin-${slug}-${moment().format('DDMMYYYY')}`
+      let workbook = new Excel.Workbook()
+      let worksheet = workbook.addWorksheet(moment().format('DD-MM-YYYY'), {
+         pageSetup: { fitToPage: true, orientation: 'portrait' }
+      })
+      let currentRowCount = 7
+
+      workbook.Props = {
+         Title: fileName,
+         Subject: `Thông tin chi tiết về ${name}`,
+         Author: 'MFFMS',
+         CreatedDate: moment()
+      }
+
+      worksheet.mergeCells('A1:G1')
+      worksheet.getCell('A1').value = tenSanBong
+      worksheet.getCell('A1').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A2:G2')
+      worksheet.getCell('A2').value = diaChi
+      worksheet.getCell('A2').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A3:G3')
+      worksheet.getCell(
+         'A3'
+      ).value = `Số điện thoại: ${soDienThoai} - Fax: ${fax}`
+      worksheet.getCell('A3').font = excelFormat.boldFont
+
+      worksheet.mergeCells('A5:M5')
+      worksheet.getCell(
+         'M5'
+      ).value = `THÔNG TIN CHI TIẾT VỀ ${name.toUpperCase()}`
+      worksheet.getCell('M5').font = { ...excelFormat.boldFont, size: 18 }
+      worksheet.getCell('M5').alignment = excelFormat.center
+
+      fields.forEach((field, index) => {
+         const { label, propForValue, type } = field
+
+         worksheet.mergeCells(`B${currentRowCount}:D${currentRowCount}`)
+         worksheet.mergeCells(`E${currentRowCount}:L${currentRowCount}`)
+
+         worksheet.getCell(`B${currentRowCount}`).value = label
+         worksheet.getCell(`B${currentRowCount}`).font = excelFormat.boldFont
+         worksheet.getCell(`B${currentRowCount}`).alignment = excelFormat.left
+
+         worksheet.getCell(`E${currentRowCount}`).value = (type => {
+            switch (type) {
+               case 'date': {
+                  return formatDateString(deepGet(data, propForValue))
+               }
+
+               default: {
+                  return deepGet(data, propForValue)
+               }
+            }
+         })(type)
+         worksheet.getCell(`E${currentRowCount}`).font = excelFormat.normalFont
+         worksheet.getCell(`E${currentRowCount}`).alignment = excelFormat.left
+
+         currentRowCount += index !== fields.length - 1 ? 2 : 0
+      })
+
+      worksheet.mergeCells(
+         'G' + (currentRowCount + 2) + ':M' + (currentRowCount + 2)
+      )
+      worksheet.getCell(
+         'G' + (currentRowCount + 2)
+      ).value = `${diaChiTrenPhieu}, ngày ${moment().format(
+         'DD'
+      )} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}`
+      worksheet.getCell('G' + (currentRowCount + 2)).font =
+         excelFormat.italicFont
+      worksheet.getCell('G' + (currentRowCount + 2)).alignment =
+         excelFormat.right
+
+      worksheet.mergeCells(
+         'B' + (currentRowCount + 4) + ':D' + (currentRowCount + 4)
+      )
+      worksheet.getCell('B' + (currentRowCount + 4)).value = `NGƯỜI DUYỆT`
+      worksheet.getCell('B' + (currentRowCount + 4)).font = excelFormat.boldFont
+      worksheet.getCell('B' + (currentRowCount + 4)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'J' + (currentRowCount + 4) + ':L' + (currentRowCount + 4)
+      )
+      worksheet.getCell('J' + (currentRowCount + 4)).value = `NGƯỜI LẬP`
+      worksheet.getCell('J' + (currentRowCount + 4)).font = excelFormat.boldFont
+      worksheet.getCell('J' + (currentRowCount + 4)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'A' + (currentRowCount + 5) + ':E' + (currentRowCount + 5)
+      )
+      worksheet.getCell(
+         'A' + (currentRowCount + 5)
+      ).value = `(Ký và ghi rõ họ tên)`
+      worksheet.getCell('A' + (currentRowCount + 5)).font =
+         excelFormat.italicFont
+      worksheet.getCell('A' + (currentRowCount + 5)).alignment =
+         excelFormat.center
+
+      worksheet.mergeCells(
+         'I' + (currentRowCount + 5) + ':M' + (currentRowCount + 5)
+      )
+      worksheet.getCell(
+         'I' + (currentRowCount + 5)
+      ).value = `(Ký và ghi rõ họ tên)`
+      worksheet.getCell('I' + (currentRowCount + 5)).font =
+         excelFormat.italicFont
+      worksheet.getCell('I' + (currentRowCount + 5)).alignment =
+         excelFormat.center
+
+      workbook.xlsx.writeBuffer().then(function(data) {
+         var blob = new Blob([data], {
+            type:
+               'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+         })
+         saveAs(blob, fileName)
+      })
+
+      showSuccessNotification()
+   }
+
+   toggleExportReportDialog = () => {
+      const { showExportReportDialog } = this.state
+
+      this.setState({ showExportReportDialog: !showExportReportDialog })
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
@@ -591,26 +773,54 @@ class ForViewWithListPage extends Component {
                <i className="fas fa-chevron-right"></i>
             </span>
             <span className="breadcrumb-active">
-               <Link to="#">Thêm {name} mới</Link>
+               <Link to="#">Xem thông tin {name}</Link>
             </span>
          </span>
+      )
+   }
+
+   renderSectionHeaderRight = () => {
+      const { refresh, exportData, toggleExportReportDialog } = this
+      const { data } = this.state
+      const { settings } = this.props
+      const { exportable = true } = settings
+
+      return (
+         <Fragment>
+            <span className="button" onClick={refresh}>
+               <i className="fas fa-redo"></i>&nbsp;&nbsp;Tải lại
+            </span>
+
+            {/* {data !== null && (
+               <span className="button" onClick={exportData}>
+                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất dữ liệu
+               </span>
+            )} */}
+
+            {exportable && data !== null && (
+               <span className="button" onClick={toggleExportReportDialog}>
+                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
+               </span>
+            )}
+         </Fragment>
       )
    }
 
    renderBody = () => {
       const {
          renderErrors,
+         renderSectionHeaderRight,
          renderForm,
          renderDetailedList,
          renderFormFooter
-         // renderFooter
       } = this
       const { settings } = this.props
       const { entity } = settings
       const { name } = entity
       const section = {
-         title: `Thêm ${name} mới`,
-         subtitle: `Thêm ${name} mới vào hệ thống`,
+         title: `Xem thông tin ${name}`,
+         subtitle: `Xem thông tin chi tiết của ${name}`,
+         headerRight: renderSectionHeaderRight(),
          footerRight: renderFormFooter()
       }
 
@@ -619,8 +829,28 @@ class ForViewWithListPage extends Component {
             {renderErrors()}
             {renderForm()}
             {renderDetailedList()}
-            {/* {renderFooter()} */}
          </Section>
+      )
+   }
+
+   renderDialogs = () => {
+      const { toggleExportReportDialog, exportToPdf, exportToXlsx } = this
+      const { showExportReportDialog, data } = this.state
+      const { settings } = this.props
+      const { entity } = settings
+      const dialogSettings = {
+         isOpen: showExportReportDialog,
+         onClose: toggleExportReportDialog,
+         onExportToPdf: exportToPdf,
+         onExportToXlsx: exportToXlsx,
+         entity,
+         data
+      }
+
+      return (
+         <Fragment>
+            <ExportReportDialog settings={dialogSettings} />
+         </Fragment>
       )
    }
 
@@ -718,11 +948,19 @@ class ForViewWithListPage extends Component {
                   className="form-input-disabled"
                   type="text"
                   placeholder={placeholder}
-                  value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
-                  onFocus={hideAlert}
+                  value={deepGet(editingData, propForValue)}
+                  disabled={true}
+               />
+            )
+         }
+
+         case 'number': {
+            return (
+               <input
+                  className="form-input-disabled"
+                  type="text"
+                  placeholder={placeholder}
+                  value={numberWithCommas(deepGet(editingData, propForValue))}
                   disabled={true}
                />
             )
@@ -735,10 +973,6 @@ class ForViewWithListPage extends Component {
                   type="password"
                   placeholder={placeholder}
                   value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
-                  onFocus={hideAlert}
                   disabled={true}
                />
             )
@@ -750,11 +984,7 @@ class ForViewWithListPage extends Component {
                   className="form-input-disabled"
                   type="email"
                   placeholder={placeholder}
-                  value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
-                  onFocus={hideAlert}
+                  value={deepGet(editingData, propForValue)}
                   disabled={true}
                />
             )
@@ -764,13 +994,9 @@ class ForViewWithListPage extends Component {
             return (
                <input
                   className="form-input-disabled"
-                  type="date"
+                  type="input"
                   placeholder={placeholder}
-                  value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
-                  onFocus={hideAlert}
+                  value={formatDateString(deepGet(editingData, propForValue))}
                   disabled={true}
                />
             )
@@ -796,11 +1022,7 @@ class ForViewWithListPage extends Component {
                <textarea
                   className="form-input-disabled"
                   placeholder={placeholder}
-                  value={editingData[propForValue]}
-                  onChange={e =>
-                     changeEditingData(e.target.value, propForValue)
-                  }
-                  onFocus={hideAlert}
+                  value={deepGet(editingData, propForValue)}
                   disabled={true}
                ></textarea>
             )
@@ -825,87 +1047,69 @@ class ForViewWithListPage extends Component {
                <input
                   className="form-input-disabled"
                   type="text"
-                  placeholder={placeholder}
                   value={deepGet(details[index], propForValue)}
-                  onChange={e =>
-                     changeDetailsData(
-                        e.target.value,
-                        propForValue,
-                        index,
-                        column
-                     )
-                  }
-                  onFocus={hideAlert}
                   disabled={true}
                />
             )
          }
 
-         case 'calculation': {
-            return (
-               <input
-                  className="form-input-disabled"
-                  type="text"
-                  placeholder={placeholder}
-                  value={deepGet(details[index], propForValue)}
-                  onFocus={hideAlert}
-                  disabled={true}
-               />
-            )
-         }
+         // case 'calculation': {
+         //    return (
+         //       <input
+         //          className="form-input-disabled"
+         //          type="text"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onFocus={hideAlert}
+         //          disabled={true}
+         //       />
+         //    )
+         // }
 
          case 'number': {
             return (
                <input
                   className="form-input-disabled"
-                  type="number"
-                  placeholder={placeholder}
-                  value={deepGet(details[index], propForValue)}
-                  onChange={e =>
-                     changeDetailsData(
-                        e.target.value,
-                        propForValue,
-                        index,
-                        column
-                     )
-                  }
-                  onFocus={hideAlert}
+                  type="text"
+                  value={numberWithCommas(
+                     deepGet(details[index], propForValue)
+                  )}
                   disabled={true}
                />
             )
          }
 
-         case 'password': {
-            return (
-               <input
-                  className="form-input-disabled"
-                  type="password"
-                  placeholder={placeholder}
-                  value={deepGet(details[index], propForValue)}
-                  onChange={e =>
-                     changeDetailsData(e.target.value, propForValue, index)
-                  }
-                  onFocus={hideAlert}
-                  disabled={true}
-               />
-            )
-         }
+         // case 'password': {
+         //    return (
+         //       <input
+         //          className="form-input-disabled"
+         //          type="password"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onChange={e =>
+         //             changeDetailsData(e.target.value, propForValue, index)
+         //          }
+         //          onFocus={hideAlert}
+         //          disabled={true}
+         //       />
+         //    )
+         // }
 
-         case 'email': {
-            return (
-               <input
-                  className="form-input-disabled"
-                  type="email"
-                  placeholder={placeholder}
-                  value={deepGet(details[index], propForValue)}
-                  onChange={e =>
-                     changeDetailsData(e.target.value, propForValue, index)
-                  }
-                  onFocus={hideAlert}
-                  disabled={true}
-               />
-            )
-         }
+         // case 'email': {
+         //    return (
+         //       <input
+         //          className="form-input-disabled"
+         //          type="email"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onChange={e =>
+         //             changeDetailsData(e.target.value, propForValue, index)
+         //          }
+         //          onFocus={hideAlert}
+         //          disabled={true}
+         //       />
+         //    )
+         // }
 
          case 'date': {
             return (
@@ -939,20 +1143,20 @@ class ForViewWithListPage extends Component {
             )
          }
 
-         case 'textarea': {
-            return (
-               <textarea
-                  className="form-input-disabled"
-                  placeholder={placeholder}
-                  value={deepGet(details[index], propForValue)}
-                  onChange={e =>
-                     changeDetailsData(e.target.value, propForValue, index)
-                  }
-                  onFocus={hideAlert}
-                  disabled={true}
-               ></textarea>
-            )
-         }
+         // case 'textarea': {
+         //    return (
+         //       <textarea
+         //          className="form-input-disabled"
+         //          placeholder={placeholder}
+         //          value={deepGet(details[index], propForValue)}
+         //          onChange={e =>
+         //             changeDetailsData(e.target.value, propForValue, index)
+         //          }
+         //          onFocus={hideAlert}
+         //          disabled={true}
+         //       ></textarea>
+         //    )
+         // }
       }
    }
 
@@ -971,7 +1175,6 @@ class ForViewWithListPage extends Component {
             <table className="table">
                <thead>
                   <tr>
-                     <th></th>
                      <th>STT</th>
                      {columns.map((column, index) => (
                         <th key={index}>{column.label}</th>
@@ -980,17 +1183,27 @@ class ForViewWithListPage extends Component {
                </thead>
 
                <tbody>
-                  {stateDetails.map((detail, detailIndex) => (
-                     <tr key={detailIndex}>
-                        <td onClick={() => deleteDetail(detailIndex)}>X</td>
-                        <td>{detailIndex + 1}</td>
-                        {columns.map((column, index) => (
-                           <td key={index}>
-                              {renderColumn(column, detailIndex)}
-                           </td>
-                        ))}
+                  {stateDetails.length > 0 ? (
+                     stateDetails.map((detail, detailIndex) => (
+                        <tr key={detailIndex}>
+                           <td>{detailIndex + 1}</td>
+                           {columns.map((column, index) => (
+                              <td key={index}>
+                                 {renderColumn(column, detailIndex)}
+                              </td>
+                           ))}
+                        </tr>
+                     ))
+                  ) : (
+                     <tr>
+                        <td
+                           colSpan={columns.length + 1}
+                           style={{ textAlign: 'center' }}
+                        >
+                           Trống
+                        </td>
                      </tr>
-                  ))}
+                  )}
                </tbody>
             </table>
          </div>
@@ -1072,13 +1285,24 @@ class ForViewWithListPage extends Component {
    }
 
    renderComponent = () => {
-      const { renderHeader, renderBody } = this
-      const { loading } = this.state
+      const { renderHeader, renderBody, renderDialogs } = this
+      const { editingData, loading } = this.state
+      const data = editingData
+      const { settings } = this.props
+      const { entity, fields } = settings
+      const printSettings = {
+         entity,
+         fields,
+         data
+      }
 
       return (
          <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
+            {renderDialogs()}
+
+            <ForDetailsPrintPage settings={printSettings} />
          </LoadingIndicator>
       )
    }

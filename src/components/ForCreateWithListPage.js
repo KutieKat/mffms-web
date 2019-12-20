@@ -66,38 +66,52 @@ class ForCreateWithListPage extends Component {
 
    ///// METHODS FOR INTERACTING WITH API /////
 
-   createDetails = async () => {
+   createDetails = (propKey, propValue) => {
+      const { showErrorNotification, showSuccessNotification } = this
       const stateDetails = this.state.details
-      const { settings } = this.props
-      const { details } = settings
+      const { history, settings } = this.props
+      const { details, entity } = settings
+      const { slug } = entity
       const { api } = details
       const url = api.create
 
-      for (let i = 0; i < stateDetails.length; i++) {
-         const detail = details[i]
-         await apiPost(url, detail)
-      }
+      return apiPost(
+         url,
+         stateDetails.map(detail => {
+            detail[propKey] = propValue
+
+            return detail
+         })
+      )
+         .then(response => {
+            showSuccessNotification()
+
+            this.setState({ loading: false }, () => {
+               history.push(`/quan-ly/${slug}`)
+            })
+         })
+         .catch(error => {
+            showErrorNotification()
+            this.setState({ loading: false })
+            // const { errors } = error.response.data.result
+            // this.setState({ showAlert: true })
+         })
    }
 
-   createRecord = async () => {
-      const {
-         showErrorNotification,
-         showSuccessNotification,
-         createDetails
-      } = this
+   createRecord = () => {
+      const { showErrorNotification, createDetails } = this
       const { editingData } = this.state
-      const { settings, history } = this.props
-      const { api, entity } = settings
-      const { slug } = entity
+      const { settings } = this.props
+      const { api } = settings
       const url = api.create
 
       return apiPost(url, editingData)
          .then(response => {
-            showSuccessNotification()
-            this.setState({ loading: false }, () => {
-               createDetails()
-               history.push(`/quan-ly/${slug}`)
-            })
+            const { data } = response.data.result
+            const propKey = Object.keys(data)[0]
+            const propValue = data[propKey]
+
+            createDetails(propKey, propValue)
          })
          .catch(error => {
             showErrorNotification()
@@ -242,6 +256,8 @@ class ForCreateWithListPage extends Component {
             showAlert: true
          })
       } else {
+         // Check for duplication
+
          const generalErrors = validateFields()
          const detailsErrors = validateDetails()
 
@@ -996,7 +1012,9 @@ class ForCreateWithListPage extends Component {
                <tbody>
                   {stateDetails.map((detail, detailIndex) => (
                      <tr key={detailIndex}>
-                        <td onClick={() => deleteDetail(detailIndex)}>X</td>
+                        <td onClick={() => deleteDetail(detailIndex)}>
+                           <i class="fas fa-times-circle reset-search-data"></i>
+                        </td>
                         <td>{detailIndex + 1}</td>
                         {columns.map((column, index) => (
                            <td key={index}>
@@ -1106,7 +1124,6 @@ class ForCreateWithListPage extends Component {
    }
 
    render() {
-      console.log('STATE: ', this.state)
       const { renderComponent } = this
 
       return renderComponent()

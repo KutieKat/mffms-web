@@ -139,7 +139,6 @@ class DeleteDialog extends Component {
    }
 
    render() {
-      console.log('DEBUG: ', this.props)
       const { renderComponent } = this
 
       return renderComponent()

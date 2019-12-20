@@ -260,8 +260,6 @@ class App extends Component {
             menu.find(menuItem => menuItem.title === section)
          )
 
-      console.log(filteredMenu)
-
       return (
          filteredMenu &&
          filteredMenu.map((item, index) => {

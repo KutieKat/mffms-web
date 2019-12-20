@@ -124,6 +124,7 @@ main {
    width: 280px;
    box-shadow: 0 2px 20px 0 rgba(106, 108, 111, 0.1);
    background-color: #ffffff;
+   flex-shrink: 0;
 }
 
 .main-nav__title {
@@ -1124,6 +1125,7 @@ tr th:not(:first-child) {
    font-size: 20px;
    color: rgba(0, 0, 0, 0.65);
    margin-top: 6px;
+   cursor: pointer;
 }
 
 .popup-header__main-section img {

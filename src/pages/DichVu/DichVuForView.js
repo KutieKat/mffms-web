@@ -22,7 +22,7 @@ class DichVuForView extends Component {
                type: 'input'
             },
             {
-               label: 'Đơn giá',
+               label: 'Đơn giá (VNĐ)',
                propForValue: 'donGia',
                type: 'input'
             },

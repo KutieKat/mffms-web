@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import ForListPage from '../../components/ForListPage'
 import apiRoutes from '../../routes/apis'
 import { hoaDonDichVu } from '../../entities'
-import { GENDERS_FOR_SEARCH } from '../../constants'
 import { apiGet } from '../../utils'
 
 class HoaDonDichVuForList extends Component {

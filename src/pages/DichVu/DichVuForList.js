@@ -19,7 +19,7 @@ class DichVuForList extends Component {
                type: 'string',
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo mã'
+                  placeholder: 'Mã dịch vụ'
                }
             },
             {
@@ -29,11 +29,11 @@ class DichVuForList extends Component {
                type: 'string',
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo tên'
+                  placeholder: 'Tên dịch vụ'
                }
             },
             {
-               text: 'Đơn giá',
+               text: 'Đơn giá (VNĐ)',
                propForValue: 'donGia',
                propForSorting: 'DonGia',
                type: 'number',
@@ -42,7 +42,7 @@ class DichVuForList extends Component {
                   min: 0,
                   max: 100000000,
                   step: 1000000,
-                  placeholder: 'Tìm theo đơn giá'
+                  placeholder: 'Đơn giá'
                }
             },
             {
@@ -52,7 +52,7 @@ class DichVuForList extends Component {
                type: 'string',
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo đơn vị tính'
+                  placeholder: 'Đơn vị tính'
                }
             },
             {
@@ -62,7 +62,7 @@ class DichVuForList extends Component {
                type: 'string',
                search: {
                   type: 'input',
-                  placeholder: 'Tìm theo ghi chú'
+                  placeholder: 'Ghi chú'
                }
             }
          ]

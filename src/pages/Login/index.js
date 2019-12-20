@@ -33,7 +33,6 @@ class Login extends Component {
 
    login = async () => {
       const { reset, showSuccessNotification, showErrorNotification } = this
-      console.log('This is called')
 
       try {
          const { reset } = this

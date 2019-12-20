@@ -25,9 +25,9 @@ class DichVuForUpdate extends Component {
                ]
             },
             {
-               label: 'Đơn giá',
+               label: 'Đơn giá (VNĐ)',
                propForValue: 'donGia',
-               placeholder: 'Nhập đơn giá của dịch vụ',
+               placeholder: 'Nhập đơn giá của dịch vụ (VNĐ)',
                type: 'input',
                validators: [
                   {

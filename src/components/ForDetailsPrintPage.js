@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { apiGet, formatDateString } from '../utils'
+import { apiGet, formatDateString, numberWithCommas, deepGet } from '../utils'
 import apiRoutes from '../routes/apis'
 import moment from 'moment'
 
@@ -166,7 +166,18 @@ class ForDetailsPrintPage extends Component {
                <input
                   className="form-input-disabled"
                   type="text"
-                  value={getFieldValue('text', data && data[propForValue])}
+                  value={deepGet(data, propForValue)}
+                  disabled={true}
+               />
+            )
+         }
+
+         case 'number': {
+            return (
+               <input
+                  className="form-input-disabled"
+                  type="text"
+                  value={numberWithCommas(deepGet(data, propForValue))}
                   disabled={true}
                />
             )
@@ -177,7 +188,7 @@ class ForDetailsPrintPage extends Component {
                <input
                   className="form-input-disabled"
                   type="text"
-                  value={getFieldValue('date', data && data[propForValue])}
+                  value={formatDateString(deepGet(data, propForValue))}
                   disabled={true}
                />
             )
@@ -189,7 +200,7 @@ class ForDetailsPrintPage extends Component {
             return (
                <select
                   className="form-input-disabled"
-                  value={data && data[propForValue]}
+                  value={deepGet(data, propForValue)}
                   disabled={true}
                >
                   {values.length > 0 &&
@@ -206,7 +217,7 @@ class ForDetailsPrintPage extends Component {
             return (
                <textarea
                   className="form-input-disabled"
-                  value={getFieldValue('text', data && data[propForValue])}
+                  value={deepGet(data, propForValue)}
                   disabled={true}
                ></textarea>
             )

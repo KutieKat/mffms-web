@@ -83,7 +83,7 @@ export default {
       deleteById: baseHoaDonDichVuApi + '/PermanentlyDeleteById'
    },
    chiTietHoaDonDichVu: {
-      create: baseChiTietHoaDonDichVu + '/Create'
+      create: baseChiTietHoaDonDichVu + '/CreateMultiple'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',

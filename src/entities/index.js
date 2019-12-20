@@ -50,12 +50,14 @@ const chiTietDonNhapHang = {
 
 const hoaDonDichVu = {
    name: 'hóa đơn dịch vụ',
-   slug: 'hoa-don-dich-vu'
+   slug: 'hoa-don-dich-vu',
+   propName: 'hoaDonDichVu'
 }
 
 const chiTietHoaDonDichVu = {
    name: 'chi tiết hóa đơn dịch vụ',
-   slug: 'chi-tiet-hoa-don-dich-vu'
+   slug: 'chi-tiet-hoa-don-dich-vu',
+   propName: 'chiTietHDDV'
 }
 
 export {
