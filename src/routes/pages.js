@@ -68,8 +68,14 @@ import PhieuDatSanForView from '../pages/PhieuDatSan/PhieuDatSanForView'
 
 ///// CaiDat /////
 import CaiDatForUpdate from '../pages/CaiDat/CaiDatForUpdate'
+import ChartBoard from '../pages/ChartBoard'
 
 export default [
+   {
+      path: '/',
+      component: ChartBoard,
+      exact: true
+   },
    ///// KhachHang /////
    {
       path: '/quan-ly/khach-hang',

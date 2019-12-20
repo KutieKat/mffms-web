@@ -5,6 +5,7 @@
   "dependencies": {
     "@vtex/react-csv-parse": "^3.0.2",
     "axios": "^0.18.0",
+    "chart.js": "^2.9.3",
     "clone-deep": "^4.0.1",
     "csvjson": "^5.1.0",
     "debounce": "^1.2.0",
@@ -14,6 +15,7 @@
     "moment": "^2.24.0",
     "rc-slider": "^8.7.1",
     "react": "16.5.0",
+    "react-chartjs-2": "^2.8.0",
     "react-ckeditor-component": "^1.1.0",
     "react-countup": "^4.2.6",
     "react-csv": "^1.1.1",

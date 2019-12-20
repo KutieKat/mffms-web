@@ -53,6 +53,11 @@ const menu = [
       title: 'Thống kê',
       items: [
          {
+            title: 'Biểu đồ tổng quan',
+            path: '/',
+            icon: 'fas fa-chart-pie'
+         },
+         {
             title: 'Thống kê khách hàng',
             path: '/thong-ke/khach-hang',
             icon: 'fas fa-users'

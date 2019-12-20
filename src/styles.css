@@ -1235,6 +1235,16 @@ textarea.form-input-disabled {
    border: 2px solid #edf0f5;
 }
 
+.chart-section {
+   background-color: white;
+   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.05);
+   padding: 32px;
+}
+
+.chart-section:not(:first-child) {
+   margin-top: 32px;
+}
+
 .loading-indicator {
    display: flex;
    flex-direction: column;

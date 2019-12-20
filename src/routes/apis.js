@@ -10,9 +10,10 @@ const baseTaiKhoanApi = baseApi + '/TaiKhoan'
 const baseDonNhapHangApi = baseApi + '/DonNhapHang'
 const baseChiTietDonNhapHangApi = baseApi + '/ChiTietDonNhapHang'
 const baseHoaDonDichVuApi = baseApi + '/HoaDonDichVu'
-const baseChiTietHoaDonDichVu = baseApi + '/ChiTietHDDV'
+const baseChiTietHoaDonDichVuApi = baseApi + '/ChiTietHDDV'
 const basePhieuDatSanApi = baseApi + '/PhieuDatSan'
-const baseChiTietPhieuDatSan = baseApi + '/ChiTietPhieuDatSan'
+const baseChiTietPhieuDatSanApi = baseApi + '/ChiTietPhieuDatSan'
+const baseThongKeApi = baseApi + '/ThongKe'
 
 export default {
    khachHang: {
@@ -93,7 +94,7 @@ export default {
       deleteById: baseHoaDonDichVuApi + '/PermanentlyDeleteById'
    },
    chiTietHoaDonDichVu: {
-      create: baseChiTietHoaDonDichVu + '/CreateMultiple'
+      create: baseChiTietHoaDonDichVuApi + '/CreateMultiple'
    },
    phieuDatSan: {
       getAll: basePhieuDatSanApi + '/GetAll',
@@ -103,7 +104,13 @@ export default {
       deleteById: basePhieuDatSanApi + '/PermanentlyDeleteById'
    },
    chiTietPhieuDatSan: {
-      create: baseChiTietPhieuDatSan + '/CreateMultiple'
+      create: baseChiTietPhieuDatSanApi + '/CreateMultiple'
+   },
+   thongKe: {
+      tongSoLuotDatSan: baseThongKeApi + '/TongSoLuotDatSan',
+      tongTienDatSan: baseThongKeApi + '/TongTienDatSan',
+      tongTienDichVu: baseThongKeApi + '/TongTienDichVu',
+      tongTienNhapHang: baseThongKeApi + '/TongTienNhapHang'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',
