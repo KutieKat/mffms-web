@@ -1049,6 +1049,19 @@ class ForViewWithListPage extends Component {
             )
          }
 
+         case 'time': {
+            return (
+               <input
+                  className="form-input-disabled"
+                  type="text"
+                  value={moment
+                     .unix(deepGet(details[index], propForValue))
+                     .format('HH:mm:ss')}
+                  disabled={true}
+               />
+            )
+         }
+
          // case 'calculation': {
          //    return (
          //       <input
@@ -1111,13 +1124,10 @@ class ForViewWithListPage extends Component {
             return (
                <input
                   className="form-input-disabled"
-                  type="date"
-                  placeholder={placeholder}
-                  value={deepGet(details[index], propForValue)}
-                  onChange={e =>
-                     changeDetailsData(e.target.value, propForValue, index)
-                  }
-                  onFocus={hideAlert}
+                  type="text"
+                  value={formatDateString(
+                     deepGet(details[index], propForValue)
+                  )}
                   disabled={true}
                />
             )

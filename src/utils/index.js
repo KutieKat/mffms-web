@@ -63,7 +63,9 @@ export const isPhoneNumber = phone => {
    return false
 }
 
-export const isAfter = (date, dateToCheck) => dateToCheck.diff(date) >= 0
+// export const isAfter = (date, dateToCheck) => dateToCheck.diff(date) >= 0
+
+export const isAfter = (date, dateToCheck) => true
 
 export const apiGet = (url, data) => axios.get(url, { params: data })
 
@@ -149,4 +151,17 @@ export const deepGet = (variable, keys, defaultVal) => {
    }
 
    return resultVal
+}
+
+export const hmsToSecondsOnly = str => {
+   let p = str.split(':'),
+      s = 0,
+      m = 1
+
+   while (p.length > 0) {
+      s += m * parseInt(p.pop(), 10)
+      m *= 60
+   }
+
+   return s
 }

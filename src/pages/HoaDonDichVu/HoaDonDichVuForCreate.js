@@ -145,6 +145,7 @@ class HoaDonDichVuForCreate extends Component {
       const settings = {
          entity: hoaDonDichVu,
          api: apiRoutes.hoaDonDichVu,
+         sumpriceProp: 'thanhTien',
          fields: [
             {
                label: 'Khách hàng',
@@ -191,7 +192,7 @@ class HoaDonDichVuForCreate extends Component {
             {
                label: 'Ghi chú',
                propForValue: 'ghiChu',
-               placeholder: 'Nhập ghi chú về nhân viên (nếu có)',
+               placeholder: 'Nhập ghi chú về hóa đơn (nếu có)',
                type: 'textarea'
             },
             {
@@ -216,7 +217,7 @@ class HoaDonDichVuForCreate extends Component {
          details: {
             entity: chiTietHoaDonDichVu,
             api: apiRoutes.chiTietHoaDonDichVu,
-            uniqueKeys: ['maDichVu'],
+            // uniqueKeys: ['maDichVu'],
             columns: [
                {
                   label: 'Dịch vụ',

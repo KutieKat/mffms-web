@@ -62,6 +62,18 @@ const chiTietHoaDonDichVu = {
    propName: 'chiTietHDDV'
 }
 
+const phieuDatSan = {
+   name: 'phiếu đặt sân',
+   slug: 'phieu-dat-san',
+   propName: 'phieuDatSan'
+}
+
+const chiTietPhieuDatSan = {
+   name: 'chi tiết phiếu đặt sân',
+   slug: 'chi-tiet-phieu-dat-san',
+   propName: 'chiTietPhieuDatSan'
+}
+
 export {
    khachHang,
    nhanVien,
@@ -74,5 +86,7 @@ export {
    chiTietDonNhapHang,
    hoaDonDichVu,
    chiTietHoaDonDichVu,
+   phieuDatSan,
+   chiTietPhieuDatSan,
    caiDat
 }

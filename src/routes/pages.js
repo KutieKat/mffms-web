@@ -61,6 +61,11 @@ import HoaDonDichVuForCreate from '../pages/HoaDonDichVu/HoaDonDichVuForCreate'
 import HoaDonDichVuForList from '../pages/HoaDonDichVu/HoaDonDichVuForList'
 import HoaDonDichVuForView from '../pages/HoaDonDichVu/HoaDonDichVuForView'
 
+///// PhieuDatSan /////
+import PhieuDatSanForCreate from '../pages/PhieuDatSan/PhieuDatSanForCreate'
+import PhieuDatSanForList from '../pages/PhieuDatSan/PhieuDatSanForList'
+import PhieuDatSanForView from '../pages/PhieuDatSan/PhieuDatSanForView'
+
 ///// CaiDat /////
 import CaiDatForUpdate from '../pages/CaiDat/CaiDatForUpdate'
 
@@ -264,6 +269,21 @@ export default [
    {
       path: '/quan-ly/hoa-don-dich-vu/xem-thong-tin/:id',
       component: HoaDonDichVuForView
+   },
+
+   ///// PhieuDatSan /////
+   {
+      path: '/quan-ly/phieu-dat-san',
+      component: PhieuDatSanForList,
+      exact: true
+   },
+   {
+      path: '/quan-ly/phieu-dat-san/them-moi',
+      component: PhieuDatSanForCreate
+   },
+   {
+      path: '/quan-ly/phieu-dat-san/xem-thong-tin/:id',
+      component: PhieuDatSanForView
    },
 
    ///// CaiDat /////

@@ -142,6 +142,7 @@ class DonNhapHangForCreate extends Component {
       const settings = {
          entity: donNhapHang,
          api: apiRoutes.donNhapHang,
+         sumpriceProp: 'thanhTien',
          fields: [
             {
                label: 'Nhà cung cấp',
@@ -188,7 +189,7 @@ class DonNhapHangForCreate extends Component {
             {
                label: 'Ghi chú',
                propForValue: 'ghiChu',
-               placeholder: 'Nhập ghi chú về nhân viên (nếu có)',
+               placeholder: 'Nhập ghi chú về đơn nhập hàng (nếu có)',
                type: 'textarea'
             },
             {

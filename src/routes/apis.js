@@ -11,6 +11,8 @@ const baseDonNhapHangApi = baseApi + '/DonNhapHang'
 const baseChiTietDonNhapHangApi = baseApi + '/ChiTietDonNhapHang'
 const baseHoaDonDichVuApi = baseApi + '/HoaDonDichVu'
 const baseChiTietHoaDonDichVu = baseApi + '/ChiTietHDDV'
+const basePhieuDatSanApi = baseApi + '/PhieuDatSan'
+const baseChiTietPhieuDatSan = baseApi + '/ChiTietPhieuDatSan'
 
 export default {
    khachHang: {
@@ -92,6 +94,16 @@ export default {
    },
    chiTietHoaDonDichVu: {
       create: baseChiTietHoaDonDichVu + '/CreateMultiple'
+   },
+   phieuDatSan: {
+      getAll: basePhieuDatSanApi + '/GetAll',
+      create: basePhieuDatSanApi + '/Create',
+      getById: basePhieuDatSanApi + '/GetById',
+      create: basePhieuDatSanApi + '/Create',
+      deleteById: basePhieuDatSanApi + '/PermanentlyDeleteById'
+   },
+   chiTietPhieuDatSan: {
+      create: baseChiTietPhieuDatSan + '/CreateMultiple'
    },
    caiDat: {
       getAll: baseCaiDatApi + '/GetAll',

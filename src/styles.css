@@ -1229,6 +1229,12 @@ textarea.form-input-disabled {
    resize: none;
 }
 
+.react-time-picker__wrapper {
+   padding: 7px;
+   background: white;
+   border: 2px solid #edf0f5;
+}
+
 .loading-indicator {
    display: flex;
    flex-direction: column;

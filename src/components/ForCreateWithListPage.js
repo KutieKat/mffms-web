@@ -17,6 +17,8 @@ import { connect } from 'react-redux'
 import { showNotification } from '../redux/actions'
 import LoadingIndicator from './LoadingIndicator'
 import Select from 'react-select'
+import TimePicker from 'react-time-picker'
+import cloneDeep from 'clone-deep'
 
 const customStyles = {
    control: () => ({
@@ -25,6 +27,18 @@ const customStyles = {
       fontWeight: 'normal',
       paddingTop: '3px',
       paddingBottom: '2px'
+   })
+}
+
+const customStyles2 = {
+   control: () => ({
+      border: '2px solid #edf0f5',
+      display: 'flex',
+      fontWeight: 'normal',
+      paddingTop: '3px',
+      paddingBottom: '2px',
+      width: '200px',
+      background: 'white'
    })
 }
 
@@ -68,21 +82,40 @@ class ForCreateWithListPage extends Component {
 
    createDetails = (propKey, propValue) => {
       const { showErrorNotification, showSuccessNotification } = this
-      const stateDetails = this.state.details
+      const stateDetails = cloneDeep(this.state.details)
       const { history, settings } = this.props
       const { details, entity } = settings
       const { slug } = entity
       const { api } = details
       const url = api.create
 
-      return apiPost(
-         url,
-         stateDetails.map(detail => {
-            detail[propKey] = propValue
+      const postData = stateDetails.map(detail => {
+         detail[propKey] = propValue
 
-            return detail
-         })
-      )
+         if (
+            detail['thoiGianBatDau'] !== undefined &&
+            detail['thoiGianKetThuc'] !== undefined
+         ) {
+            const thoiGianBatDau = Math.floor(
+               new Date(
+                  `${detail['ngayDat']} ${detail['thoiGianBatDau']}:00`
+               ).getTime() / 1000
+            )
+
+            const thoiGianKetThuc = Math.floor(
+               new Date(
+                  `${detail['ngayDat']} ${detail['thoiGianKetThuc']}:00`
+               ).getTime() / 1000
+            )
+
+            detail['thoiGianBatDau'] = thoiGianBatDau
+            detail['thoiGianKetThuc'] = thoiGianKetThuc
+         }
+
+         return detail
+      })
+
+      return apiPost(url, postData)
          .then(response => {
             showSuccessNotification()
 
@@ -111,6 +144,7 @@ class ForCreateWithListPage extends Component {
             const propKey = Object.keys(data)[0]
             const propValue = data[propKey]
 
+            // console.log('Cailoz gì vậy?')
             createDetails(propKey, propValue)
          })
          .catch(error => {
@@ -140,7 +174,7 @@ class ForCreateWithListPage extends Component {
       const { editingData } = this.state
       const stateDetails = this.state.details
       const { settings } = this.props
-      const { details } = settings
+      const { details, sumpriceProp } = settings
       const { columns } = details
 
       if (typeof value === 'number') {
@@ -189,8 +223,8 @@ class ForCreateWithListPage extends Component {
 
       // Re-calculate sumprice
       let sumprice = 0
-      stateDetails.forEach(detail => (sumprice += Number(detail['thanhTien'])))
-      editingData['thanhTien'] = '' + sumprice
+      stateDetails.forEach(detail => (sumprice += Number(detail[sumpriceProp])))
+      editingData[sumpriceProp] = '' + sumprice
 
       this.setState({ details: stateDetails, editingData })
    }
@@ -296,8 +330,9 @@ class ForCreateWithListPage extends Component {
 
    initializeEditingData = (props = this.props) => {
       const { settings } = props
-      const { fields } = settings
-      let editingData = { thanhTien: '0' }
+      const { fields, sumpriceProp } = settings
+      let editingData = {}
+      editingData[sumpriceProp] = '0'
 
       fields.forEach(field => {
          const { type, propForValue } = field
@@ -580,6 +615,9 @@ class ForCreateWithListPage extends Component {
 
    renderErrors = () => {
       const { showAlert, errors, detailsErrors } = this.state
+      const { settings } = this.props
+      const { entity } = settings
+      const { name } = entity
 
       return (
          showAlert && (
@@ -606,7 +644,7 @@ class ForCreateWithListPage extends Component {
                            <ul>
                               <li>
                                  <strong>
-                                    Chi tiết đơn nhập hàng #{index + 1}
+                                    Chi tiết {name} #{index + 1}
                                  </strong>
                               </li>
 
@@ -960,7 +998,7 @@ class ForCreateWithListPage extends Component {
                   }
                   options={values}
                   placeholder={placeholder}
-                  styles={customStyles}
+                  styles={customStyles2}
                   onFocus={hideAlert}
                />
             )
@@ -984,6 +1022,17 @@ class ForCreateWithListPage extends Component {
                   onFocus={hideAlert}
                   disabled={disabled}
                ></textarea>
+            )
+         }
+
+         case 'time': {
+            return (
+               <TimePicker
+                  onChange={time =>
+                     changeDetailsData(time, propForValue, index)
+                  }
+                  value={deepGet(details[index], propForValue)}
+               />
             )
          }
       }
@@ -1083,6 +1132,16 @@ class ForCreateWithListPage extends Component {
                break
             }
 
+            case 'time': {
+               detail[propForValue] = '00:00'
+               break
+            }
+
+            case 'date': {
+               detail[propForValue] = moment().format('YYYY-MM-DD')
+               break
+            }
+
             case 'calculation': {
                detail[propForValue] = 0
                break
@@ -1127,7 +1186,6 @@ class ForCreateWithListPage extends Component {
    }
 
    render() {
-      console.log('STATE: ', this.state)
       const { renderComponent } = this
 
       return renderComponent()
