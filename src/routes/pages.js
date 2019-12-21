@@ -62,12 +62,14 @@ import HoaDonDichVuForCreate from '../pages/HoaDonDichVu/HoaDonDichVuForCreate'
 import HoaDonDichVuForList from '../pages/HoaDonDichVu/HoaDonDichVuForList'
 import HoaDonDichVuForView from '../pages/HoaDonDichVu/HoaDonDichVuForView'
 import HoaDonDichVuForStats from '../pages/HoaDonDichVu/HoaDonDichVuForStats'
+import HoaDonDichVuForUpdate from '../pages/HoaDonDichVu/HoaDonDichVuForUpdate'
 
 ///// PhieuDatSan /////
 import PhieuDatSanForCreate from '../pages/PhieuDatSan/PhieuDatSanForCreate'
 import PhieuDatSanForList from '../pages/PhieuDatSan/PhieuDatSanForList'
 import PhieuDatSanForView from '../pages/PhieuDatSan/PhieuDatSanForView'
 import PhieuDatSanForStats from '../pages/PhieuDatSan/PhieuDatSanForStats'
+import PhieuDatSanForUpdate from '../pages/PhieuDatSan/PhieuDatSanForUpdate'
 
 ///// CaiDat /////
 import CaiDatForUpdate from '../pages/CaiDat/CaiDatForUpdate'
@@ -268,6 +270,10 @@ export default [
       path: '/thong-ke/don-nhap-hang',
       component: DonNhapHangForStats
    },
+   {
+      path: '/quan-ly/don-nhap-hang/cap-nhat/:id',
+      component: DonNhapHangForUpdate
+   },
 
    ///// HoaDonDichVu /////
    {
@@ -287,6 +293,10 @@ export default [
       path: '/thong-ke/hoa-don-dich-vu',
       component: HoaDonDichVuForStats
    },
+   {
+      path: '/quan-ly/hoa-don-dich-vu/cap-nhat/:id',
+      component: HoaDonDichVuForUpdate
+   },
 
    ///// PhieuDatSan /////
    {
@@ -305,6 +315,10 @@ export default [
    {
       path: '/thong-ke/phieu-dat-san',
       component: PhieuDatSanForStats
+   },
+   {
+      path: '/quan-ly/phieu-dat-san/cap-nhat/:id',
+      component: PhieuDatSanForUpdate
    },
 
    ///// CaiDat /////
