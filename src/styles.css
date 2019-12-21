@@ -170,6 +170,7 @@ ul {
 
 .section {
    padding: 24px;
+   padding-bottom: 0;
 }
 
 .section__title {
@@ -1056,6 +1057,26 @@ input[type='file'] {
       background-color: transparent;
       color: #111;
    }
+
+   .printing-page .chart-section__title {
+      font-weight: 600;
+      font-size: 16px;
+   }
+
+   .printing-page + .chart-sections-wrapper {
+      padding: 0;
+      margin: 0;
+   }
+
+   .printing-page + .chart-sections-wrapper .chart-section {
+      padding: 0 62px;
+      margin: 0;
+      margin-bottom: 12px;
+   }
+
+   /* .printing-page .chart-section {
+      width: 100px;
+   } */
 }
 
 .section-h5 {
@@ -1269,6 +1290,11 @@ textarea.form-input-disabled {
 
 .chart-section:not(:first-child) {
    margin-top: 32px;
+}
+
+.chart-sections-wrapper {
+   padding: 0 24px;
+   padding-bottom: 24px;
 }
 
 .loading-indicator {

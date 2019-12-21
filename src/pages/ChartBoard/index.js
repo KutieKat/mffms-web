@@ -6,20 +6,16 @@ import {
    print,
    apiGet,
    formatDateString,
-   deepGet,
-   excelFormat
+   deepGet
 } from '../../utils'
 import LoadingIndicator from '../../components/LoadingIndicator'
 import { STATS_TABS, LONG_FETCHING_DATA_INTERVAL } from '../../constants'
-import CountUp from 'react-countup'
 import moment from 'moment'
 import { DateRangePicker } from 'react-date-range'
 import Dialog from '../../components/Dialog'
-import ForStatsPrintPage from '../../components/ForStatsPrintPage'
+import ForChartsPrintPage from '../../components/ForChartsPrintPage'
 import { connect } from 'react-redux'
 import { showNotification } from '../../redux/actions'
-import Excel from 'exceljs'
-import { saveAs } from 'file-saver'
 import apiRoutes from '../../routes/apis'
 import ExportReportDialog from '../../components/ExportReportDialog'
 import cloneDeep from 'clone-deep'
@@ -301,134 +297,6 @@ class ForStatsPage extends Component {
       showSuccessNotification()
    }
 
-   exportToXlsx = () => {
-      const { showSuccessNotification } = this
-      const { data, settingsData } = this.state
-      const {
-         tenSanBong,
-         diaChi,
-         diaChiTrenPhieu,
-         soDienThoai,
-         fax
-      } = settingsData
-      const { settings } = this.props
-      const { entity, cards } = settings
-      const { name, slug } = entity
-      const fileName = `thong-ke-${slug}-${moment().format('DDMMYYYY')}`
-      let workbook = new Excel.Workbook()
-      let worksheet = workbook.addWorksheet(moment().format('DD-MM-YYYY'), {
-         pageSetup: { fitToPage: true, orientation: 'portrait' }
-      })
-      let currentRowCount = 7
-
-      workbook.Props = {
-         Title: fileName,
-         Subject: `Thống kê ${name}`,
-         Author: 'MFFMS',
-         CreatedDate: moment()
-      }
-
-      worksheet.mergeCells('A1:G1')
-      worksheet.getCell('A1').value = tenSanBong
-      worksheet.getCell('A1').font = excelFormat.boldFont
-
-      worksheet.mergeCells('A2:G2')
-      worksheet.getCell('A2').value = diaChi
-      worksheet.getCell('A2').font = excelFormat.boldFont
-
-      worksheet.mergeCells('A3:G3')
-      worksheet.getCell(
-         'A3'
-      ).value = `Số điện thoại: ${soDienThoai} - Fax: ${fax}`
-      worksheet.getCell('A3').font = excelFormat.boldFont
-
-      worksheet.mergeCells('A5:M5')
-      worksheet.getCell('M5').value = `THỐNG KÊ ${name.toUpperCase()}`
-      worksheet.getCell('M5').font = { ...excelFormat.boldFont, size: 18 }
-      worksheet.getCell('M5').alignment = excelFormat.center
-
-      cards.forEach((card, index) => {
-         const { label, propForValue, unit } = card
-
-         worksheet.mergeCells(`B${currentRowCount}:D${currentRowCount}`)
-         worksheet.mergeCells(`E${currentRowCount}:L${currentRowCount}`)
-
-         worksheet.getCell(`B${currentRowCount}`).value = `${label} (${unit})`
-         worksheet.getCell(`B${currentRowCount}`).font = excelFormat.boldFont
-         worksheet.getCell(`B${currentRowCount}`).alignment = excelFormat.left
-
-         worksheet.getCell(`E${currentRowCount}`).value = deepGet(
-            data,
-            propForValue
-         )
-         worksheet.getCell(`E${currentRowCount}`).font = excelFormat.normalFont
-         worksheet.getCell(`E${currentRowCount}`).alignment = excelFormat.left
-
-         currentRowCount += index !== cards.length - 1 ? 2 : 0
-      })
-
-      worksheet.mergeCells(
-         'G' + (currentRowCount + 2) + ':M' + (currentRowCount + 2)
-      )
-      worksheet.getCell(
-         'G' + (currentRowCount + 2)
-      ).value = `${diaChiTrenPhieu}, ngày ${moment().format(
-         'DD'
-      )} tháng ${moment().format('MM')} năm ${moment().format('YYYY')}`
-      worksheet.getCell('G' + (currentRowCount + 2)).font =
-         excelFormat.italicFont
-      worksheet.getCell('G' + (currentRowCount + 2)).alignment =
-         excelFormat.right
-
-      worksheet.mergeCells(
-         'B' + (currentRowCount + 4) + ':D' + (currentRowCount + 4)
-      )
-      worksheet.getCell('B' + (currentRowCount + 4)).value = `NGƯỜI DUYỆT`
-      worksheet.getCell('B' + (currentRowCount + 4)).font = excelFormat.boldFont
-      worksheet.getCell('B' + (currentRowCount + 4)).alignment =
-         excelFormat.center
-
-      worksheet.mergeCells(
-         'J' + (currentRowCount + 4) + ':L' + (currentRowCount + 4)
-      )
-      worksheet.getCell('J' + (currentRowCount + 4)).value = `NGƯỜI LẬP`
-      worksheet.getCell('J' + (currentRowCount + 4)).font = excelFormat.boldFont
-      worksheet.getCell('J' + (currentRowCount + 4)).alignment =
-         excelFormat.center
-
-      worksheet.mergeCells(
-         'A' + (currentRowCount + 5) + ':E' + (currentRowCount + 5)
-      )
-      worksheet.getCell(
-         'A' + (currentRowCount + 5)
-      ).value = `(Ký và ghi rõ họ tên)`
-      worksheet.getCell('A' + (currentRowCount + 5)).font =
-         excelFormat.italicFont
-      worksheet.getCell('A' + (currentRowCount + 5)).alignment =
-         excelFormat.center
-
-      worksheet.mergeCells(
-         'I' + (currentRowCount + 5) + ':M' + (currentRowCount + 5)
-      )
-      worksheet.getCell(
-         'I' + (currentRowCount + 5)
-      ).value = `(Ký và ghi rõ họ tên)`
-      worksheet.getCell('I' + (currentRowCount + 5)).font =
-         excelFormat.italicFont
-      worksheet.getCell('I' + (currentRowCount + 5)).alignment =
-         excelFormat.center
-
-      workbook.xlsx.writeBuffer().then(function(data) {
-         var blob = new Blob([data], {
-            type:
-               'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-         })
-         saveAs(blob, fileName)
-      })
-
-      showSuccessNotification()
-   }
-
    toggleExportReportDialog = () => {
       const { showExportReportDialog } = this.state
 
@@ -467,7 +335,6 @@ class ForStatsPage extends Component {
 
    renderSectionHeaderRight = () => {
       const { refresh, toggleExportReportDialog } = this
-      const { data } = this.state
 
       return (
          <Fragment>
@@ -475,11 +342,9 @@ class ForStatsPage extends Component {
                <i className="fas fa-redo"></i>&nbsp;&nbsp;Tải lại
             </span>
 
-            {data !== null && (
-               <span className="button" onClick={toggleExportReportDialog}>
-                  <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
-               </span>
-            )}
+            <span className="button" onClick={toggleExportReportDialog}>
+               <i className="fas fa-file-export"></i>&nbsp;&nbsp;Xuất báo cáo
+            </span>
          </Fragment>
       )
    }
@@ -489,12 +354,8 @@ class ForStatsPage extends Component {
          renderSectionHeaderRight,
          renderTabs,
          renderCharts,
-         renderCards,
          renderDateRangePickers
       } = this
-      // const { settings } = this.props
-      // const { entity } = settings
-      // const { name } = entity
       const generalStatsSection = {
          title: `Biểu đồ thống kê tổng quan`,
          subtitle: `Biểu đồ thống kê tổng quan về số liệu trên hệ thống`,
@@ -506,10 +367,14 @@ class ForStatsPage extends Component {
          <Fragment>
             <Section section={generalStatsSection}>
                {renderTabs()}
-               {renderCharts()}
-               {/* {renderCards()} */}
                {renderDateRangePickers()}
             </Section>
+
+            <div className="chart-sections">
+               <ForChartsPrintPage settings={{ section: 'header' }} />
+               <div className="chart-sections-wrapper">{renderCharts()}</div>
+               <ForChartsPrintPage settings={{ section: 'footer' }} />
+            </div>
          </Fragment>
       )
    }
@@ -594,7 +459,6 @@ class ForStatsPage extends Component {
          Array.isArray(rawData) &&
          rawData.map(record => moment(record.thoiGian).format('DD/MM/YYYY'))
 
-      // https://github.com/jerairrest/react-chartjs-2
       data['datasets'] = [
          {
             label: getLabelForPropName(propName),
@@ -606,50 +470,10 @@ class ForStatsPage extends Component {
 
       return (
          <div className="chart-section">
-            <h4>{getLabelForPropName(propName)}</h4>
+            <h4 className="chart-section__title">
+               {getLabelForPropName(propName)}
+            </h4>
             <Bar data={data} width="50%" height="20vh" />
-         </div>
-      )
-   }
-
-   renderCards = () => {
-      const { renderCard } = this
-      const { data } = this.state
-      const { settings } = this.props
-      const { cards } = settings
-
-      return (
-         <div className="stats-cards">
-            {cards.map((cardMeta, index) => {
-               const { propForValue } = cardMeta
-
-               return renderCard(cardMeta, data && data[propForValue], index)
-            })}
-         </div>
-      )
-   }
-
-   renderCard = (cardMeta, cardData, index) => {
-      const { label, icon, unit } = cardMeta
-
-      return (
-         <div className="stats-card" key={index}>
-            <div className="stats-card__label">
-               <i className={icon}></i>&nbsp;&nbsp; {label}
-            </div>
-
-            <div className="stats-card__body">
-               <div className="stats-card__value">
-                  <CountUp
-                     start={0}
-                     end={cardData || 0}
-                     duration={2.75}
-                     separator=","
-                  />
-               </div>
-
-               <div className="stats-card__unit">Đơn vị tính: {unit}</div>
-            </div>
          </div>
       )
    }
@@ -677,17 +501,12 @@ class ForStatsPage extends Component {
    }
 
    renderDialogs = () => {
-      const { toggleExportReportDialog, exportToPdf, exportToXlsx } = this
+      const { toggleExportReportDialog, exportToPdf } = this
       const { showExportReportDialog, data } = this.state
-      const { settings } = this.props
-      const { entity } = settings
       const dialogSettings = {
          isOpen: showExportReportDialog,
          onClose: toggleExportReportDialog,
-         onExportToPdf: exportToPdf,
-         onExportToXlsx: exportToXlsx,
-         entity,
-         data
+         onExportToPdf: exportToPdf
       }
 
       return (
@@ -698,23 +517,14 @@ class ForStatsPage extends Component {
    }
 
    renderComponent = () => {
-      const { renderHeader, renderBody, renderDialogs } = this
-      const { data, loading } = this.state
-      // const { settings } = this.props
-      // const { entity, cards } = settings
-      // const printSettings = {
-      //    entity,
-      //    cards,
-      //    data
-      // }
+      const { renderHeader, renderBody, renderDialogs, renderCharts } = this
+      const { loading } = this.state
 
       return (
          <LoadingIndicator isLoading={loading}>
             {renderHeader()}
             {renderBody()}
-            {/* {renderDialogs()} */}
-
-            {/* <ForStatsPrintPage settings={printSettings} /> */}
+            {renderDialogs()}
          </LoadingIndicator>
       )
    }
