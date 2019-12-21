@@ -247,10 +247,10 @@ class ForDetailsPrintPage extends Component {
       const { name } = entity
 
       return (
-         <div>
-            <h4>Chi tiết {name}</h4>
+         <div className="details-section">
+            <h4 className="details-section__title">Chi tiết {name}</h4>
 
-            <table className="table">
+            <table className="table details-section__table">
                <thead>
                   <tr>
                      <th>STT</th>

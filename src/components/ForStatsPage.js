@@ -575,7 +575,9 @@ class ForStatsPage extends Component {
                   />
                </div>
 
-               <div className="stats-card__unit">Đơn vị tính: {unit}</div>
+               {unit !== undefined && (
+                  <div className="stats-card__unit">Đơn vị tính: {unit}</div>
+               )}
             </div>
          </div>
       )
