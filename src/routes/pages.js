@@ -56,6 +56,7 @@ import DonNhapHangForCreate from '../pages/DonNhapHang/DonNhapHangForCreate'
 import DonNhapHangForList from '../pages/DonNhapHang/DonNhapHangForList'
 import DonNhapHangForView from '../pages/DonNhapHang/DonNhapHangForView'
 import DonNhapHangForStats from '../pages/DonNhapHang/DonNhapHangForStats'
+import DonNhapHangForUpdate from '../pages/DonNhapHang/DonNhapHangForUpdate'
 
 ///// HoaDonDichVu /////
 import HoaDonDichVuForCreate from '../pages/HoaDonDichVu/HoaDonDichVuForCreate'
