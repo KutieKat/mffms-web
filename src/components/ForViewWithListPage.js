@@ -7,14 +7,15 @@ import {
    isEmptyObj,
    isPhoneNumber,
    apiGet,
-   apiPost,
    scrollTop,
    isBefore,
    isValidEmail,
    deepGet,
    numberWithCommas,
    formatDateString,
-   print
+   print,
+   getColumnsOrdinates,
+   getLetterByIndex
 } from '../utils'
 import { connect } from 'react-redux'
 import { showNotification } from '../redux/actions'
@@ -68,12 +69,6 @@ class ForViewWithListPage extends Component {
 
    ///// METHODS FOR REACT LIFECYCLES /////
 
-   // componentWillMount() {
-   //    const { fetchData } = this
-
-   //    fetchData()
-   // }
-
    componentDidMount() {
       const { fetchSettingsData } = this
 
@@ -88,59 +83,7 @@ class ForViewWithListPage extends Component {
       this.setState({ editingData }, fetchData)
    }
 
-   //    componentDidMount() {
-   //       scrollTop()
-   //    }
-
-   //    componentWillReceiveProps(nextProps) {
-   //       const { initializeEditingData } = this
-   //       const editingData = initializeEditingData(nextProps)
-
-   //       this.setState({ editingData })
-   //    }
-
    ///// METHODS FOR INTERACTING WITH API /////
-
-   //    createDetails = async () => {
-   //       const stateDetails = this.state.details
-   //       const { settings } = this.props
-   //       const { details } = settings
-   //       const { api } = details
-   //       const url = api.create
-
-   //       for (let i = 0; i < stateDetails.length; i++) {
-   //          const detail = details[i]
-   //          await apiPost(url, detail)
-   //       }
-   //    }
-
-   //    createRecord = async () => {
-   //       const {
-   //          showErrorNotification,
-   //          showSuccessNotification,
-   //          createDetails
-   //       } = this
-   //       const { editingData } = this.state
-   //       const { settings, history } = this.props
-   //       const { api, entity } = settings
-   //       const { slug } = entity
-   //       const url = api.create
-
-   //       return apiPost(url, editingData)
-   //          .then(response => {
-   //             showSuccessNotification()
-   //             this.setState({ loading: false }, () => {
-   //                createDetails()
-   //                history.push(`/quan-ly/${slug}`)
-   //             })
-   //          })
-   //          .catch(error => {
-   //             showErrorNotification()
-   //             this.setState({ loading: false })
-   //             // const { errors } = error.response.data.result
-   //             // this.setState({ showAlert: true })
-   //          })
-   //    }
 
    fetchSettingsData = async () => {
       const { caiDat } = apiRoutes
@@ -365,8 +308,9 @@ class ForViewWithListPage extends Component {
    }
 
    exportToXlsx = () => {
-      const { showSuccessNotification } = this
+      const { showSuccessNotification, getCellValue } = this
       const { editingData, settingsData } = this.state
+      const stateDetails = this.state.details
       const data = editingData
       const {
          tenSanBong,
@@ -376,9 +320,11 @@ class ForViewWithListPage extends Component {
          fax
       } = settingsData
       const { settings } = this.props
-      const { entity, fields } = settings
+      const { entity, fields, details } = settings
+      const { columns } = details
       const { name, slug } = entity
       const fileName = `thong-tin-${slug}-${moment().format('DDMMYYYY')}`
+      const endLetter = getLetterByIndex(columns.length * 3)
       let workbook = new Excel.Workbook()
       let worksheet = workbook.addWorksheet(moment().format('DD-MM-YYYY'), {
          pageSetup: { fitToPage: true, orientation: 'portrait' }
@@ -437,7 +383,65 @@ class ForViewWithListPage extends Component {
          worksheet.getCell(`E${currentRowCount}`).font = excelFormat.normalFont
          worksheet.getCell(`E${currentRowCount}`).alignment = excelFormat.left
 
-         currentRowCount += index !== fields.length - 1 ? 2 : 0
+         currentRowCount += 2
+      })
+
+      worksheet.getCell(`A${currentRowCount}`).value = 'STT'
+      worksheet.getCell(`A${currentRowCount}`).font = excelFormat.boldFont
+      worksheet.getCell(`A${currentRowCount}`).alignment = excelFormat.center
+      worksheet.getCell(`A${currentRowCount}`).border = excelFormat.border
+
+      getColumnsOrdinates(
+         'B',
+         endLetter,
+         columns.length,
+         currentRowCount
+      ).forEach((columnOrdinate, index) => {
+         const { label } = columns[index]
+         const cellOrdinate = columnOrdinate.split(':')[0]
+
+         worksheet.mergeCells(columnOrdinate)
+         worksheet.getCell(cellOrdinate).value = label
+         worksheet.getCell(cellOrdinate).alignment = excelFormat.center
+         worksheet.getCell(cellOrdinate).font = excelFormat.boldFont
+         worksheet.getCell(cellOrdinate).border = excelFormat.border
+      })
+
+      currentRowCount += 1
+
+      stateDetails.forEach((record, recordIndex) => {
+         const columnOrdinates = getColumnsOrdinates(
+            'B',
+            endLetter,
+            columns.length,
+            currentRowCount
+         )
+
+         ;['', ...columns].forEach((column, index) => {
+            if (index === 0) {
+               worksheet.mergeCells(`A${currentRowCount}:A${currentRowCount}`)
+               worksheet.getCell(`A${currentRowCount}`).value = recordIndex + 1
+               worksheet.getCell(`A${currentRowCount}`).font =
+                  excelFormat.boldFont
+               worksheet.getCell(`A${currentRowCount}`).alignment =
+                  excelFormat.center
+               worksheet.getCell(`A${currentRowCount}`).border =
+                  excelFormat.border
+            } else {
+               const columnOrdinate = columnOrdinates[index - 1]
+               const cellOrdinate = columnOrdinate.split(':')[0]
+               worksheet.mergeCells(columnOrdinate)
+               worksheet.getCell(cellOrdinate).value = getCellValue(
+                  column,
+                  record
+               )
+               worksheet.getCell(cellOrdinate).alignment = excelFormat.center
+               worksheet.getCell(cellOrdinate).font = excelFormat.normalFont
+               worksheet.getCell(cellOrdinate).border = excelFormat.border
+            }
+         })
+
+         currentRowCount += 1
       })
 
       worksheet.mergeCells(
@@ -509,6 +513,33 @@ class ForViewWithListPage extends Component {
    }
 
    ///// METHODS FOR COMPUTING VALUES /////
+
+   getCellValue = (column, record) => {
+      const { type, propForValue } = column
+      const value = deepGet(record, propForValue)
+
+      switch (type) {
+         case 'date': {
+            return formatDateString(value)
+         }
+
+         case 'number': {
+            return numberWithCommas(value)
+         }
+
+         case 'string': {
+            return value
+         }
+
+         case 'time': {
+            return moment(new Date(Number(value) * 1000)).format('HH:mm:ss')
+         }
+
+         default: {
+            return value
+         }
+      }
+   }
 
    getPrefetchedValue = (column, index) => {
       const { details } = this.state
