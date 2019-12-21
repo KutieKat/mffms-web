@@ -9,7 +9,7 @@ import {
    apiGet,
    apiPut,
    scrollTop,
-   isAfter,
+   isBefore,
    isValidEmail
 } from '../utils'
 import { connect } from 'react-redux'
@@ -240,10 +240,10 @@ class ForUpdatePage extends Component {
                break
             }
 
-            case 'isAfter': {
+            case 'isBefore': {
                const { date } = validator
 
-               if (!isAfter(data, date)) {
+               if (!isBefore(data, date)) {
                   errors.push(message)
                }
 

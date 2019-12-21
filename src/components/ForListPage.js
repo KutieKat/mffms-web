@@ -109,7 +109,7 @@ class ForListPage extends Component {
    ///// METHODS FOR INTERACTING WITH API /////
 
    fetchSettingsData = async () => {
-      const caiDat = { apiRoutes }
+      const { caiDat } = apiRoutes
       const url = caiDat.getAll
 
       try {

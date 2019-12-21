@@ -8,7 +8,7 @@ import {
    isPhoneNumber,
    apiPost,
    scrollTop,
-   isAfter,
+   isBefore,
    isValidEmail
 } from '../utils'
 import { connect } from 'react-redux'
@@ -214,10 +214,10 @@ class ForCreatePage extends Component {
                break
             }
 
-            case 'isAfter': {
+            case 'isBefore': {
                const { date } = validator
 
-               if (!isAfter(data, date)) {
+               if (!isBefore(data, date)) {
                   errors.push(message)
                }
 

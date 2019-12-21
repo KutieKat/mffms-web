@@ -142,7 +142,8 @@ class DonNhapHangForCreate extends Component {
       const settings = {
          entity: donNhapHang,
          api: apiRoutes.donNhapHang,
-         sumpriceProp: 'thanhTien',
+         sumPriceProp: 'thanhTien',
+         elemPriceProp: 'thanhTien',
          fields: [
             {
                label: 'Nhà cung cấp',

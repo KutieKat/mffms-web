@@ -129,7 +129,7 @@ class DonNhapHangForView extends Component {
                {
                   label: 'Đơn giá (VNĐ)',
                   propForValue: 'donGia',
-                  type: 'input'
+                  type: 'number'
                },
                {
                   label: 'Đơn vị tính',
@@ -139,12 +139,12 @@ class DonNhapHangForView extends Component {
                {
                   label: 'Số lượng',
                   propForValue: 'soLuong',
-                  type: 'input'
+                  type: 'number'
                },
                {
                   label: 'Thành tiền (VNĐ)',
                   propForValue: 'thanhTien',
-                  type: 'input'
+                  type: 'number'
                }
             ]
          }

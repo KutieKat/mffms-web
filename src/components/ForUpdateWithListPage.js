@@ -9,7 +9,7 @@ import {
    apiGet,
    apiPost,
    scrollTop,
-   isAfter,
+   isBefore,
    isValidEmail,
    deepGet,
    numberWithCommas,
@@ -656,10 +656,10 @@ class ForViewWithListPage extends Component {
                break
             }
 
-            case 'isAfter': {
+            case 'isBefore': {
                const { date } = validator
 
-               if (!isAfter(data, date)) {
+               if (!isBefore(data, date)) {
                   errors.push(message)
                }
 

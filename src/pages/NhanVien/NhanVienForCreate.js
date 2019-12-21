@@ -51,7 +51,7 @@ class NhanVienForCreate extends Component {
                         'Ngày sinh của nhân viên là thông tin bắt buộc và không được để trống!'
                   },
                   {
-                     rule: 'isAfter',
+                     rule: 'isBefore',
                      date: moment.utc().startOf('day'),
                      message:
                         'Ngày sinh của nhân viên phải nhỏ hơn hoặc bằng ngày hiện tại!'

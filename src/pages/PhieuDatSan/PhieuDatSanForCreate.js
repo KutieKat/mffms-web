@@ -192,7 +192,8 @@ class PhieuDatSanForCreate extends Component {
       const settings = {
          entity: phieuDatSan,
          api: apiRoutes.phieuDatSan,
-         sumpriceProp: 'tongTien',
+         sumPriceProp: 'tongTien',
+         elemPriceProp: 'thanhTien',
          fields: [
             {
                label: 'Khách hàng',
@@ -223,12 +224,6 @@ class PhieuDatSanForCreate extends Component {
                   }
                ]
             }
-            // {
-            //    label: 'Ghi chú',
-            //    propForValue: 'ghiChu',
-            //    placeholder: 'Nhập ghi chú về phiếu đặt sân (nếu có)',
-            //    type: 'textarea'
-            // }
          ],
          details: {
             entity: chiTietPhieuDatSan,
@@ -281,7 +276,7 @@ class PhieuDatSanForCreate extends Component {
                },
                {
                   label: 'Thành tiền (VNĐ)',
-                  propForValue: 'tongTien',
+                  propForValue: 'thanhTien',
                   type: 'input',
                   validators: [
                      {

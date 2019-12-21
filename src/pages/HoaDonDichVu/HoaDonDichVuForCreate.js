@@ -145,7 +145,8 @@ class HoaDonDichVuForCreate extends Component {
       const settings = {
          entity: hoaDonDichVu,
          api: apiRoutes.hoaDonDichVu,
-         sumpriceProp: 'thanhTien',
+         sumPriceProp: 'thanhTien',
+         elemPriceProp: 'thanhTien',
          fields: [
             {
                label: 'Khách hàng',

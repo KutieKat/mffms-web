@@ -8,7 +8,7 @@ import {
    isPhoneNumber,
    apiPost,
    scrollTop,
-   isAfter,
+   isBefore,
    isValidEmail,
    deepGet,
    numberWithCommas
@@ -174,7 +174,7 @@ class ForCreateWithListPage extends Component {
       const { editingData } = this.state
       const stateDetails = this.state.details
       const { settings } = this.props
-      const { details, sumpriceProp } = settings
+      const { details, sumPriceProp, elemPriceProp } = settings
       const { columns } = details
 
       if (typeof value === 'number') {
@@ -222,9 +222,11 @@ class ForCreateWithListPage extends Component {
       }
 
       // Re-calculate sumprice
-      let sumprice = 0
-      stateDetails.forEach(detail => (sumprice += Number(detail[sumpriceProp])))
-      editingData[sumpriceProp] = '' + sumprice
+      let sumPrice = 0
+      stateDetails.forEach(
+         detail => (sumPrice += Number(detail[elemPriceProp]))
+      )
+      editingData[sumPriceProp] = '' + sumPrice
 
       this.setState({ details: stateDetails, editingData })
    }
@@ -463,10 +465,10 @@ class ForCreateWithListPage extends Component {
                break
             }
 
-            case 'isAfter': {
+            case 'isBefore': {
                const { date } = validator
 
-               if (!isAfter(data, date)) {
+               if (!isBefore(data, date)) {
                   errors.push(message)
                }
 

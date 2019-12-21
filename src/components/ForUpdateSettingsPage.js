@@ -9,7 +9,7 @@ import {
    apiGet,
    apiPut,
    scrollTop,
-   isAfter
+   isBefore
 } from '../utils'
 import LoadingIndicator from './LoadingIndicator'
 
@@ -223,10 +223,10 @@ class ForUpdateSettingsPage extends Component {
                break
             }
 
-            case 'isAfter': {
+            case 'isBefore': {
                const { date } = validator
 
-               if (!isAfter(data, date)) {
+               if (!isBefore(data, date)) {
                   errors.push(message)
                }
 

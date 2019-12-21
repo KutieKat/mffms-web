@@ -245,12 +245,12 @@ class PhieuDatSanForView extends Component {
                {
                   label: 'Thành tiền (VNĐ)',
                   propForValue: 'thanhTien',
-                  type: 'input'
+                  type: 'number'
                },
                {
                   label: 'Số tiền đã thanh toán (VNĐ)',
                   propForValue: 'tienCoc',
-                  type: 'input'
+                  type: 'number'
                }
             ]
          }
