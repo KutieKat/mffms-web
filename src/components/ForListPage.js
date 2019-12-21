@@ -9,7 +9,8 @@ import {
    apiGet,
    print,
    getColumnsOrdinates,
-   deepGet
+   deepGet,
+   getLetterByIndex
 } from '../utils'
 import axios from 'axios'
 import { debounce } from 'debounce'
@@ -430,6 +431,7 @@ class ForListPage extends Component {
       const { entity, columns } = settings
       const { name, slug } = entity
       const fileName = `danh-sach-${slug}-${moment().format('DDMMYYYY')}`
+      const endLetter = getLetterByIndex(columns.length * 3)
       let workbook = new Excel.Workbook()
       let worksheet = workbook.addWorksheet(moment().format('DD-MM-YYYY'), {
          pageSetup: { fitToPage: true, orientation: 'portrait' }
@@ -470,25 +472,28 @@ class ForListPage extends Component {
       worksheet.getCell('A7').alignment = excelFormat.center
       worksheet.getCell('A7').border = excelFormat.border
 
-      getColumnsOrdinates('B', 'P', columns.length, currentRowCount).forEach(
-         (columnOrdinate, index) => {
-            const { text } = columns[index]
-            const cellOrdinate = columnOrdinate.split(':')[0]
+      getColumnsOrdinates(
+         'B',
+         endLetter,
+         columns.length,
+         currentRowCount
+      ).forEach((columnOrdinate, index) => {
+         const { text } = columns[index]
+         const cellOrdinate = columnOrdinate.split(':')[0]
 
-            worksheet.mergeCells(columnOrdinate)
-            worksheet.getCell(cellOrdinate).value = text
-            worksheet.getCell(cellOrdinate).alignment = excelFormat.center
-            worksheet.getCell(cellOrdinate).font = excelFormat.boldFont
-            worksheet.getCell(cellOrdinate).border = excelFormat.border
-         }
-      )
+         worksheet.mergeCells(columnOrdinate)
+         worksheet.getCell(cellOrdinate).value = text
+         worksheet.getCell(cellOrdinate).alignment = excelFormat.center
+         worksheet.getCell(cellOrdinate).font = excelFormat.boldFont
+         worksheet.getCell(cellOrdinate).border = excelFormat.border
+      })
 
       currentRowCount += 1
 
       data.forEach((record, recordIndex) => {
          const columnOrdinates = getColumnsOrdinates(
             'B',
-            'P',
+            endLetter,
             columns.length,
             currentRowCount
          )
