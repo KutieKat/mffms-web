@@ -87,20 +87,24 @@ export default {
       create: baseDonNhapHangApi + '/Create',
       getById: baseDonNhapHangApi + '/GetById',
       create: baseDonNhapHangApi + '/Create',
+      updateById: baseDonNhapHangApi + '/UpdateById',
       deleteById: baseDonNhapHangApi + '/PermanentlyDeleteById'
    },
    chiTietDonNhapHang: {
-      create: baseChiTietDonNhapHangApi + '/CreateMultiple'
+      create: baseChiTietDonNhapHangApi + '/CreateMultiple',
+      updateById: baseChiTietDonNhapHangApi + '/UpdateById'
    },
    hoaDonDichVu: {
       getGeneralStats: baseHoaDonDichVuApi + '/GetGeneralStatistics',
       getAll: baseHoaDonDichVuApi + '/GetAll',
       getById: baseHoaDonDichVuApi + '/GetById',
       create: baseHoaDonDichVuApi + '/Create',
+      updateById: baseHoaDonDichVuApi + '/UpdateById',
       deleteById: baseHoaDonDichVuApi + '/PermanentlyDeleteById'
    },
    chiTietHoaDonDichVu: {
-      create: baseChiTietHoaDonDichVuApi + '/CreateMultiple'
+      create: baseChiTietHoaDonDichVuApi + '/CreateMultiple',
+      updateById: baseChiTietHoaDonDichVuApi + '/UpdateById'
    },
    phieuDatSan: {
       getGeneralStats: basePhieuDatSanApi + '/GetGeneralStatistics',
@@ -108,10 +112,12 @@ export default {
       create: basePhieuDatSanApi + '/Create',
       getById: basePhieuDatSanApi + '/GetById',
       create: basePhieuDatSanApi + '/Create',
+      updateById: basePhieuDatSanApi + '/UpdateById',
       deleteById: basePhieuDatSanApi + '/PermanentlyDeleteById'
    },
    chiTietPhieuDatSan: {
-      create: baseChiTietPhieuDatSanApi + '/CreateMultiple'
+      create: baseChiTietPhieuDatSanApi + '/CreateMultiple',
+      updateById: baseChiTietPhieuDatSanApi + '/UpdateById'
    },
    thongKe: {
       tongSoLuotDatSan: baseThongKeApi + '/TongSoLuotDatSan',

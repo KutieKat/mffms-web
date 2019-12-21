@@ -218,7 +218,6 @@ class HoaDonDichVuForCreate extends Component {
          details: {
             entity: chiTietHoaDonDichVu,
             api: apiRoutes.chiTietHoaDonDichVu,
-            // uniqueKeys: ['maDichVu'],
             columns: [
                {
                   label: 'Dịch vụ',

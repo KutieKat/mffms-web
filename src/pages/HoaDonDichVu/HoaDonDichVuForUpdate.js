@@ -1,19 +1,21 @@
 import React, { Component } from 'react'
-import ForViewPage from '../../components/ForViewWithListPage'
+import ForUpdatePage from '../../components/ForUpdateWithListPage'
 import { hoaDonDichVu, chiTietHoaDonDichVu } from '../../entities'
 import apiRoutes from '../../routes/apis'
 import { apiGet } from '../../utils'
 
-class HoaDonDichVuForView extends Component {
+class HoaDonDichVuForUpdate extends Component {
    constructor(props) {
       super(props)
 
       this.state = {
-         services: []
+         employees: [],
+         services: [],
+         customers: []
       }
    }
 
-   // ////// METHODS FOR REACT LIFECYCLES /////
+   ////// METHODS FOR REACT LIFECYCLES /////
 
    componentDidMount() {
       const { fetchData } = this
@@ -21,12 +23,14 @@ class HoaDonDichVuForView extends Component {
       fetchData()
    }
 
-   // ///// METHODS FOR INTERACTING WITH API /////
+   ///// METHODS FOR INTERACTING WITH API /////
 
    fetchData = () => {
-      const { fetchServices } = this
+      const { fetchServices, fetchEmployees, fetchCustomers } = this
 
       fetchServices()
+      fetchEmployees()
+      fetchCustomers()
    }
 
    fetchServices = async () => {
@@ -48,7 +52,47 @@ class HoaDonDichVuForView extends Component {
       }
    }
 
-   // ///// METHODS FOR COMPUTING VALUES /////
+   fetchEmployees = async () => {
+      const url = apiRoutes.nhanVien.getAll
+      const queries = { pageSize: 1000 }
+
+      try {
+         const response = await apiGet(url, queries)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({ employees: data })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   fetchCustomers = async () => {
+      const url = apiRoutes.khachHang.getAll
+      const queries = {
+         pageSize: 1000
+      }
+
+      try {
+         const response = await apiGet(url, queries)
+
+         if (response && response.data.status === 'SUCCESS') {
+            const { data } = response.data.result
+
+            this.setState({ customers: data })
+         } else {
+            throw new Error(response.errors)
+         }
+      } catch (error) {
+         console.error(error)
+      }
+   }
+
+   ///// METHODS FOR COMPUTING VALUES /////
 
    getAllServices = () => {
       const { services } = this.state
@@ -64,10 +108,39 @@ class HoaDonDichVuForView extends Component {
       return allServices
    }
 
+   getAllEmployees = () => {
+      const { employees } = this.state
+      let allEmployees = []
+
+      employees.forEach(employee => {
+         allEmployees.push({
+            value: employee['maNhanVien'],
+            label: employee['tenNhanVien']
+         })
+      })
+
+      return allEmployees
+   }
+
+   getAllCustomers = () => {
+      const { customers } = this.state
+      let allCustomers = []
+
+      customers.forEach(customer => {
+         allCustomers.push({
+            value: customer['maKhachHang'],
+            label: customer['tenKhachHang']
+         })
+      })
+
+      return allCustomers
+   }
+
    ///// METHODS FOR RENDERING UI /////
 
    renderComponent = () => {
-      const { getAllServices } = this
+      const { getAllCustomers, getAllServices, getAllEmployees } = this
+      const { services } = this.state
 
       const settings = {
          entity: hoaDonDichVu,
@@ -80,38 +153,69 @@ class HoaDonDichVuForView extends Component {
             },
             {
                label: 'Khách hàng',
-               propForValue: 'khachHang.tenKhachHang',
-               type: 'input'
+               propForValue: 'maKhachHang',
+               type: 'select',
+               values: getAllCustomers(),
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Nhân viên',
-               propForValue: 'nhanVien.tenNhanVien',
-               type: 'input'
+               propForValue: 'maNhanVien',
+               type: 'select',
+               values: getAllEmployees(),
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Ngày sử dụng',
                propForValue: 'ngaySuDung',
-               type: 'date'
+               placeholder: 'Nhập ngày sử dụng dịch vụ',
+               type: 'date',
+               validators: [
+                  {
+                     rule: 'notEmpty',
+                     message:
+                        'Ngày sử dụng dịch vụ là thông tin bắt buộc và không được để trống!'
+                  }
+               ]
             },
             {
                label: 'Ngày lập hóa đơn',
                propForValue: 'ngayLap',
-               type: 'date'
+               placeholder: 'Nhập ngày lập hóa đơn',
+               type: 'date',
+               validators: [
+                  {
+                     rule: 'notEmpty',
+                     message:
+                        'Ngày lập hóa đơn là thông tin bắt buộc và không được để trống!'
+                  }
+               ]
             },
             {
                label: 'Ghi chú',
                propForValue: 'ghiChu',
+               placeholder: 'Nhập ghi chú về hóa đơn (nếu có)',
                type: 'textarea'
             },
             {
                label: 'Số tiền đã thanh toán (VNĐ)',
                propForValue: 'daThanhToan',
-               type: 'number'
-            },
-            {
-               label: 'Tình trạng',
-               propForValue: 'tinhTrang',
-               type: 'input'
+               placeholder: 'Nhập số tiền đã thanh toán',
+               type: 'input',
+               validators: [
+                  {
+                     rule: 'isNumeric',
+                     message:
+                        'Số tiền đã thanh toán chỉ được bao gồm các chữ số (0-9)!'
+                  },
+                  {
+                     rule: 'notEmpty',
+                     message:
+                        'Số tiền đã thanh toán là thông tin bắt buộc và không được để trống!'
+                  }
+               ]
             }
          ],
          details: {
@@ -124,28 +228,61 @@ class HoaDonDichVuForView extends Component {
                   type: 'select',
                   values: getAllServices(),
                   propForItemValue: 'value',
-                  propForItemText: 'label'
+                  propForItemText: 'label',
+                  affectedProps: ['donGia', 'thanhTien']
                },
                {
                   label: 'Đơn giá (VNĐ)',
                   propForValue: 'donGia',
-                  type: 'number'
+                  placeholder: 'Nhập đơn giá của dịch vụ',
+                  prefetch: {
+                     values: services,
+                     reference: 'maDichVu',
+                     propForValue: 'donGia'
+                  },
+                  type: 'input',
+                  validators: [
+                     {
+                        rule: 'isNumeric',
+                        message:
+                           'Đơn giá của dịch vụ chỉ được bao gồm các chữ số (0-9)!'
+                     },
+                     {
+                        rule: 'notEmpty',
+                        message:
+                           'Đơn giá của dịch vụ là thông tin bắt buộc và không được để trống!'
+                     }
+                  ],
+                  disabled: true
                },
                {
                   label: 'Số lượng',
                   propForValue: 'soLuong',
-                  type: 'number'
+                  placeholder: 'Nhập số lượng dịch vụ',
+                  type: 'input',
+                  validators: [
+                     {
+                        rule: 'isNumeric',
+                        message:
+                           'Số lượng dịch vụ chỉ được bao gồm các chữ số (0-9)!'
+                     }
+                  ],
+                  affectedProps: ['thanhTien']
                },
                {
                   label: 'Thành tiền (VNĐ)',
+                  type: 'calculation',
+                  operator: '*',
                   propForValue: 'thanhTien',
-                  type: 'number'
+                  propForValue1: 'soLuong',
+                  propForValue2: 'donGia',
+                  disabled: true
                }
             ]
          }
       }
 
-      return <ForViewPage settings={settings} />
+      return <ForUpdatePage settings={settings} />
    }
 
    render() {
@@ -155,4 +292,4 @@ class HoaDonDichVuForView extends Component {
    }
 }
 
-export default HoaDonDichVuForView
+export default HoaDonDichVuForUpdate

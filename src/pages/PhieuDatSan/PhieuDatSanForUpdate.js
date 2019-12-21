@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import ForViewPage from '../../components/ForViewWithListPage'
+import ForUpdatePage from '../../components/ForUpdateWithListPage'
 import { phieuDatSan, chiTietPhieuDatSan } from '../../entities'
 import apiRoutes from '../../routes/apis'
 import { apiGet } from '../../utils'
 
-class PhieuDatSanForView extends Component {
+class PhieuDatSanForUpdate extends Component {
    constructor(props) {
       super(props)
 
@@ -197,22 +197,37 @@ class PhieuDatSanForView extends Component {
             {
                label: 'Mã phiếu đặt sân',
                propForValue: 'maPhieuDatSan',
-               type: 'input'
+               type: 'input',
+               disabled: true
             },
             {
                label: 'Khách hàng',
-               propForValue: 'khachHang.tenKhachHang',
-               type: 'input'
+               propForValue: 'maKhachHang',
+               type: 'select',
+               values: getAllCustomers(),
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Nhân viên',
-               propForValue: 'nhanVien.tenNhanVien',
-               type: 'input'
+               propForValue: 'maNhanVien',
+               type: 'select',
+               values: getAllEmployees(),
+               propForItemValue: 'value',
+               propForItemText: 'label'
             },
             {
                label: 'Ngày lập hóa đơn',
                propForValue: 'ngayLap',
-               type: 'date'
+               placeholder: 'Nhập ngày lập phiếu',
+               type: 'date',
+               validators: [
+                  {
+                     rule: 'notEmpty',
+                     message:
+                        'Ngày lập phiếu là thông tin bắt buộc và không được để trống!'
+                  }
+               ]
             }
          ],
          details: {
@@ -230,33 +245,68 @@ class PhieuDatSanForView extends Component {
                {
                   label: 'Thời gian bắt đầu',
                   propForValue: 'thoiGianBatDau',
-                  type: 'time'
+                  type: 'time',
+                  validators: [
+                     {
+                        rule: 'notEmpty',
+                        message:
+                           'Thời gian bắt đầu là thông tin bắt buộc và không được để trống!'
+                     }
+                  ]
                },
                {
                   label: 'Thời gian kết thúc',
                   propForValue: 'thoiGianKetThuc',
-                  type: 'time'
+                  type: 'time',
+                  validators: [
+                     {
+                        rule: 'notEmpty',
+                        message:
+                           'Thời gian kết thúc là thông tin bắt buộc và không được để trống!'
+                     }
+                  ]
                },
                {
                   label: 'Ngày đặt',
                   propForValue: 'ngayDat',
-                  type: 'date'
+                  type: 'date',
+                  validators: [
+                     {
+                        rule: 'notEmpty',
+                        message:
+                           'Ngày đặt sân là thông tin bắt buộc và không được để trống!'
+                     }
+                  ]
                },
                {
                   label: 'Thành tiền (VNĐ)',
                   propForValue: 'thanhTien',
-                  type: 'input'
+                  type: 'input',
+                  validators: [
+                     {
+                        rule: 'notEmpty',
+                        message:
+                           'Thành tiền là thông tin bắt buộc và không được để trống!'
+                     }
+                  ]
                },
                {
                   label: 'Số tiền đã thanh toán (VNĐ)',
                   propForValue: 'tienCoc',
-                  type: 'input'
+                  type: 'input',
+                  validators: [
+                     {
+                        rule: 'notEmpty',
+                        message:
+                           'Số tiền đã thanh toán là thông tin bắt buộc và không được để trống!'
+                     }
+                  ]
                }
             ]
          }
       }
 
-      return <ForViewPage settings={settings} />
+      return <ForUpdatePage settings={settings} />
    }
 
    render() {
@@ -266,4 +316,4 @@ class PhieuDatSanForView extends Component {
    }
 }
 
-export default PhieuDatSanForView
+export default PhieuDatSanForUpdate
