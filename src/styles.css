@@ -1030,6 +1030,32 @@ input[type='file'] {
    .notification-container {
       display: none !important;
    }
+
+   .printing-page__details {
+      margin-top: 24px;
+   }
+
+   .printing-page__details table,
+   .printing-page__details table tr th,
+   .printing-page__details table tr td {
+      border: 1px solid #111;
+   }
+
+   .printing-page__details table tr th {
+      text-align: center;
+   }
+
+   .printing-page__details table tr td {
+      padding: 0;
+      text-align: center;
+   }
+
+   .printing-page__details table tr td input {
+      text-align: center;
+      padding: 0;
+      background-color: transparent;
+      color: #111;
+   }
 }
 
 .section-h5 {

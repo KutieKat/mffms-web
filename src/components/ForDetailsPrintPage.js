@@ -132,7 +132,7 @@ class ForDetailsPrintPage extends Component {
       return (
          <div className="printing-page__main">
             <h1 className="printing-page-title">
-               THÔNG TIN CHI TIẾT VỀ {name.toUpperCase()}
+               THÔNG TIN {name.toUpperCase()}
             </h1>
          </div>
       )
@@ -242,15 +242,12 @@ class ForDetailsPrintPage extends Component {
    renderDetails = () => {
       const { renderColumn } = this
       const { settings } = this.props
-      const { details, entity, stateDetails } = settings
+      const { details, stateDetails } = settings
       const { columns } = details
-      const { name } = entity
 
       return (
-         <div className="details-section">
-            <h4 className="details-section__title">Chi tiết {name}</h4>
-
-            <table className="table details-section__table">
+         <div className="printing-page__details">
+            <table className="table">
                <thead>
                   <tr>
                      <th>STT</th>
@@ -321,7 +318,11 @@ class ForDetailsPrintPage extends Component {
                <input
                   className="form-input-disabled"
                   type="text"
-                  value={deepGet(details[index], propForValue)}
+                  value={moment(
+                     new Date(
+                        Number(deepGet(details[index], propForValue)) * 1000
+                     )
+                  ).format('HH:mm:ss')}
                   disabled={true}
                />
             )
