@@ -1,7 +1,7 @@
 # mffms-web
 :soccer: Website của hệ thống quản lý sân bóng đá mini (Mini Football Field Management System)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.org/KutieKat/mffms-web.svg?branch=master)](https://travis-ci.org/KutieKat/mffms-web)
 
 ## Giới thiệu
 * **MFFMS** (Mini Football Field Management System) là hệ thống quản lý sân bóng đá mini trên nền tảng web. MFFMS hỗ trợ tin học hóa các chức năng nghiệp vụ cơ bản mà một sân bóng đá mini cần phải có.
