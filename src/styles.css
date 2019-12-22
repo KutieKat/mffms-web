@@ -1061,6 +1061,7 @@ input[type='file'] {
    .printing-page .chart-section__title {
       font-weight: 600;
       font-size: 16px;
+      margin-bottom: 6px;
    }
 
    .printing-page + .chart-sections-wrapper {
@@ -1073,6 +1074,12 @@ input[type='file'] {
       margin: 0;
       margin-bottom: 12px;
    }
+}
+
+.chart-section__title {
+   font-size: 18px;
+   font-weight: 600;
+   margin-bottom: 6px;
 }
 
 .section-h5 {

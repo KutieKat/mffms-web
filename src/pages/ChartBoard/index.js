@@ -85,8 +85,8 @@ class ForStatsPage extends Component {
    fetchData = () => {
       const { fetchStats } = this
 
-      fetchStats('tongSoLuotDatSan')
       fetchStats('tongTienDatSan')
+      fetchStats('tongSoLuotDatSan')
       fetchStats('tongTienDichVu')
       fetchStats('tongTienNhapHang')
    }
@@ -427,8 +427,8 @@ class ForStatsPage extends Component {
 
       return (
          <Fragment>
-            {renderChart('tongSoLuotDatSan')}
             {renderChart('tongTienDatSan')}
+            {renderChart('tongSoLuotDatSan')}
             {renderChart('tongTienDichVu')}
             {renderChart('tongTienNhapHang')}
          </Fragment>
@@ -462,8 +462,8 @@ class ForStatsPage extends Component {
       data['datasets'] = [
          {
             label: getLabelForPropName(propName),
-            backgroundColor: 'rgba(75,192,192,0.4)',
-            borderColor: 'rgba(75,192,192,1)',
+            backgroundColor: 'rgba(255,99,132,0.4)',
+            borderColor: 'rgba(255,99,132,1)',
             data: Array.isArray(rawData) && rawData.map(record => record.giaTri)
          }
       ]
@@ -473,7 +473,7 @@ class ForStatsPage extends Component {
             <h4 className="chart-section__title">
                {getLabelForPropName(propName)}
             </h4>
-            <Bar data={data} width="50%" height="20vh" />
+            <Bar data={data} width="50%" height="12vh" />
          </div>
       )
    }
