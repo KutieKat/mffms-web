@@ -1,7 +1,11 @@
-# mffms-web
-:soccer: Website của hệ thống quản lý sân bóng đá mini (Mini Football Field Management System)
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.org/KutieKat/mffms-web.svg?branch=master)](https://travis-ci.org/KutieKat/mffms-web)
+<h1 align="center">
+  mffms-web
+</h1>
+<p align="center" style="font-size: 1.2rem;">Website của hệ thống quản lý sân bóng đá mini (Mini Football Field Management System)</p>
+<p align="center">
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License" /></a>
+  <a href="https://travis-ci.org/KutieKat/mffms-web"><img src="https://travis-ci.org/KutieKat/mffms-web.svg?branch=master" alt="Build Status" /></a>
+</p>
 
 ## Giới thiệu
 * **MFFMS** (Mini Football Field Management System) là hệ thống quản lý sân bóng đá mini trên nền tảng web. MFFMS hỗ trợ tin học hóa các chức năng nghiệp vụ cơ bản mà một sân bóng đá mini cần phải có.
@@ -84,10 +88,14 @@
 * [Moment](https://www.npmjs.com/package/moment)
 
 ## Đội ngũ phát triển
-* [Nguyễn Tiến Dũng](https://github.com/KutieKat) (16520259 - PMCL2016.1)
-* [Nguyễn Việt Tiến](https://github.com/viettiennguyen029) (16521233 - PMCL2016.3)
-* [Hồ Nguyễn Nhật Tiến](https://github.com/nhattienho1998) (16521218 - PMCL2016.3)
-* [Dương Thạnh Tín](https://github.com/DuongThanhTin) (16521241 - PMCL2016.3)
+<table>
+  <tr>
+    <td align="center"><img src="https://avatars2.githubusercontent.com/u/37391128?s=460&v=4" alt="Nguyễn Tiến Dũng"/><br /><b><a href="https://github.com/KutieKat">Nguyễn Tiến Dũng</a><br/>(Trưởng nhóm)</b><br/>16520259<br/>PMCL2016.1<br /><span title="Coding">💻</span> <span title="Documenting">📖</span> <span title="Testing">✔️</span></td>
+    <td align="center"><img src="https://avatars3.githubusercontent.com/u/38419585?s=460&v=4" alt="Nguyễn Việt Tiến"/><br /><b><a href="https://github.com/viettiennguyen029">Nguyễn Việt Tiến</a><br/>(Nhóm phó)</b><br/>16521233<br/>PMCL2016.3<br /><span title="Coding">💻</span> <span title="Documenting">📖</span> <span title="Testing">✔️</span></td>
+    <td align="center"><img src="https://avatars1.githubusercontent.com/u/29588339?s=460&v=4" alt="Hồ Nguyễn Nhật Tiến" /><br /><b><a href="https://github.com/nhattienho1998">Hồ Nguyễn Nhật Tiến</a><br/>(Thành viên)</b><br/>16521218<br/>PMCL2016.3<br /><span title="Coding">💻</span> <span title="Documenting">📖</span> <span title="Testing">✔️</span></td>
+    <td align="center"><img src="https://avatars3.githubusercontent.com/u/38368965?s=460&v=4" alt="Dương Thạnh Tín"/><br /><b><a href="https://github.com/DuongThanhTin">Dương Thạnh Tín</a><br/>(Thành viên)</b><br/>16521241<br/>PMCL2016.3<br /><span title="Documenting">📖</span> <span title="Testing">✔️</span></td>
+  </tr>
+</table>
 
 ## Giấy phép
 * [MIT](https://github.com/KutieKat/mffms-web/blob/master/LICENSE)
