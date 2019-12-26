@@ -92,7 +92,8 @@ export default {
    },
    chiTietDonNhapHang: {
       create: baseChiTietDonNhapHangApi + '/CreateMultiple',
-      updateById: baseChiTietDonNhapHangApi + '/UpdateById'
+      updateById: baseChiTietDonNhapHangApi + '/UpdateById',
+      deleteById: baseChiTietDonNhapHangApi + '/PermanentlyDeleteById'
    },
    hoaDonDichVu: {
       getGeneralStats: baseHoaDonDichVuApi + '/GetGeneralStatistics',
@@ -104,7 +105,8 @@ export default {
    },
    chiTietHoaDonDichVu: {
       create: baseChiTietHoaDonDichVuApi + '/CreateMultiple',
-      updateById: baseChiTietHoaDonDichVuApi + '/UpdateById'
+      updateById: baseChiTietHoaDonDichVuApi + '/UpdateById',
+      deleteById: baseChiTietHoaDonDichVuApi + '/PermanentlyDeleteById'
    },
    phieuDatSan: {
       getGeneralStats: basePhieuDatSanApi + '/GetGeneralStatistics',
@@ -117,7 +119,8 @@ export default {
    },
    chiTietPhieuDatSan: {
       create: baseChiTietPhieuDatSanApi + '/CreateMultiple',
-      updateById: baseChiTietPhieuDatSanApi + '/UpdateById'
+      updateById: baseChiTietPhieuDatSanApi + '/UpdateById',
+      deleteById: baseChiTietPhieuDatSanApi + '/PermanentlyDeleteById'
    },
    thongKe: {
       tongSoLuotDatSan: baseThongKeApi + '/TongSoLuotDatSan',

@@ -192,7 +192,8 @@ class PhieuDatSanForUpdate extends Component {
       const settings = {
          entity: phieuDatSan,
          api: apiRoutes.phieuDatSan,
-         sumpriceProp: 'tongTien',
+         sumPriceProp: 'tongTien',
+         elemPriceProp: 'thanhTien',
          fields: [
             {
                label: 'Mã phiếu đặt sân',
@@ -233,6 +234,8 @@ class PhieuDatSanForUpdate extends Component {
          details: {
             entity: chiTietPhieuDatSan,
             api: apiRoutes.chiTietPhieuDatSan,
+            propNameForKey: ['maChiTietPDS'],
+            propNameForParentKey: 'maPhieuDatSan',
             columns: [
                {
                   label: 'Sân bóng',

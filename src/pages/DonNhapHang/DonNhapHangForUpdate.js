@@ -264,6 +264,8 @@ class DonNhapHangForUpdate extends Component {
          details: {
             entity: chiTietDonNhapHang,
             api: apiRoutes.chiTietDonNhapHang,
+            propNameForKey: ['maDonNhapHang, maTSTB'],
+            propNameForParentKey: 'maDonNhapHang',
             columns: [
                {
                   label: 'Tài sản thiết bị',

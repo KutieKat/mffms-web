@@ -221,6 +221,8 @@ class HoaDonDichVuForUpdate extends Component {
          details: {
             entity: chiTietHoaDonDichVu,
             api: apiRoutes.chiTietHoaDonDichVu,
+            propNameForKey: ['soHDDV, maDichVu'],
+            propNameForParentKey: 'soHDDV',
             columns: [
                {
                   label: 'Dịch vụ',
