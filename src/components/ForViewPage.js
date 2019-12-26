@@ -544,7 +544,7 @@ class ForViewPage extends Component {
             {renderBody()}
             {renderDialogs()}
 
-            <ForDetailsPrintPage settings={printSettings} />
+            {/* <ForDetailsPrintPage set/tings={printSettings} /> */}
          </LoadingIndicator>
       )
    }
