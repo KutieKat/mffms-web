@@ -14,7 +14,11 @@ import {
    isValidEmail,
    deepGet,
    numberWithCommas,
-   formatDateString
+   formatDateString,
+   apiDelete,
+   containsKeys,
+   joinValueOfKeys,
+   createQueryFromObj
 } from '../utils'
 import { connect } from 'react-redux'
 import { showNotification } from '../redux/actions'
@@ -61,6 +65,7 @@ class ForUpdateWithListPage extends Component {
          showAlert: false,
          loading: false,
          fields: [],
+         prevDetails: [],
          details: [],
          deleted: []
       }
@@ -82,33 +87,15 @@ class ForUpdateWithListPage extends Component {
       fetchData()
    }
 
-   // componentWillReceiveProps(nextProps) {
-   //    const { initializeEditingData } = this
-   //    const editingData = initializeEditingData(nextProps)
-
-   //    this.setState({ editingData })
-   // }
-
    ///// METHODS FOR INTERACTING WITH API /////
-
-   //    createDetails = async () => {
-   //       const stateDetails = this.state.details
-   //       const { settings } = this.props
-   //       const { details } = settings
-   //       const { api } = details
-   //       const url = api.create
-
-   //       for (let i = 0; i < stateDetails.length; i++) {
-   //          const detail = details[i]
-   //          await apiPost(url, detail)
-   //       }
-   //    }
 
    updateRecord = async () => {
       const {
          showErrorNotification,
          showSuccessNotification,
-         createDetails
+         createDetails,
+         updateExistedDetails,
+         deleteRemovedDetails
       } = this
       const { editingData } = this.state
       const { settings, history, match } = this.props
@@ -120,8 +107,12 @@ class ForUpdateWithListPage extends Component {
       return apiPut(url, editingData)
          .then(response => {
             showSuccessNotification()
+
             this.setState({ loading: false }, () => {
-               // createDetails()
+               createDetails()
+               updateExistedDetails()
+               deleteRemovedDetails()
+
                history.push(`/quan-ly/${slug}`)
             })
          })
@@ -131,6 +122,142 @@ class ForUpdateWithListPage extends Component {
             // const { errors } = error.response.data.result
             // this.setState({ showAlert: true })
          })
+   }
+
+   createDetails = async () => {
+      const stateDetails = this.state.details
+      const { settings, match } = this.props
+      const { details } = settings
+      const { api, propNameForKey, propNameForParentKey } = details
+      const url = api.create
+      const { id } = match.params
+      const filteredDetails = stateDetails.filter(
+         detail => !containsKeys(detail, propNameForKey)
+      )
+
+      if (filteredDetails.length > 0) {
+         for (let i = 0; i < filteredDetails.length; i++) {
+            const detail = filteredDetails[i]
+            const rawPostData = [detail]
+
+            delete rawPostData.thoiGianTao
+            delete rawPostData.thoiGianCapNhat
+
+            const postData = rawPostData.map(detail => {
+               detail[propNameForParentKey] = id
+
+               if (
+                  detail['thoiGianBatDau'] !== undefined &&
+                  detail['thoiGianKetThuc'] !== undefined
+               ) {
+                  const thoiGianBatDau = Math.floor(
+                     new Date(
+                        `${detail['ngayDat']} ${detail['thoiGianBatDau']}:00`
+                     ).getTime() / 1000
+                  )
+
+                  const thoiGianKetThuc = Math.floor(
+                     new Date(
+                        `${detail['ngayDat']} ${detail['thoiGianKetThuc']}:00`
+                     ).getTime() / 1000
+                  )
+
+                  detail['thoiGianBatDau'] = thoiGianBatDau
+                  detail['thoiGianKetThuc'] = thoiGianKetThuc
+               }
+
+               return detail
+            })
+
+            await apiPost(url, postData)
+         }
+      }
+   }
+
+   updateExistedDetails = async () => {
+      const { details } = this.state
+      const { settings } = this.props
+      const settingsDetails = settings.details
+      const { api, propNameForKey, usesCompoundKey } = settingsDetails
+
+      for (let i = 0; i < details.length; i++) {
+         const detail = details[i]
+         let pathname = ''
+         let retrievedValues = []
+
+         propNameForKey.forEach(val => {
+            retrievedValues.push(detail[val])
+         })
+
+         if (!usesCompoundKey) {
+            pathname = joinValueOfKeys(detail, propNameForKey)
+         } else {
+            pathname = createQueryFromObj(propNameForKey, retrievedValues)
+         }
+
+         if (pathname !== undefined) {
+            const url = `${api.updateById}/${pathname}`
+            console.log(url)
+
+            if (
+               detail['thoiGianBatDau'] !== undefined &&
+               detail['thoiGianKetThuc'] !== undefined
+            ) {
+               const thoiGianBatDau = Math.floor(
+                  new Date(
+                     `${detail['ngayDat']} ${detail['thoiGianBatDau']}:00`
+                  ).getTime() / 1000
+               )
+
+               const thoiGianKetThuc = Math.floor(
+                  new Date(
+                     `${detail['ngayDat']} ${detail['thoiGianKetThuc']}:00`
+                  ).getTime() / 1000
+               )
+
+               detail['thoiGianBatDau'] = thoiGianBatDau
+               detail['thoiGianKetThuc'] = thoiGianKetThuc
+            }
+
+            await apiPut(url, detail)
+         }
+      }
+   }
+
+   deleteRemovedDetails = async () => {
+      const { prevDetails, details } = this.state
+      const { settings } = this.props
+      const settingsDetails = settings.details
+      const { api, propNameForKey } = settingsDetails
+
+      let prev = [],
+         current = [],
+         ids = []
+
+      prevDetails.forEach(detail => {
+         if (containsKeys(detail, propNameForKey)) {
+            prev.push(joinValueOfKeys(detail, propNameForKey))
+         }
+      })
+
+      details.forEach(detail => {
+         if (containsKeys(detail, propNameForKey)) {
+            current.push(joinValueOfKeys(detail, propNameForKey))
+         }
+      })
+
+      prev.forEach(detail => {
+         if (current.indexOf(detail) === -1) {
+            ids.push(detail)
+         }
+      })
+
+      for (let i = 0; i < ids.length; i++) {
+         const id = ids[i]
+         const url = `${api.deleteById}/${id}`
+
+         await apiDelete(url)
+      }
    }
 
    fetchSettingsData = async () => {
@@ -180,7 +307,12 @@ class ForUpdateWithListPage extends Component {
                }
             })
 
-            this.setState({ editingData: newData, details, loading: false })
+            this.setState({
+               editingData: newData,
+               details,
+               prevDetails: cloneDeep(details),
+               loading: false
+            })
          } else {
             throw new Error(response.errors)
          }
@@ -210,7 +342,7 @@ class ForUpdateWithListPage extends Component {
             } else if (key.includes('ngay')) {
                newResult[key] = moment(new Date(value)).format('YYYY-MM-DD')
             } else {
-               newResult[key] = value
+               newResult[key] = '' + value
             }
          })
 
@@ -239,7 +371,7 @@ class ForUpdateWithListPage extends Component {
       const { editingData } = this.state
       const stateDetails = this.state.details
       const { settings } = this.props
-      const { details } = settings
+      const { details, sumPriceProp, elemPriceProp } = settings
       const { columns } = details
 
       if (typeof value === 'number') {
@@ -253,7 +385,7 @@ class ForUpdateWithListPage extends Component {
          const { affectedProps } = column
 
          columns
-            .filter(col => affectedProps.indexOf(col.propForValue) > -1)
+            // .filter(col => affectedProps.indexOf(col.propForValue) > -1)
             .forEach(prop => {
                const { type, propForValue } = prop
 
@@ -284,19 +416,31 @@ class ForUpdateWithListPage extends Component {
       }
 
       // Re-calculate sumprice
-      let sumprice = 0
-      stateDetails.forEach(detail => (sumprice += Number(detail['thanhTien'])))
-      editingData['thanhTien'] = '' + sumprice
+      let sumPrice = 0
+      stateDetails.forEach(
+         detail => (sumPrice += Number(detail[elemPriceProp]))
+      )
+      editingData[sumPriceProp] = '' + sumPrice
 
       this.setState({ details: stateDetails, editingData })
    }
 
    deleteDetail = index => {
-      const { details } = this.state
+      const { editingData } = this.state
+      const stateDetails = cloneDeep(this.state.details)
+      const { settings } = this.props
+      const { sumPriceProp, elemPriceProp } = settings
 
-      details.splice(index, 1)
+      stateDetails.splice(index, 1)
 
-      this.setState({ details })
+      // Re-calculate sumprice
+      let sumPrice = 0
+      stateDetails.forEach(
+         detail => (sumPrice += Number(detail[elemPriceProp]))
+      )
+      editingData[sumPriceProp] = '' + sumPrice
+
+      this.setState({ details: stateDetails, editingData })
    }
 
    calculate = (column, index) => {
@@ -350,6 +494,7 @@ class ForUpdateWithListPage extends Component {
          }
 
          showErrorNotification()
+
          this.setState({
             errors,
             showAlert: true
@@ -1116,7 +1261,7 @@ class ForUpdateWithListPage extends Component {
                      stateDetails.map((detail, detailIndex) => (
                         <tr key={detailIndex}>
                            <td onClick={() => deleteDetail(detailIndex)}>
-                              <i class="fas fa-times-circle reset-search-data"></i>
+                              <i className="fas fa-times-circle reset-search-data"></i>
                            </td>
                            <td>{detailIndex + 1}</td>
                            {columns.map((column, index) => (
@@ -1129,7 +1274,7 @@ class ForUpdateWithListPage extends Component {
                   ) : (
                      <tr>
                         <td
-                           colSpan={columns.length + 1}
+                           colSpan={columns.length + 2}
                            style={{ textAlign: 'center' }}
                         >
                            Trống
@@ -1247,7 +1392,7 @@ class ForUpdateWithListPage extends Component {
    }
 
    render() {
-      console.log('DEBUG STATE: ', this.state)
+      console.log('STATE: ', this.state)
       const { renderComponent } = this
 
       return renderComponent()

@@ -156,3 +156,44 @@ export const deepGet = (variable, keys, defaultVal) => {
 export const getLetterByIndex = index => {
    return ALPHABETS[index]
 }
+
+export const containsKeys = (obj, keys) => {
+   let count = 0
+
+   keys.forEach(key => {
+      if (key in obj) {
+         count += 1
+      }
+   })
+
+   return count > 0 ? true : false
+}
+
+export const joinValueOfKeys = (obj, keys) => {
+   let values = []
+
+   keys.forEach(key => {
+      if (key in obj) {
+         values.push(obj[key])
+      }
+   })
+
+   return values.join('_')
+}
+
+export const createQueryFromObj = (keys, values) => {
+   let query = ''
+
+   for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]
+      const value = values[i]
+
+      if (i !== keys.length - 1) {
+         query += `${key}=${value}&`
+      } else {
+         query += `${key}={${value}}`
+      }
+   }
+
+   return query
+}
