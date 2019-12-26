@@ -144,7 +144,6 @@ class ForCreateWithListPage extends Component {
             const propKey = Object.keys(data)[0]
             const propValue = data[propKey]
 
-            // console.log('Cailoz gì vậy?')
             createDetails(propKey, propValue)
          })
          .catch(error => {
