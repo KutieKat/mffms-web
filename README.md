@@ -88,14 +88,8 @@
 * [Moment](https://www.npmjs.com/package/moment)
 
 ## Đội ngũ phát triển
-<table>
-  <tr>
-    <td align="center"><img src="https://avatars2.githubusercontent.com/u/37391128?s=460&v=4" alt="Nguyễn Tiến Dũng"/><br /><b><a href="https://github.com/KutieKat">Nguyễn Tiến Dũng</a><br/>(Trưởng nhóm)</b><br/>16520259<br/>PMCL2016.1<br /><span title="Coding">💻</span> <span title="Documenting">📖</span> <span title="Testing">✔️</span></td>
-    <td align="center"><img src="https://avatars3.githubusercontent.com/u/38419585?s=460&v=4" alt="Nguyễn Việt Tiến"/><br /><b><a href="https://github.com/viettiennguyen029">Nguyễn Việt Tiến</a><br/>(Nhóm phó)</b><br/>16521233<br/>PMCL2016.3<br /><span title="Coding">💻</span> <span title="Documenting">📖</span> <span title="Testing">✔️</span></td>
-    <td align="center"><img src="https://avatars1.githubusercontent.com/u/29588339?s=460&v=4" alt="Hồ Nguyễn Nhật Tiến" /><br /><b><a href="https://github.com/nhattienho1998">Hồ Nguyễn Nhật Tiến</a><br/>(Thành viên)</b><br/>16521218<br/>PMCL2016.3<br /><span title="Coding">💻</span> <span title="Documenting">📖</span> <span title="Testing">✔️</span></td>
-    <td align="center"><img src="https://avatars3.githubusercontent.com/u/38368965?s=460&v=4" alt="Dương Thạnh Tín"/><br /><b><a href="https://github.com/DuongThanhTin">Dương Thạnh Tín</a><br/>(Thành viên)</b><br/>16521241<br/>PMCL2016.3<br /><span title="Documenting">📖</span> <span title="Testing">✔️</span></td>
-  </tr>
-</table>
+* [Nguyễn Tiến Dũng](https://github.com/KutieKat) (MSSV: 16520259 - Lớp: PMCL2016.1)
+* [Nguyễn Việt Tiến](https://github.com/viettiennguyen029) (MSSV: 16521233 - Lớp: PMCL2016.3)
 
 ## Giấy phép
 * [MIT](https://github.com/KutieKat/mffms-web/blob/master/LICENSE)
