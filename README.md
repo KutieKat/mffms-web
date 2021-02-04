@@ -87,9 +87,5 @@
 * [File Saver](https://www.npmjs.com/package/file-saver)
 * [Moment](https://www.npmjs.com/package/moment)
 
-## Đội ngũ phát triển
-* [Nguyễn Tiến Dũng](https://github.com/KutieKat) (MSSV: 16520259 - Lớp: PMCL2016.1)
-* [Nguyễn Việt Tiến](https://github.com/viettiennguyen029) (MSSV: 16521233 - Lớp: PMCL2016.3)
-
 ## Giấy phép
 * [MIT](https://github.com/KutieKat/mffms-web/blob/master/LICENSE)
