@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "chart.js": "^2.9.3",
     "clone-deep": "^4.0.1",
     "debounce": "^1.2.0",
