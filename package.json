@@ -10,7 +10,7 @@
     "exceljs": "^1.13.0",
     "export-from-json": "^1.1.4",
     "file-saver": "^2.0.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "rc-slider": "^8.7.1",
     "react": "16.5.0",
     "react-chartjs-2": "^2.8.0",
